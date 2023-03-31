@@ -12,6 +12,5 @@ app.use(express.json());
 
 app.use(storeRoutes);
 
-app.listen(4000); 
-console.log("Server on port 4000");
-console.log(process.env);
+app.listen(8080); 
+console.log("Server on port 8080");
