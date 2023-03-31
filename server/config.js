@@ -3,10 +3,10 @@ config()
 
 module.exports = {
     db: {
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        database: process.env.DB_DATABASE
+        user: 'dbuser',
+        password: 'dbpassword',
+        host: 'dbstore-gf2ir-postgresql.external.kinsta.app',
+        port: 30825,
+        database: 'dbstore',
     }
 }
