@@ -45,22 +45,14 @@ const App = () => {
     const uploadDB = async () => {
         console.log(values);
         console.log(JSON.stringify(values));
-        const res = await fetch("http://localhost:4000/store/products", {
-            method: "POST",
-            body: JSON.stringify(values),
-            headers: {"Content-Type": "application/json; charset=utf-8",
-            }
-        });
-        const resLot = await fetch("http://localhost:4000/store/products/createLot", {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: {"Content-Type": "application/json; charset=utf-8",
             }
         });
         const data = await res.json();
-        const dataLot = await resLot.json();
         console.log(data);
-        console.log(dataLot);
     }
 
     const handleCancel = () => {
