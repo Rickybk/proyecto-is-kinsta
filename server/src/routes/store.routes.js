@@ -2,6 +2,7 @@ const { Router } = require("express");
 const pool = require("../db");
 const router = Router();
 const {
+  getDbTime,
   getAllCategories,
   getACategorie,
   createACategorie,
@@ -14,6 +15,9 @@ const {
   updateProduct,
   updateLote,
 } = require("../controllers/store.controllers");
+
+//Get Time prueba DB now()
+router.get("/time", getDbTime);
 
 //Ruta por defecto raiz.
 router.get("/", (req, res) => {

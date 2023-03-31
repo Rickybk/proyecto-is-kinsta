@@ -1,5 +1,11 @@
 const pool = require("../db");
 
+const getDbTime = async (req,res) =>{
+  const result = await pool.query("SELECT now()");
+  console.log(result);
+  res.json(result.rows);
+}
+
 const getAllCategories = async (req, res) => {
   const result = await pool.query("SELECT * FROM categorias");
   console.log(result);
@@ -192,6 +198,7 @@ const updateLote = async (req, res) => {
 
 
 module.exports = {
+  getDbTime,
   getAllCategories,
   getACategorie,
   createACategorie,
