@@ -4,10 +4,10 @@
   "description": "",
   "scripts": {
     "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
-    "server": "node ./src/index.js",
+    "server": "node ./server/index.js",
     "client": "cd client && npm start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "if-env": "^1.0.4"
+  }
 }
