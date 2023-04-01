@@ -1,0 +1,12 @@
+.menu{
+    width:100%;
+}
+
+.menu ul{
+    font-weight: bold;
+    background-color:#f55555;
+}
+
+.menu li:hover{
+    color:white;
+}
