@@ -2,27 +2,30 @@ const { Router } = require("express");
 const pool = require("../db");
 const router = Router();
 const {
-  getDbTime,
   getAllCategories,
   getACategorie,
   createACategorie,
   deleteACategorie,
   updateACategorie,
   getAllProductsLots,
+  getProduct,
+  getLots,
   createProduct,
   createLot,
   deleteProduct,
+  deleteLot,
   updateProduct,
   updateLote,
+  getDbTime
 } = require("../controllers/store.controllers");
-
-//Get Time prueba DB now()
-router.get("/time", getDbTime);
 
 //Ruta por defecto raiz.
 router.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+//Metodo para testeo
+router.get("/time", getDbTime);
 
 //Devuelve todas las categorias
 router.get("/store/categories", getAllCategories);
@@ -42,16 +45,20 @@ router.put("/store/categories/update/:id", updateACategorie);
 //Devuelve todos los productos
 router.get("/store/products", getAllProductsLots);
 //Devuelve un producto
-//router.get('/store/products/1', getProduct)
+router.get('/store/products/:id', getProduct);
+//devuelve todos los lotes
+router.get('/store/products/lot/:id', getLots);
 //Creamos un producto
 router.post("/store/products", createProduct);
 //creamos un lote
-router.post("/store/products/createLot", createLot);
+router.post("/store/products/lot/:id", createLot);
 //Borramos un producto
-router.delete("/store/products/delete/:id/:nameProduct", deleteProduct);
+router.delete("/store/products/:id/:nameProduct", deleteProduct);
+//Borramos un lote
+router.delete("/store/products/lot/:id", deleteLot);
 //Actualizamos un producto
 router.put("/store/products/update/:id", updateProduct);
 //Actualizamos un lote
-router.put("/store/products/updateLot/:id",updateLote);
+router.put("/store/products/updateLot/:idLote/:idProducto",updateLote);
 
 module.exports = router;

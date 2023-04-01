@@ -1,55 +1,17 @@
-import React, { Children } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider, Route, Link, Outlet, createRoutesFromElements } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
-import ModalProducto from './Forms/FormProductModal';
-import SideMenu from './components/Layout';
-import Casa from './Home';
-
-
-const Inicio = () => {
-  //Asociar el menu para la navegacion
-  return (
-    <>
-      <SideMenu />
-      <Outlet />
-    </>);
-}
-
-//Construimos las rutas
-const router = createBrowserRouter(createRoutesFromElements(
-  <Route element={<Inicio />}>
-    <Route path='/' element={null} />
-    <Route path='/Home' element={<Casa />} />
-    <Route path='/Inventario' element={<ModalProducto />} />
-  </Route>
-
-));
-
+import { BrowserRouter } from 'react-router-dom';
+import App from './components/App'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <ConfigProvider
-      theme={{
-        "token": {
-          "colorPrimary": "#fe9688",
-          "colorSuccess": "#b86fd6",
-          "colorWarning": "#ff9966",
-          "colorError": "#eb636b",
-          "colorInfo": "#77ddec",
-          "colorBgBase": "#ffeae6",
-          "colorTextQuaternary": "#000000",
-          "fontSize": 14,
-          "colorFill": "#fa8072"
-        }
-      }}
-    >
-      <RouterProvider router={router} className="menu">
-      </RouterProvider>
-    </ConfigProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 

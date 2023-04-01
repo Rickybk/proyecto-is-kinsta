@@ -1,11 +1,11 @@
 CREATE TABLE categorias (
                 id_categoria SERIAL PRIMARY KEY,
-                nombre_categoria VARCHAR NOT NULL
+                nombre_categoria VARCHAR NOT NULL UNIQUE
 );
 
 CREATE TABLE productos (
                 id_producto SERIAL PRIMARY KEY,
-                nombre_producto VARCHAR NOT NULL,
+                nombre_producto VARCHAR NOT NULL UNIQUE,
                 costo_unitario REAL NOT NULL,
                 precio_unitario REAL NOT NULL,
                 id_categoria INTEGER,

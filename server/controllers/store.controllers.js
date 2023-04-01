@@ -71,13 +71,36 @@ const updateACategorie = async (req, res) => {
 /*PRODUCTOS*/
 
 const getAllProductsLots = async (req, res) => {
-  const result = await pool.query("SELECT * FROM productos,lotes");
+  try{
+  const result = await pool.query("SELECT DISTINCT ON (productos.nombre_producto) productos.*, lotes.* FROM productos JOIN lotes ON productos.id_producto = lotes.id_producto");
 
   console.log(result);
 
   res.json(result.rows);
+  } catch (err) {
+   console.error(err);
+   res.status(500).send("Error obteniendo los producto");
+  }
 };
-
+const getProduct = async (req, res) => {
+  const idProduct = req.params.id;
+  try {
+    const resultProduct = await pool.query("SELECT * FROM productos WHERE id_producto = $1", [idProduct]);
+    res.json(resultProduct.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo el producto");
+  }
+};
+const getLots = async (req, res)=>{
+  const idProduct = req.params.id;
+  try { 
+ const result = await pool.query("SELECT * FROM lotes WHERE id_producto = $1", [idProduct]);
+ res.json(result.rows);
+  }catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo lotes");}
+}
 const createProduct = async (req, res) => {
   try {
     const { nombreProducto, cantidad, costoUnitario, precio, fechaCaducidad, descripcion } =
@@ -104,30 +127,22 @@ const createProduct = async (req, res) => {
   }
 };
 
-
-
 const createLot = async (req, res) => {
   try {
+    const idProduct = req.params.id;
     const {
-      cantidad,
-      costoUnitario,
-      precio,
-      
+      cantidad, 
       fechaCaducidad
     } = req.body;
     const newLot = await pool.query(
-      "INSERT INTO lotes ( id_producto, cantidad, costo_unitario, precio_unitario, fecha_caducidad) VALUES(9, $1, $2, $3, $4) RETURNING *",
-      [cantidad,
-        costoUnitario,
-        precio,
-        fechaCaducidad]
+      "INSERT INTO lotes ( id_producto, cantidad, fecha_caducidad) VALUES($1, $2, $3) RETURNING *",
+      [idProduct, cantidad,fechaCaducidad]
     );
 
-    res.json(newLot.rows[0]);
-    //res.send("Creamos un lote");
+    res.json({ message: "El lote ha sido creado exitosamente", lot: newLot.rows[0] });
   } catch (error) {
-    console.log("El lote del producto ya existe!");
-    res.json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: "No se pudo crear el lote. Intente nuevamente más tarde." });
   }
 };
 
@@ -150,14 +165,23 @@ const deleteProduct = async (req, res) => {
 
 };
 
+const deleteLot = async (req, res) => {
+  const idLot = req.params.id;
+  try {
+    const result1 = await pool.query('DELETE FROM lotes WHERE id_lote = $1', [idLot]);
+    return res.status(200).send(`Eliminados ${result1.rowCount} registros de lotes`);
+  } catch (error) {
+    return res.status(500).send('Error eliminando lote: ' + error);
+  }
+};
 
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name_product, id_category, description_product } = req.body;
+    const { nombre_producto, costo_unitario, precio_unitario, id_category, descripcion } = req.body;
     const newProduct = await pool.query(
-      "UPDATE productos SET nombre_producto = $1, id_categoria = $2, descripcion = $3 WHERE id_producto = $4 RETURNING *",
-      [name_product, id_category, description_product, id]
+      "UPDATE productos SET nombre_producto = $1, costo_unitario = $2, precio_unitario = $3, id_categoria = $4, descripcion = $5 WHERE id_producto = $6 RETURNING *",
+      [nombre_producto, costo_unitario, precio_unitario, id_category, descripcion, id]
     );
 
     if (newProduct.rows.length === 0)
@@ -173,16 +197,15 @@ const updateProduct = async (req, res) => {
 
 const updateLote = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { idLote } = req.params;
+    const {idProducto} = req.params;
     const {
-      quantity,
-      unit_cost,
-      unit_price,
-      expiration_date
+      cantidad,
+      fecha_caducidad,
     } = req.body;
     const newProduct = await pool.query(
-      "UPDATE lotes SET cantidad = $1, costo_unitario = $2, precio_unitario = $3, fecha_caducidad = $4 WHERE id_lote = $5 RETURNING *",
-      [quantity, unit_cost, unit_price, expiration_date, id]
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 RETURNING *",
+      [cantidad, fecha_caducidad, idLote, idProducto]
     );
 
     if (newProduct.rows.length === 0)
@@ -198,16 +221,19 @@ const updateLote = async (req, res) => {
 
 
 module.exports = {
-  getDbTime,
   getAllCategories,
   getACategorie,
   createACategorie,
   deleteACategorie,
   updateACategorie,
   getAllProductsLots,
+  getProduct,
+  getLots,
   createProduct,
   createLot,
   deleteProduct,
+  deleteLot,
   updateProduct,
   updateLote,
+  getDbTime
 };
