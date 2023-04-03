@@ -100,7 +100,7 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type='number' id="cantidad" min={1}
+                    <InputNumber style={{ width: '100%' }} className="inputs" id="cantidad" min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -116,7 +116,7 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type="number" id="costoU" min={1}
+                    <InputNumber prefix="Bs." style={{ width: '100%' }}  className="inputs" id="costoU" min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -132,7 +132,7 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type='number' id="precio" min={1}
+                    <InputNumber prefix="Bs." style={{ width: '100%' }}  className="inputs" id="precio" min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -158,6 +158,7 @@ const FormProducto = () => {
                     <DatePicker id="fechaCad"
                         className="inputs"
                         placeholder='Inserte la fecha'
+                        style={{ width: '100%' }}
                         disabledDate={(current) => {
                             return moment().add(-1, 'days') >= current;
                         }}
