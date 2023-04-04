@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { ShopOutlined, HomeOutlined } from '@ant-design/icons';
 import Home from '../Forms/Home';
-import Inventario from '../Forms/ProductModal';
+import MenuInventario from '../Forms/InventarioMenu';
 
 function App() {
     return (
@@ -74,13 +74,16 @@ function Content() {
                 background: colorBgContainer
             }}
         >
-            TIENDA J&B
+            <Routes>
+                <Route path="/" element={<div><h1>Tienda J&B</h1></div>}></Route>
+                <Route path="/inventario" element={<div><h1>INVENTARIO</h1></div>}></Route>
+            </Routes>
         </Header>
 
         <Content>
             <Routes>
                 <Route path="/" element={<div><Home /></div>}></Route>
-                <Route path="/inventario" element={<div><Inventario /></div>}></Route>
+                <Route path="/inventario" element={<div><MenuInventario /></div>}></Route>
             </Routes>
         </Content>
 
