@@ -1,17 +1,21 @@
-import { Button, Modal, message} from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
 
-//Lo usamos para guardar los valores de los inputs de los forms
 const values = {
-    imagen: "",
+    image: "",
     nombreProducto: "",
     cantidad: "",
     costoUnitario: "",
     precio: "",
-    categoria: "",
     fechaCaducidad: "",
     descripcion: ""
+}
+
+var imgUrl = "";
+
+const getImgUrlForm = (data) => {
+    imgUrl = data;
 }
 
 const ProductModal = () => {
@@ -34,6 +38,9 @@ const ProductModal = () => {
 
     function validData() {
         var valid = true;
+        if (imgUrl === undefined) {
+            valid = false;
+        }
         if (!document.getElementById("nombre").value) {
             valid = false;
         }
@@ -50,17 +57,19 @@ const ProductModal = () => {
     }
 
     const saveData = () => {
+        values.image = imgUrl;
         values.nombreProducto = document.getElementById("nombre").value;
         values.cantidad = document.getElementById("cantidad").value;
         values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
-        values.categoria = document.getElementById("categoria").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
     }
 
     const uploadDB = async () => {
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products`, {
+        //Ruta para server en localhost: "http://localhost:8080/store/products"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products`
+        const res = await fetch("http://localhost:8080/store/products", {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
@@ -98,7 +107,7 @@ const ProductModal = () => {
                 ]}
                 destroyOnClose="true"
             >
-                <ProductForm />
+                <ProductForm getImgUrlForm={getImgUrlForm} />
             </Modal>
         </>
     );

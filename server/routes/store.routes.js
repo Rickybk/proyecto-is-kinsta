@@ -1,13 +1,13 @@
 const { Router } = require("express");
-const pool = require("../db");
 const router = Router();
+
 const {
   getAllCategories,
   getACategorie,
   createACategorie,
   deleteACategorie,
   updateACategorie,
-  getAllProductsLots,
+  getAllProducts,
   getProduct,
   getLots,
   createProduct,
@@ -16,49 +16,44 @@ const {
   deleteLot,
   updateProduct,
   updateLote,
-  getDbTime
+  getDbTime,
+  uploadImg
 } = require("../controllers/store.controllers");
 
-//Ruta por defecto raiz.
 router.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-//Metodo para testeo
+router.post("/api/upload",uploadImg);
+
 router.get("/time", getDbTime);
 
-//Devuelve todas las categorias
 router.get("/store/categories", getAllCategories);
 
-//Devuelve una categoria en base al id. Esta en construccion
 router.get("/store/categories/1", getACategorie);
 
-//Creamos una categoria
 router.post("/store/categories/create", createACategorie);
 
-//Borramos una categoria
 router.delete("/store/categories/delete/:id", deleteACategorie);
 
-//Actualizamos una categoria
 router.put("/store/categories/update/:id", updateACategorie);
 
-//Devuelve todos los productos
-router.get("/store/products", getAllProductsLots);
-//Devuelve un producto
-router.get('/store/products/:id', getProduct);
-//devuelve todos los lotes
-router.get('/store/products/lot/:id', getLots);
-//Creamos un producto
+router.get("/store/allproducts", getAllProducts);
+
+router.get('/store/products/:idProduct', getProduct);
+
+router.get('/store/products/lot/:idProduct', getLots);
+
 router.post("/store/products", createProduct);
-//creamos un lote
-router.post("/store/products/lot/:id", createLot);
-//Borramos un producto
-router.delete("/store/products/:id/:nameProduct", deleteProduct);
-//Borramos un lote
-router.delete("/store/products/lot/:id", deleteLot);
-//Actualizamos un producto
-router.put("/store/products/update/:id", updateProduct);
-//Actualizamos un lote
-router.put("/store/products/updateLot/:idLote/:idProducto",updateLote);
+
+router.post("/store/products/lot/:idProduct", createLot);
+
+router.delete("/store/products/:idProduct/:nameProduct", deleteProduct);
+
+router.delete("/store/products/lot/:idLot", deleteLot);
+
+router.put("/store/products/:idProduct", updateProduct);
+
+router.put("/store/products/lot/:idLot/:idProduct",updateLote);
 
 module.exports = router;

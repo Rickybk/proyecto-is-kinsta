@@ -1,0 +1,13 @@
+.row{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:20px;
+    max-width:100%;
+    margin-top: 2%;
+    margin-left: 5%;
+}
+
+.column{
+    flex-basis: 90%;
+}
