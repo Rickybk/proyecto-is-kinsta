@@ -1,54 +1,40 @@
-import { EditOutlined, PlusOutlined, SettingOutlined , DeleteOutlined} from '@ant-design/icons';
-import { Avatar, Card } from 'antd';
-import ProductModal from './ProductModal';
-import PropTypes from "prop-types";
+import { EditOutlined, PlusOutlined, DeleteOutlined} from '@ant-design/icons';
+import { Card, Button, Modal } from 'antd';
+import EditarModal from './EditarForm'
+import React, { useState } from 'react';
 
 
+function Productos({title,imagen,precio,cantidad,idProducto}){  
+  const [modalEditar,setEditar] = useState(false);
+  const [modalLote,setLote] = useState(false);
+  const [modalBorrar,setBorrar] = useState(false);
 
-/*
-function Card({ imageSource, title, text, url }) {
-  return (
-    <div className="card text-center bg-dark animate__animated animate__fadeInUp">
-      <div className="overflow">
-        <img src={imageSource} alt="a wallpaper" className="card-img-top" />
-      </div>
-      <div className="card-body text-light">
-        <h4 className="card-title">{title}</h4>
-        <p className="card-text text-secondary">
-          {text
-            ? text
-            : "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam deserunt fuga accusantium excepturi quia, voluptates obcaecati nam in voluptas perferendis velit harum dignissimos quasi ex? Tempore repellat quo doloribus magnam."}
-        </p>
-        <a
-          href={url ? url : "#!"}
-          target="_blank"
-          className="btn btn-outline-secondary border-0"
-          rel="noreferrer"
-        >
-          Go to {title}
-        </a>
-      </div>
-    </div>
-  );
-}
+  const abrirModal = (e) =>{
+    const {name,value} = e.target  
+    switch(name){
+      case 'modalEditar':
+        setEditar(true);
+        break;
+      case 'modalLote':
+        setLote(true);
+        break;
+      case 'modalEditar':
+          setBorrar(true);
+          break;
+      default:
+          break;
+    }  
+  }
 
-Card.propTypes = {
-  title: PropTypes.string.isRequired,
-  text: PropTypes.string,
-  url: PropTypes.string,
-  imageSource: PropTypes.string
-};
+  const cerrarModalEdit = (e) =>{
+    setEditar(false);
+  }
 
-card = () =>{
-      
-}
-*/
-
-function Productos({title,text,imagen,precio}){  
   return(
   <Card
     style={{
       width: 200,
+      textAlign:'center'
     }}
     cover={
       <img
@@ -57,14 +43,16 @@ function Productos({title,text,imagen,precio}){
       />
     }
     actions={[
-      <EditOutlined key="edit" onClick={ProductModal}/>,
-      <PlusOutlined/>,
-      <DeleteOutlined />
+      <><Button  name="modalEditar" onClick={abrirModal}><EditOutlined /></Button>
+        <EditarModal visible={modalEditar} onClose={cerrarModalEdit} idProducto={idProducto} />
+      </>,
+        <DeleteOutlined />
     ]}
     title={title}
   >
-    <p>{text}</p>
-    <p>{precio}</p>
+    <p><b>Precio Unitario: </b>{precio} Bs.</p>
+    <p><b>Cantidad: </b>{cantidad} u</p>
+    <p></p>
   </Card>
   );
 };

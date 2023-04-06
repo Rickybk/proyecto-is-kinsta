@@ -1,12 +1,20 @@
-import { Form, DatePicker, InputNumber, Input, Select} from 'antd';
+import { Form, DatePicker, InputNumber, Input } from 'antd';
 import moment from 'moment';
-import { Upload } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-//import Upload from '../components/Upload';
+import Upload from '../ComponentesInventario/Upload';
 
 const { TextArea } = Input;
 
-const FormProducto = () => {
+
+
+const FormProducto = ({ getImgUrlForm }) => {
+
+    var imgUrl = "";
+
+    const getImgUrlUpload = (data) => {
+        imgUrl = data;
+        console.log("Url desde form: ", imgUrl);
+        getImgUrlForm(imgUrl);
+    }
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -53,18 +61,7 @@ const FormProducto = () => {
                     rules={[{ required: false, }
                     ]}
                 >
-                    {/*<Upload/>*/}
-                    <Upload
-                        action="/upload.do"
-                        listType="picture-card"
-                        maxCount={1}
-                        accept="image/png, image/jpeg"
-                    >
-                        <div>
-                            <PlusOutlined />
-                            <div style={{ marginTop: 8 }}>Upload</div>
-                        </div>
-                </Upload>
+                    <Upload getImgUrlUpload={getImgUrlUpload} />
                 </Form.Item>
 
                 <Form.Item
@@ -100,7 +97,12 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type='number' id="cantidad" min={1}
+                    <InputNumber
+                        style={{ width: '100%' }}
+                        prefix="U."
+                        className="inputs"
+                        id="cantidad"
+                        min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -116,7 +118,12 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type="number" id="costoU" min={1}
+                    <InputNumber
+                        style={{ width: '100%' }}
+                        prefix="Bs."
+                        className="inputs"
+                        id="costoU"
+                        min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -132,30 +139,25 @@ const FormProducto = () => {
                         },
                     ]}
                 >
-                    <InputNumber className="inputs" type='number' id="precio" min={1}
+                    <InputNumber
+                        style={{ width: '100%' }}
+                        prefix="Bs."
+                        className="inputs"
+                        id="precio"
+                        min={1}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
                 <Form.Item
-                    label="Sleccionar Categoria"
-                    labelCol={{ span: 24 }}
-                    name="categoria"
-                    rules={[{ required: false, },
-                    ]}
-                >
-                    <Select className="inputs" id="categoria" placeholder='Seleccione la categoría'>
-                        {/**Recuperar de la BD las categorias**/}
-                    </Select>
-                </Form.Item>
-
-                <Form.Item
-                    label="Sleccionar Fecha de Caducidad"
+                    label="Seleccionar Fecha de Caducidad"
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
                     rules={[{ required: false, },
                     ]}
                 >
-                    <DatePicker id="fechaCad"
+                    <DatePicker
+                        style={{ width: '100%' }}
+                        id="fechaCad"
                         className="inputs"
                         placeholder='Inserte la fecha'
                         disabledDate={(current) => {

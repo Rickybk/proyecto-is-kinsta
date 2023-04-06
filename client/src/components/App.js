@@ -10,15 +10,16 @@ function App() {
         <ConfigProvider
             theme={{
                 "token": {
-                    "colorPrimary": "#fe9688",
+                    "colorPrimary": "#66bde6",
+                    "colorPrimaryBorder": "#4da8cf",
+                    "colorPrimaryBorderHover": "#abdefa",
                     "colorSuccess": "#b86fd6",
                     "colorWarning": "#ff9966",
                     "colorError": "#eb636b",
                     "colorInfo": "#77ddec",
-                    "colorBgBase": "#ffeae6",
-                    "colorTextQuaternary": "#000000",
-                    "fontSize": 14,
-                    "colorFill": "#fa8072"
+                    "colorBgContainer": "#abdefa",
+                    "colorBgElevated": "#e4f4fd",
+                    "colorBgLayout": "#c9e9fc"
                 }
             }}
         >
@@ -67,7 +68,7 @@ function Content() {
     } = theme.useToken();
 
     return <Layout>
-        <Header 
+        <Header
             style={{
                 padding: 0,
                 textAlign: 'center',
