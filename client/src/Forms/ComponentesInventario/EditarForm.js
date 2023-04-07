@@ -13,10 +13,19 @@ const values = {
     descripcion: ""
 }
 
+var imgUrl = "Sin cambios";
+
+const getImgUrlForm = (data) => {
+    imgUrl = data;
+}
+
 const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, costo, descripcion, setRefresh }) => {
 
     function validData() {
         var valid = true;
+        if(imgUrl === "Peso exedido"){
+            valid = false;
+        }
         if (!document.getElementById("nombre").value) {
             valid = false;
         }
@@ -30,6 +39,11 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
     }
 
     const saveData = () => {
+        if(imgUrl === "Sin cambios"){
+            values.imagen = imagen;
+        }else{
+            values.imagen = imgUrl;
+        }
         values.nombreProducto = document.getElementById("nombre").value;
         values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
@@ -42,7 +56,12 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
             await updateProduct();
             onClose();
         } else {
-            message.warning('Los campos obligatorios deben llenarse');
+            if(imgUrl === "Peso exedido"){
+                message.error('El peso maximo de la imagen debe ser de 2MB!');   
+            }else{
+                message.warning('Los campos obligatorios deben llenarse');
+            }
+            
         }
     };
 
@@ -138,7 +157,7 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                 rules={[{ required: false, }
                 ]}
             >
-                <Upload imagenUrl={imagen}/>
+                <Upload getImgUrlUpload={getImgUrlForm} imagenUrl={imagen}/>
             </Form.Item>
 
             <Form.Item

@@ -6,13 +6,12 @@ const { TextArea } = Input;
 
 
 
-const FormProducto = ({ getImgUrlForm }) => {
+const FormProducto = ({ getImgUrlForm, imagen}) => {
 
-    var imgUrl = "";
+    var imgUrl = imagen;
 
     const getImgUrlUpload = (data) => {
         imgUrl = data;
-        console.log("Url desde form: ", imgUrl);
         getImgUrlForm(imgUrl);
     }
 
@@ -62,7 +61,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                     rules={[{ required: false, }
                     ]}
                 >
-                    <Upload getImgUrlUpload={getImgUrlUpload} />
+                    <Upload getImgUrlUpload={getImgUrlUpload} imagenUrl={imagen}/>
                 </Form.Item>
 
                 <Form.Item

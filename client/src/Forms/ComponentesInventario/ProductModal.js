@@ -12,7 +12,7 @@ const values = {
     descripcion: ""
 }
 
-var imgUrl = "";
+var imgUrl = "Sin imagen";
 
 const getImgUrlForm = (data) => {
     imgUrl = data;
@@ -26,14 +26,15 @@ const ProductModal = ({setRefresh}) => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
         if (validData()) {
             saveData();
-            uploadDB();
+            await uploadDB();
             setRefresh(true);
+            message.success("Producto creado exitosamente");
             document.getElementById("productForm").reset();
         } else {
-            if (imgUrl === undefined || !imgUrl) {
+            if (imgUrl === "Peso exedido") {
                 message.error('El peso maximo de la imagen debe ser de 2MB!');
             }else{
                 message.warning('Todos los campos obligatorios deben llenarse');
@@ -43,7 +44,7 @@ const ProductModal = ({setRefresh}) => {
 
     function validData() {
         var valid = true;
-        if (imgUrl === undefined || !imgUrl) {
+        if (imgUrl === "Peso exedido") {
             valid = false;
         }
         if (!document.getElementById("nombre").value) {
@@ -83,8 +84,6 @@ const ProductModal = ({setRefresh}) => {
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
-        const data = await res.json();
-        console.log(data);
     }
 
     const handleCancel = () => {
@@ -116,7 +115,7 @@ const ProductModal = ({setRefresh}) => {
                 ]}
                 destroyOnClose="true"
             >
-                <ProductForm getImgUrlForm={getImgUrlForm} />
+                <ProductForm getImgUrlForm={getImgUrlForm} imagen={imgUrl} />
             </Modal>
         </>
     );

@@ -1,5 +1,5 @@
-import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Card, Button, Modal } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Card, Button} from 'antd';
 import EditarModal from './EditarForm'
 import DeleteModal from './DeleteModal';
 import React, { useState } from 'react';
@@ -7,8 +7,8 @@ import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
 function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
+  
   const [modalEditar, setEditar] = useState(false);
-  const [modalLote, setLote] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
 
   const abrirModalEdit = () => {
@@ -42,7 +42,7 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             margin: 'auto'
           }}
           alt="Algo salio mal..."
-          src={!imagen ? defaultLogo : imagen}
+          src={imagen === "Sin imagen" ? defaultLogo : imagen}
         />
       }
       actions={[

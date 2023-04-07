@@ -21,6 +21,7 @@ function App() {
                     "colorBgElevated": "#e4f4fd",
                     "colorBgLayout": "#c9e9fc"
                 }
+                //algorithm: theme.darkAlgorithm
             }}
         >
             <AppLayout />

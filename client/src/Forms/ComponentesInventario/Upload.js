@@ -13,12 +13,17 @@ const getBase64 = (file) =>
 
 const App = ({ getImgUrlUpload, imagenUrl }) => {
 
-  var imgUrl = undefined;
+  var imgUrl = imagenUrl;
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState(imagenUrl !== "Sin imagen" ? [{
+    uid: '-1',
+    name: 'image.png',
+    status: 'done',
+    url: imagenUrl
+  }] : []);
 
 
   const handleCancel = () => setPreviewOpen(false);
@@ -50,15 +55,17 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
   };
 
   const handleRemove = () => {
-    imgUrl = undefined;
+    imgUrl = "Sin imagen";
     getImgUrlUpload(imgUrl);
   };
 
-  const beforeUpload = (file) => {
-    console.log("upload");
+  const beforeUpload = async (file) => {
     const isLt2M = file.size / 1024 / 1024 < 1;
     if (isLt2M) {
-      uploadImage(file); 
+      await uploadImage(file);
+    } else {
+      imgUrl = "Peso exedido";
+      getImgUrlUpload(imgUrl);
     }
     return false;
   };
@@ -77,8 +84,7 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
         getImgUrlUpload(imgUrl);
       } else {
         setFileList([]);
-        imgUrl = undefined;
-        getImgUrlUpload(imgUrl);
+        handleCancel();
         message.error('No se pudo subir la imagen, intente nuevamente.');
       }
 
