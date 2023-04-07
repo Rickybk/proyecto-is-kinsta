@@ -125,6 +125,8 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         id="costoU"
                         min={1}
                         maxLength='6'
+                        precision={2}
+                        step={0.5}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -147,6 +149,8 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         id="precio"
                         min={1}
                         maxLength='6'
+                        precision={2}
+                        step={0.5}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 

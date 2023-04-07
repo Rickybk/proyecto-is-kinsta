@@ -60,6 +60,13 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
   };
 
   const beforeUpload = async (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('Solo se admiten imagenes JPG/PNG!');
+      imgUrl = "Peso exedido";
+      getImgUrlUpload(imgUrl);
+    }
+
     const isLt2M = file.size / 1024 / 1024 < 1;
     if (isLt2M) {
       await uploadImage(file);
@@ -67,6 +74,7 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
       imgUrl = "Peso exedido";
       getImgUrlUpload(imgUrl);
     }
+
     return false;
   };
 
@@ -74,7 +82,9 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const response = await axios.post('http://localhost:8080/api/upload', formData, {
+      //'http://localhost:8080/api/upload'
+      //`${process.env.REACT_APP_SERVERURL}/api/upload`
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/api/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

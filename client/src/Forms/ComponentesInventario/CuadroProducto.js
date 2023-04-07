@@ -39,7 +39,8 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             width: 100,
             height: 150,
             objectFit: 'cover',
-            margin: 'auto'
+            margin: 'auto',
+            marginTop: '20px'
           }}
           alt="Algo salio mal..."
           src={imagen === "Sin imagen" ? defaultLogo : imagen}

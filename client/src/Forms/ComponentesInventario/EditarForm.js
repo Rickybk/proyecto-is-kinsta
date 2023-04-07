@@ -67,8 +67,9 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
 
     /**Actualizar Producto**/
     const updateProduct = async () => {
-        // const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products`
-        const url = "http://localhost:8080/store/products/" + idProducto;
+        // `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto
+        //"http://localhost:8080/store/products/" + idProducto
+        const url = `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto;
         console.log(url);
         const res = await fetch(url, {
             method: "PUT",
@@ -199,6 +200,8 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     id="costoU"
                     min={1}
                     maxLength='6'
+                    precision={2}
+                    step={0.5}
                     style={{ width: '100%' }}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
@@ -220,6 +223,8 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     prefix="Bs."
                     id="precio"
                     min={1}
+                    precision={2}
+                    step={0.5}
                     style={{ width: '100%' }}
                     maxLength='6'
                     onKeyDown={numberInputKeyDown} />
