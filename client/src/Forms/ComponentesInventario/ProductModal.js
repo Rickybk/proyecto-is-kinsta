@@ -33,6 +33,7 @@ const ProductModal = ({setRefresh}) => {
             setRefresh(true);
             message.success("Producto creado exitosamente");
             document.getElementById("productForm").reset();
+            imgUrl = "Sin imagen";
         } else {
             if (imgUrl === "Peso exedido") {
                 message.error('El peso maximo de la imagen debe ser de 2MB!');
