@@ -88,6 +88,7 @@ const ProductModal = ({setRefresh}) => {
     }
 
     const handleCancel = () => {
+        imgUrl = "Sin imagen";
         setIsModalOpen(false);
     };
 
