@@ -11,7 +11,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-const App = ({ getImgUrlUpload }) => {
+const App = ({ getImgUrlUpload, imagenUrl }) => {
 
   var imgUrl = undefined;
 
@@ -32,10 +32,6 @@ const App = ({ getImgUrlUpload }) => {
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
 
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList)
-  };
-
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -49,12 +45,20 @@ const App = ({ getImgUrlUpload }) => {
     </div>
   );
 
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const handleRemove = () => {
+    imgUrl = undefined;
+    getImgUrlUpload(imgUrl);
+  };
+
   const beforeUpload = (file) => {
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('La imagen debe tener un peso menor a 2MB!');
-    } else {
-      uploadImage(file);
+    console.log("upload");
+    const isLt2M = file.size / 1024 / 1024 < 1;
+    if (isLt2M) {
+      uploadImage(file); 
     }
     return false;
   };
@@ -85,16 +89,12 @@ const App = ({ getImgUrlUpload }) => {
     }
   };
 
-  const handleRemove = () => {
-    imgUrl = undefined;
-    getImgUrlUpload(imgUrl);
-  };
-
   return (
     <>
       <Upload
+        id="upload"
         listType="picture-card"
-        fileList={fileList}
+        defaultFileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={beforeUpload}

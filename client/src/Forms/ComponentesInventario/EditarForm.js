@@ -1,7 +1,8 @@
-import {Modal,Form,Button,Input,InputNumber,Upload,message} from 'antd'
-import { PlusOutlined } from '@ant-design/icons';
-const { TextArea } = Input;
+import { Modal, Form, Button, Input, InputNumber, message } from 'antd'
+import UpdateModal from './UpdateModal';
+import Upload from './Upload';
 
+const { TextArea } = Input;
 
 //Lo usamos para guardar los valores de los inputs de los forms
 const values = {
@@ -12,8 +13,7 @@ const values = {
     descripcion: ""
 }
 
-
-const EditarModal = ({visible,onClose,idProducto}) =>{
+const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, costo, descripcion, setRefresh }) => {
 
     function validData() {
         var valid = true;
@@ -36,14 +36,13 @@ const EditarModal = ({visible,onClose,idProducto}) =>{
         values.descripcion = document.getElementById("descripcion").value;
     }
 
-
-    const handleOk = () => {
+    const handleOk = async () => {
         if (validData()) {
             saveData();
-            updateProduct();
-            document.getElementById("editForm").reset();
+            await updateProduct();
+            onClose();
         } else {
-            message.warning('Todos los campos deben llenarse');
+            message.warning('Los campos obligatorios deben llenarse');
         }
     };
 
@@ -52,17 +51,15 @@ const EditarModal = ({visible,onClose,idProducto}) =>{
         // const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products`
         const url = "http://localhost:8080/store/products/" + idProducto;
         console.log(url);
-         const res = await fetch(url, {
-             method: "PUT",
-             body: JSON.stringify(values),
-             headers: { "Content-Type": "application/json" }
-         });
-         const data = await res.json();
-         console.log(data);
-     }
+        const res = await fetch(url, {
+            method: "PUT",
+            body: JSON.stringify(values),
+            headers: { "Content-Type": "application/json" }
+        });
+    }
 
 
-    return(
+    return (
         <Modal
             title="Editar Producto"
             style={{
@@ -71,25 +68,31 @@ const EditarModal = ({visible,onClose,idProducto}) =>{
             }}
             open={visible}
             onCancel={onClose}
-            onOk={handleOk}
             width="25%"
             footer={[
-                <Button id="boton" form="editForm" key="edit" type="primary" onClick={handleOk}>
-                    Editar
-                </Button>,
+                <UpdateModal
+                    handleOk={handleOk}
+                    isModalOpen={false}
+                    onClose={onClose}
+                    setRefresh={setRefresh} />,
                 <Button key="cancel" onClick={onClose}>
                     Cancelar
                 </Button>
             ]}
             destroyOnClose="true"
         >
-            <EditarForm />
+            <EditarForm
+                nombre={nombre}
+                imagen={imagen}
+                costo={costo}
+                precio={precio}
+                descripcion={descripcion} />
         </Modal>
     );
 }
 
 
-const EditarForm = () =>{
+const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -112,12 +115,13 @@ const EditarForm = () =>{
                 || eventCode.includes("end")
                 || eventCode.includes("backspace")
                 || eventCode.includes("period")
+                || eventCode.includes("tab")
                 || (eventCode.includes("numpad") && eventCode.length === 7)))
         ) {
             e.preventDefault();
         }
     };
-    return(
+    return (
         <Form
             id="editForm"
             initialValues={{
@@ -134,24 +138,14 @@ const EditarForm = () =>{
                 rules={[{ required: false, }
                 ]}
             >
-                {/*<Upload/>*/}
-                <Upload
-                    action="/upload.do"
-                    listType="picture-card"
-                    maxCount={1}
-                    accept="image/png, image/jpeg"
-                >
-                    <div>
-                        <PlusOutlined />
-                        <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-            </Upload>
+                <Upload imagenUrl={imagen}/>
             </Form.Item>
 
             <Form.Item
                 label="Nombre del Producto"
                 labelCol={{ span: 24 }}
                 name="nombre"
+                initialValue={nombre}
                 rules={[
                     {
                         required: true,
@@ -162,7 +156,6 @@ const EditarForm = () =>{
                 <Input id="nombre"
                     className="inputs"
                     placeholder='Ingrese nombre del producto'
-                    minLength='3'
                     maxLength='40'
                     type='text'
                     onSubmit={clearInput}
@@ -173,7 +166,7 @@ const EditarForm = () =>{
                 label="Costo Unitario"
                 labelCol={{ span: 24 }}
                 name="costoUnitario"
-                initialValue={1}
+                initialValue={costo}
                 rules={[
                     {
                         required: true,
@@ -181,7 +174,13 @@ const EditarForm = () =>{
                     },
                 ]}
             >
-                <InputNumber className="inputs" type="number" id="costoU" min={1}
+                <InputNumber
+                    className="inputs"
+                    prefix="Bs."
+                    id="costoU"
+                    min={1}
+                    maxLength='6'
+                    style={{ width: '100%' }}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
@@ -189,7 +188,7 @@ const EditarForm = () =>{
                 label="Precio Unitario"
                 labelCol={{ span: 24 }}
                 name="precioUnitario"
-                initialValue={1}
+                initialValue={precio}
                 rules={[
                     {
                         required: true,
@@ -197,7 +196,13 @@ const EditarForm = () =>{
                     },
                 ]}
             >
-                <InputNumber className="inputs" type='number' id="precio" min={1}
+                <InputNumber
+                    className="inputs"
+                    prefix="Bs."
+                    id="precio"
+                    min={1}
+                    style={{ width: '100%' }}
+                    maxLength='6'
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
@@ -205,6 +210,7 @@ const EditarForm = () =>{
                 label="Descripcion"
                 labelCol={{ span: 24 }}
                 name="descripcion"
+                initialValue={descripcion}
                 rules={[{ required: false, },
                 ]}
             >
@@ -213,7 +219,7 @@ const EditarForm = () =>{
                     maxLength={100}
                 />
             </Form.Item>
-    </Form>
+        </Form>
     );
 }
 

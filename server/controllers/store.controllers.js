@@ -95,7 +95,7 @@ const updateACategorie = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const result = await pool.query("SELECT id_producto, nombre_producto, precio_unitario, total, imagen FROM productos");
+    const result = await pool.query("SELECT * FROM productos ORDER BY nombre_producto ASC");
 
     console.log(result);
 
@@ -131,7 +131,7 @@ const createProduct = async (req, res) => {
       req.body;
 
     const newProduct = await pool.query(
-      "INSERT INTO productos (nombre_producto, costo_unitario, precio_unitario, id_categoria, descripcion,total, imagen) VALUES ($1, $2, $3, 2, $4, $5, $6)",
+      "INSERT INTO productos (nombre_producto, costo_unitario, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, $4, $5, $6, 2)",
       [nombreProducto, costoUnitario, precio, descripcion, cantidad, image]
     );
 
@@ -146,7 +146,7 @@ const createProduct = async (req, res) => {
 
     return res.status(200).send(`Añadidos ${newProduct.rowCount} registros de productos y ${newLot.rowCount} registros de lotes`);
   } catch (error) {
-    return res.status(500).send('Error añadiendo producto: ' + error);
+    return res.status(500).send(`Error añadiendo producto: ${error.toString()} \n ${error.stack}`);
   }
 };
 
@@ -178,18 +178,13 @@ const createLot = async (req, res) => {
 const deleteProduct = async (req, res) => {
 
   const id = req.params.idProduct;
-  const nameProducto = req.params.nameProduct;
-  pool.query('DELETE FROM lotes WHERE id_producto = $1', [id], (error, result1) => {
-    if (error) {
-      return res.status(500).send('Error eliminando lote: ' + error);
-    }
-    pool.query('DELETE FROM productos WHERE nombre_producto = $1', [nameProducto], (error, result2) => {
-      if (error) {
-        return res.status(500).send('Error eliminando producto: ' + error);
-      }
-      return res.status(200).send(`Eliminados ${result1.rowCount} registros de lotes y ${result2.rowCount} registros de productos`);
-    });
-  });
+  try {
+    const result1 = await pool.query('DELETE FROM lotes WHERE id_producto = $1', [id]);
+    const result2 = await pool.query('DELETE FROM productos WHERE id_producto = $1', [id]);
+    return res.status(200).json({ message: `Eliminados ${result1.rowCount} registros de lotes y ${result2.rowCount} registros de productos` });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error eliminando producto: ' + error });
+  }
 };
 
 const deleteLot = async (req, res) => {
@@ -219,7 +214,6 @@ const updateProduct = async (req, res) => {
     console.log("Algo salio mal");
     res.json({ error: error.message });
   }
-
 };
 
 const updateLote = async (req, res) => {

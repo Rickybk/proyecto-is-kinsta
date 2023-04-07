@@ -32,6 +32,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                 || eventCode.includes("end")
                 || eventCode.includes("backspace")
                 || eventCode.includes("period")
+                || eventCode.includes("tab")
                 || (eventCode.includes("numpad") && eventCode.length === 7)))
         ) {
             e.preventDefault();
@@ -78,7 +79,6 @@ const FormProducto = ({ getImgUrlForm }) => {
                     <Input id="nombre"
                         className="inputs"
                         placeholder='Ingrese nombre del producto'
-                        minLength='3'
                         maxLength='40'
                         type='text'
                         onSubmit={clearInput}
@@ -103,6 +103,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                         className="inputs"
                         id="cantidad"
                         min={1}
+                        maxLength='6'
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -124,6 +125,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                         className="inputs"
                         id="costoU"
                         min={1}
+                        maxLength='6'
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -145,6 +147,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                         className="inputs"
                         id="precio"
                         min={1}
+                        maxLength='6'
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
