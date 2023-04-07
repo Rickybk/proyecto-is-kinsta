@@ -9,7 +9,9 @@ CREATE TABLE productos (
                 costo_unitario REAL NOT NULL,
                 precio_unitario REAL NOT NULL,
                 id_categoria INTEGER,
-                descripcion VARCHAR
+                descripcion VARCHAR,
+                total INTEGER, 
+                imagen VARCHAR             
 );
 
 alter table productos

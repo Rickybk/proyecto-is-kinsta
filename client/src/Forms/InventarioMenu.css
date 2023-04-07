@@ -1,0 +1,8 @@
+.row{
+    margin-top: 2%;
+    margin-left: 5%;
+}
+
+.column{
+    flex-basis: 100%;
+}

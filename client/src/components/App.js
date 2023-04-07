@@ -3,23 +3,25 @@ import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { ShopOutlined, HomeOutlined } from '@ant-design/icons';
 import Home from '../Forms/Home';
-import Inventario from '../Forms/ProductModal';
+import MenuInventario from '../Forms/InventarioMenu';
 
 function App() {
     return (
         <ConfigProvider
             theme={{
                 "token": {
-                    "colorPrimary": "#fe9688",
+                    "colorPrimary": "#CDABA2", 
+                    "colorPrimaryBorder": "#4da8cf",
+                    "colorPrimaryBorderHover": "#abdefa",
                     "colorSuccess": "#b86fd6",
                     "colorWarning": "#ff9966",
                     "colorError": "#eb636b",
                     "colorInfo": "#77ddec",
-                    "colorBgBase": "#ffeae6",
-                    "colorTextQuaternary": "#000000",
-                    "fontSize": 14,
-                    "colorFill": "#fa8072"
-                }
+                    "colorBgContainer": "#E7D5C7", 
+                    "colorBgElevated": "#f5e5d0", 
+                    "colorBgLayout": "#F8EDE3" 
+                } 
+                //algorithm: theme.darkAlgorithm
             }}
         >
             <AppLayout />
@@ -67,20 +69,23 @@ function Content() {
     } = theme.useToken();
 
     return <Layout>
-        <Header 
+        <Header
             style={{
                 padding: 0,
                 textAlign: 'center',
                 background: colorBgContainer
             }}
         >
-            TIENDA J&B
+            <Routes>
+                <Route path="/" element={<div><h1 style={{fontSize: 50}}>Tienda J&B</h1></div>}></Route>
+                <Route path="/inventario" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
+            </Routes>
         </Header>
 
         <Content>
             <Routes>
                 <Route path="/" element={<div><Home /></div>}></Route>
-                <Route path="/inventario" element={<div><Inventario /></div>}></Route>
+                <Route path="/inventario" element={<div><MenuInventario /></div>}></Route>
             </Routes>
         </Content>
 

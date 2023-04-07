@@ -1,20 +1,24 @@
-import { Button, Modal, message} from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
 
-//Lo usamos para guardar los valores de los inputs de los forms
 const values = {
-    imagen: "",
+    image: "",
     nombreProducto: "",
     cantidad: "",
     costoUnitario: "",
     precio: "",
-    categoria: "",
     fechaCaducidad: "",
     descripcion: ""
 }
 
-const ProductModal = () => {
+var imgUrl = "Sin imagen";
+
+const getImgUrlForm = (data) => {
+    imgUrl = data;
+}
+
+const ProductModal = ({setRefresh}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,18 +26,28 @@ const ProductModal = () => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
         if (validData()) {
             saveData();
-            uploadDB();
+            await uploadDB();
+            setRefresh(true);
+            message.success("Producto creado exitosamente");
             document.getElementById("productForm").reset();
+            imgUrl = "Sin imagen";
         } else {
-            message.warning('Todos los campos deben llenarse');
+            if (imgUrl === "Peso exedido") {
+                message.error('El peso maximo de la imagen debe ser de 2MB!');
+            }else{
+                message.warning('Todos los campos obligatorios deben llenarse');
+            }  
         }
     };
 
     function validData() {
         var valid = true;
+        if (imgUrl === "Peso exedido") {
+            valid = false;
+        }
         if (!document.getElementById("nombre").value) {
             valid = false;
         }
@@ -50,23 +64,27 @@ const ProductModal = () => {
     }
 
     const saveData = () => {
+        values.image = imgUrl;
         values.nombreProducto = document.getElementById("nombre").value;
         values.cantidad = document.getElementById("cantidad").value;
         values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
-        values.categoria = document.getElementById("categoria").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
+
+        if(!values.fechaCaducidad){
+            values.fechaCaducidad = null;    
+        }
     }
 
     const uploadDB = async () => {
+        //Ruta para server en localhost: "http://localhost:8080/store/products"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products`
         const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
-        const data = await res.json();
-        console.log(data);
     }
 
     const handleCancel = () => {
@@ -98,7 +116,7 @@ const ProductModal = () => {
                 ]}
                 destroyOnClose="true"
             >
-                <ProductForm />
+                <ProductForm getImgUrlForm={getImgUrlForm} imagen={imgUrl} />
             </Modal>
         </>
     );
