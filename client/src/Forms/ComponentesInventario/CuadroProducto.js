@@ -1,59 +1,82 @@
-import { EditOutlined, PlusOutlined, DeleteOutlined} from '@ant-design/icons';
+import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Card, Button, Modal } from 'antd';
 import EditarModal from './EditarForm'
+import DeleteModal from './DeleteModal';
 import React, { useState } from 'react';
+import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
-function Productos({title,imagen,precio,cantidad,idProducto}){  
-  const [modalEditar,setEditar] = useState(false);
-  const [modalLote,setLote] = useState(false);
-  const [modalBorrar,setBorrar] = useState(false);
+function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
+  const [modalEditar, setEditar] = useState(false);
+  const [modalLote, setLote] = useState(false);
+  const [modalBorrar, setBorrar] = useState(false);
 
-  const abrirModal = (e) =>{
-    const {name,value} = e.target  
-    switch(name){
-      case 'modalEditar':
-        setEditar(true);
-        break;
-      case 'modalLote':
-        setLote(true);
-        break;
-      case 'modalEditar':
-          setBorrar(true);
-          break;
-      default:
-          break;
-    }  
+  const abrirModalEdit = () => {
+    setEditar(true);
   }
 
-  const cerrarModalEdit = (e) =>{
+  const abrirModalBorrar = () => {
+    setBorrar(true);
+  }
+
+  const cerrarModalEdit = () => {
     setEditar(false);
   }
 
-  return(
-  <Card
-    style={{
-      width: 200,
-      textAlign:'center'
-    }}
-    cover={
-      <img
-        alt="example"
-        src={imagen}
-      />
-    }
-    actions={[
-      <><Button  name="modalEditar" onClick={abrirModal}><EditOutlined /></Button>
-        <EditarModal visible={modalEditar} onClose={cerrarModalEdit} idProducto={idProducto} />
-      </>,
-        <DeleteOutlined />
-    ]}
-    title={title}
-  >
-    <p><b>Precio Unitario: </b>{precio} Bs.</p>
-    <p><b>Cantidad: </b>{cantidad} u</p>
-    <p></p>
-  </Card>
+  const cerrarModalBorrar = () => {
+    setBorrar(false);
+  }
+
+  return (
+    <Card
+      style={{
+        width: 200,
+        textAlign: 'center'
+      }}
+      cover={
+        <img
+          style={{
+            width: 100,
+            height: 150,
+            objectFit: 'cover',
+            margin: 'auto'
+          }}
+          alt="Algo salio mal..."
+          src={!imagen ? defaultLogo : imagen}
+        />
+      }
+      actions={[
+        <><Button name="modalEditar" onClick={abrirModalEdit}><EditOutlined /></Button>
+          <EditarModal
+            visible={modalEditar}
+            onClose={cerrarModalEdit}
+            idProducto={idProducto} 
+            nombre={title}
+            imagen={imagen}
+            precio={precio}
+            costo={costo}
+            descripcion={descripcion}
+            setRefresh={setRefresh}
+          />
+        </>,
+        <>
+          <Button name="modalBorrar" onClick={abrirModalBorrar}><DeleteOutlined /></Button>
+          <DeleteModal
+            visible={modalBorrar}
+            onClose={cerrarModalBorrar}
+            idProducto={idProducto}
+            nombreProducto={title}
+            setRefresh={setRefresh} 
+            cerrarModal={cerrarModalBorrar}  
+          />
+        </>
+      ]}
+      title={title}
+    >
+      <p><b>Precio Unitario: </b>{precio} Bs.</p>
+      <p><b>Cantidad: </b>{cantidad} u</p>
+      <p></p>
+    </Card>
   );
 };
 

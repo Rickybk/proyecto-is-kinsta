@@ -48,7 +48,7 @@ router.post("/store/products", createProduct);
 
 router.post("/store/products/lot/:idProduct", createLot);
 
-router.delete("/store/products/:idProduct/:nameProduct", deleteProduct);
+router.delete("/store/products/:idProduct", deleteProduct);
 
 router.delete("/store/products/lot/:idLot", deleteLot);
 

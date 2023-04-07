@@ -18,7 +18,7 @@ const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const ProductModal = () => {
+const ProductModal = ({setRefresh}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,15 +30,20 @@ const ProductModal = () => {
         if (validData()) {
             saveData();
             uploadDB();
+            setRefresh(true);
             document.getElementById("productForm").reset();
         } else {
-            message.warning('Todos los campos deben llenarse');
+            if (imgUrl === undefined || !imgUrl) {
+                message.error('El peso maximo de la imagen debe ser de 2MB!');
+            }else{
+                message.warning('Todos los campos obligatorios deben llenarse');
+            }  
         }
     };
 
     function validData() {
         var valid = true;
-        if (imgUrl === undefined) {
+        if (imgUrl === undefined || !imgUrl) {
             valid = false;
         }
         if (!document.getElementById("nombre").value) {
@@ -64,6 +69,10 @@ const ProductModal = () => {
         values.precio = document.getElementById("precio").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
+
+        if(!values.fechaCaducidad){
+            values.fechaCaducidad = null;    
+        }
     }
 
     const uploadDB = async () => {
