@@ -1,6 +1,7 @@
 import { Button, Modal, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
+import CreateModal from './CreateModal';
 
 const values = {
     image: "",
@@ -35,7 +36,7 @@ const ProductModal = ({setRefresh}) => {
             document.getElementById("productForm").reset();
             imgUrl = "Sin imagen";
         } else {
-            if (imgUrl === "Peso exedido") {
+            if (imgUrl === "Peso excedido") {
                 message.error('El peso maximo de la imagen debe ser de 2MB!');
             }else{
                 message.warning('Todos los campos obligatorios deben llenarse');
@@ -45,7 +46,7 @@ const ProductModal = ({setRefresh}) => {
 
     function validData() {
         var valid = true;
-        if (imgUrl === "Peso exedido") {
+        if (imgUrl === "Peso excedido") {
             valid = false;
         }
         if (!document.getElementById("nombre").value) {
@@ -108,9 +109,11 @@ const ProductModal = ({setRefresh}) => {
                 onCancel={handleCancel}
                 width="25%"
                 footer={[
-                    <Button id="boton" form="productForm" key="create" type="primary" onClick={handleOk}>
-                        Crear
-                    </Button>,
+                    <CreateModal
+                        handleOk={handleOk}
+                        isModalOpen={false}
+                        //onClose={onClose}
+                        setRefresh={setRefresh} />,
                     <Button key="cancel" onClick={handleCancel}>
                         Cancelar
                     </Button>
