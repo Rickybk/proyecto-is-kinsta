@@ -72,7 +72,7 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
           />
         </>
       ]}
-      title={title}
+      title={<b>{title}</b>}
     >
       <p><b>Precio Unitario: </b>{precio} Bs.</p>
       <p><b>Cantidad: </b>{cantidad} u</p>
