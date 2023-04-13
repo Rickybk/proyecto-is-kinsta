@@ -111,6 +111,8 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         className="inputs"
                         id="cantidad"
                         min={1}
+                        max={999999}
+                        type='number'
                         maxLength='6'
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
@@ -133,6 +135,8 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         className="inputs"
                         id="costoU"
                         min={1}
+                        max={9999.99}
+                        type='number'
                         maxLength='6'
                         precision={2}
                         step={0.5}
@@ -157,6 +161,8 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         className="inputs"
                         id="precio"
                         min={1}
+                        max={9999.99}
+                        type='number'
                         maxLength='6'
                         precision={2}
                         step={0.5}

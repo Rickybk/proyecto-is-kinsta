@@ -30,14 +30,14 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
   return (
     <Card
       style={{
-        width: 200,
+        width: 230,
         textAlign: 'center'
       }}
       cover={
         <img
           style={{
-            width: 100,
-            height: 150,
+            width: 120,
+            height: 170,
             objectFit: 'cover',
             margin: 'auto',
             marginTop: '20px'
