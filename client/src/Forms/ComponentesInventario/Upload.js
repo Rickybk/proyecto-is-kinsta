@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message } from 'antd';
 import { useState } from 'react';
 import axios from 'axios';
@@ -18,6 +18,8 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+  const [validImage, setValidImage] = useState(true);
+  const [loading, setLoaging] = useState(false);
   const [fileList, setFileList] = useState(imagenUrl !== "Sin imagen" ? [{
     uid: '-1',
     name: 'image.png',
@@ -39,7 +41,7 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
 
   const uploadButton = (
     <div>
-      <PlusOutlined />
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div
         style={{
           marginTop: 8,
@@ -50,8 +52,13 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
     </div>
   );
 
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const handleChange = (fileList) => {
+    if (validImage) {
+      setValidImage(false);
+    } else {
+      fileList["fileList"].pop();
+    }
+    setFileList(fileList["fileList"]);
   };
 
   const handleRemove = () => {
@@ -61,20 +68,24 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
 
   const beforeUpload = async (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    console.log(file.type.indexOf("image"));
     if (!isJpgOrPng) {
       message.error('Solo se admiten imagenes JPG/PNG!');
-      imgUrl = "Peso exedido";
-      getImgUrlUpload(imgUrl);
-    }
-
-    const isLt2M = file.size / 1024 / 1024 < 1;
-    if (isLt2M) {
-      await uploadImage(file);
+      setValidImage(false);
+      handleCancel();
     } else {
-      imgUrl = "Peso exedido";
-      getImgUrlUpload(imgUrl);
+      if (!isLt2M) {
+        message.error('El peso maximo de la imagen debe ser de 2MB!');
+        setValidImage(false);
+        handleCancel();
+      } else {
+        setLoaging(true);
+        await uploadImage(file);
+        setLoaging(false);
+      }
     }
-
+    setValidImage(isJpgOrPng && isLt2M);
     return false;
   };
 
@@ -84,7 +95,7 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
     try {
       //'http://localhost:8080/api/upload'
       //`${process.env.REACT_APP_SERVERURL}/api/upload`
-      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/api/upload`, formData, {
+      const response = await axios.post('http://localhost:8080/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -93,15 +104,12 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
         imgUrl = response.data['imgUrl'];
         getImgUrlUpload(imgUrl);
       } else {
-        setFileList([]);
-        handleCancel();
+        handleRemove();
         message.error('No se pudo subir la imagen, intente nuevamente.');
       }
-
     } catch (error) {
-      setFileList([]);
+      handleRemove();
       message.error('No se pudo subir la imagen, intente nuevamente.');
-      console.log(`Error uploading file: ${error}`);
     }
   };
 

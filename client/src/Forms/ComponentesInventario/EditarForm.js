@@ -26,9 +26,6 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
 
     function validData() {
         var valid = true;
-        if(imgUrl === "Peso exedido"){
-            valid = false;
-        }
         if (!document.getElementById("nombre").value) {
             valid = false;
         }
@@ -41,10 +38,6 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
         if (!document.getElementById("cantidad").value) {
             valid = false;
         }
-        if (!document.getElementById("fechaCad").value) {
-            valid = false;
-        }
-
         return valid;
     }
 
@@ -68,12 +61,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
             await updateProduct();
             onClose();
         } else {
-            if(imgUrl === "Peso exedido"){
-                message.error('El peso maximo de la imagen debe ser de 2MB!');   
-            }else{
-                message.warning('Los campos obligatorios deben llenarse');
-            }
-            
+                message.warning('Los campos obligatorios deben llenarse');     
         }
     };
 

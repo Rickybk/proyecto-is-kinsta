@@ -19,7 +19,7 @@ const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const ProductModal = ({setRefresh}) => {
+const ProductModal = ({ setRefresh }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -36,19 +36,12 @@ const ProductModal = ({setRefresh}) => {
             document.getElementById("productForm").reset();
             imgUrl = "Sin imagen";
         } else {
-            if (imgUrl === "Peso excedido") {
-                message.error('El peso maximo de la imagen debe ser de 2MB!');
-            }else{
-                message.warning('Todos los campos obligatorios deben llenarse');
-            }  
+            message.warning('Todos los campos obligatorios deben llenarse');
         }
     };
 
     function validData() {
         var valid = true;
-        if (imgUrl === "Peso excedido") {
-            valid = false;
-        }
         if (!document.getElementById("nombre").value) {
             valid = false;
         }
@@ -73,8 +66,8 @@ const ProductModal = ({setRefresh}) => {
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
 
-        if(!values.fechaCaducidad){
-            values.fechaCaducidad = null;    
+        if (!values.fechaCaducidad) {
+            values.fechaCaducidad = null;
         }
     }
 
