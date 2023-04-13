@@ -171,6 +171,14 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                         required: true,
                         message: 'Por favor ingrese el nombre del Producto!',
                     },
+                    {
+                        min: 3,
+                        message: 'El nombre del producto debe tener al menos 3 caracteres!',
+                    },
+                    {
+                        max: 39,
+                        message: 'El nombre del producto no puede tener más de 40 caracteres!',
+                    },
                 ]}
             >
                 <Input id="nombre"
@@ -236,6 +244,11 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                 name="descripcion"
                 initialValue={descripcion}
                 rules={[{ required: false, },
+                    {
+                        max: 99,
+                        message: 'La descripción no puede tener más de 100 caracteres!',
+                    },
+                
                 ]}
             >
                 <TextArea id="descripcion" className="inputs" rows={3}
