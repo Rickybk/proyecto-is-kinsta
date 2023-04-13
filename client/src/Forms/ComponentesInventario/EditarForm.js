@@ -1,6 +1,7 @@
-import { Modal, Form, Button, Input, InputNumber, message } from 'antd'
+import { Modal, Form, DatePicker, Button, Input, InputNumber, message } from 'antd'
 import UpdateModal from './UpdateModal';
 import Upload from './Upload';
+import moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -8,8 +9,10 @@ const { TextArea } = Input;
 const values = {
     imagen: "",
     nombreProducto: "",
+    cantidad: "",
     costoUnitario: "",
     precio: "",
+    fechaCaducidad: "",
     descripcion: ""
 }
 
@@ -19,7 +22,7 @@ const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, costo, descripcion, setRefresh }) => {
+const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, precio, costo, fechaCaducidad, descripcion, setRefresh }) => {
 
     function validData() {
         var valid = true;
@@ -35,6 +38,13 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
         if (!document.getElementById("precio").value) {
             valid = false;
         }
+        if (!document.getElementById("cantidad").value) {
+            valid = false;
+        }
+        if (!document.getElementById("fechaCad").value) {
+            valid = false;
+        }
+
         return valid;
     }
 
@@ -45,8 +55,10 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
             values.imagen = imgUrl;
         }
         values.nombreProducto = document.getElementById("nombre").value;
+        values.cantidad = document.getElementById("cantidad").value;
         values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
+        values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
     }
 
@@ -103,16 +115,18 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
         >
             <EditarForm
                 nombre={nombre}
+                cantidad={cantidad}
                 imagen={imagen}
                 costo={costo}
                 precio={precio}
+                fechaCaducidad={fechaCaducidad}
                 descripcion={descripcion} />
         </Modal>
     );
 }
 
 
-const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
+const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCad, descripcion }) => {
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -191,6 +205,29 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
             </Form.Item>
 
             <Form.Item
+                    label="Cantidad"
+                    labelCol={{ span: 24 }}
+                    name="cantidad"
+                    initialValue={1}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor la cantidad del producto!'
+                        },
+                    ]}
+                >
+                    <InputNumber
+                        style={{ width: '100%' }}
+                        prefix="U."
+                        className="inputs"
+                        id="cantidad"
+                        min={1}
+                        maxLength='6'
+                        onKeyDown={numberInputKeyDown} />
+                </Form.Item>
+
+
+            <Form.Item
                 label="Costo Unitario"
                 labelCol={{ span: 24 }}
                 name="costoUnitario"
@@ -237,6 +274,24 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     maxLength='6'
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
+
+            <Form.Item
+                    label="Seleccionar Fecha de Caducidad"
+                    labelCol={{ span: 24 }}
+                    name="fechaCaducidad"
+                    rules={[{ required: false, },
+                    ]}
+                >
+                    <DatePicker
+                        style={{ width: '100%' }}
+                        id="fechaCad"
+                        className="inputs"
+                        placeholder='Inserte la fecha'
+                        disabledDate={(current) => {
+                            return moment().add(-1, 'days') >= current;
+                        }}
+                    />
+                </Form.Item>
 
             <Form.Item
                 label="Descripcion"
