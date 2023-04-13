@@ -10,7 +10,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         async function fetchData() {
             //"http://localhost:8080/store/allproducts"
             //`${process.env.REACT_APP_SERVERURL}/store/allproducts`
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/allproducts`);
+            const response = await fetch("http://localhost:8080/store/allproducts");
             const jsonData = await response.json();
             setProducts(jsonData);
         }

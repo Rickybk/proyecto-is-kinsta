@@ -69,7 +69,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
     const updateProduct = async () => {
         // `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto
         //"http://localhost:8080/store/products/" + idProducto
-        const url = `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto;
+        const url = "http://localhost:8080/store/products/" + idProducto;
         console.log(url);
         const res = await fetch(url, {
             method: "PUT",
