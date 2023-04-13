@@ -114,7 +114,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
 }
 
 
-const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCad, descripcion }) => {
+const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, descripcion }) => {
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -196,7 +196,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCad, descrip
                     label="Cantidad"
                     labelCol={{ span: 24 }}
                     name="cantidad"
-                    initialValue={1}
+                    initialValue={cantidad}
                     rules={[
                         {
                             required: true,
@@ -267,6 +267,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCad, descrip
                     label="Seleccionar Fecha de Caducidad"
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
+                    initialValue={fechaCaducidad}
                     rules={[{ required: false, },
                     ]}
                 >

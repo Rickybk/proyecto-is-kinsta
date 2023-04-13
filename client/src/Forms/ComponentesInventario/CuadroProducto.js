@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
-function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
+function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCaducidad, descripcion, setRefresh }) {
   
   const [modalEditar, setEditar] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
@@ -56,7 +56,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             imagen={imagen}
             precio={precio}
             costo={costo}
+            cantidad={cantidad}
             descripcion={descripcion}
+            fechaCaducidad={fechaCaducidad}
             setRefresh={setRefresh}
           />
         </>,

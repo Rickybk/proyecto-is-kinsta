@@ -40,6 +40,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                         costo={item.costo_unitario}
                         precio={item.precio_unitario}
                         cantidad={item.total}
+                        fechaCaducidad={item.fecha_caducidad}
                         descripcion={item.descripcion}
                         setRefresh={setRefresh} />
                 </List.Item >
