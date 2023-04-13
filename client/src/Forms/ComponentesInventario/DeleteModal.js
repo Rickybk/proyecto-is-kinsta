@@ -33,7 +33,7 @@ const DeleteModal = ({visible,onClose,idProducto,nombreProducto, setRefresh,cerr
             ]}
             destroyOnClose="true"
         >
-            <p>¿Está seguro de querer eliminar {nombreProducto}</p>
+            <p>¿Está seguro de querer eliminar {nombreProducto}?</p>
         </Modal>
     );
 }
