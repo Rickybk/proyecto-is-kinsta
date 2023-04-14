@@ -30,10 +30,14 @@ const ProductModal = ({ setRefresh }) => {
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            await uploadDB();
+            const respuesta=await uploadDB();
             setRefresh(true);
-            message.success("Producto creado exitosamente");
-            document.getElementById("productForm").reset();
+            if(respuesta===1){
+                await message.error("El producto "+ values.nombreProducto +" ya existente ");
+            } else {
+                message.success("Producto creado exitosamente");
+                document.getElementById("productForm").reset();
+            } 
             imgUrl = "Sin imagen";
         } else {
             message.warning('Todos los campos obligatorios deben llenarse');
@@ -79,6 +83,10 @@ const ProductModal = ({ setRefresh }) => {
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
+        const jsonData = await res.json();
+        if(jsonData.data === 1){
+            return 1;   
+        }
     }
 
     const handleCancel = () => {

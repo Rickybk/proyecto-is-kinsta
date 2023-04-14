@@ -12,7 +12,7 @@ const values = {
     cantidad: "",
     costoUnitario: "",
     precio: "",
-    fechaCaducidad: "",
+    fechaCaducidad: '',
     descripcion: ""
 }
 
@@ -58,8 +58,14 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            await updateProduct();
-            onClose();
+            const respuesta = await updateProduct();
+            if(respuesta===1){
+                await message.error("El producto "+ values.nombreProducto +" ya existente ");
+            } else {
+                message.success("Producto actualizado exitosamente");
+                onClose();
+            } 
+            
         } else {
                 message.warning('Los campos obligatorios deben llenarse');     
         }
@@ -76,6 +82,10 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
+        const jsonData = await res.json();
+        if(jsonData.data === 1){
+            return 1;   
+        }
     }
 
 
@@ -143,6 +153,8 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
             e.preventDefault();
         }
     };
+    console.log("aaaaa   "+nombre);
+    console.log("aaaaa   "+fechaCaducidad);
     return (
         <Form
             id="editForm"
