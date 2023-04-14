@@ -30,14 +30,14 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
   return (
     <Card
       style={{
-        width: 230,
+        width: 210,
         textAlign: 'center'
       }}
       cover={
         <img
           style={{
-            width: 120,
-            height: 170,
+            width: 110,
+            height: 150,
             objectFit: 'cover',
             margin: 'auto',
             marginTop: '20px'
@@ -76,8 +76,8 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
       ]}
       title={<b>{title}</b>}
     >
-      <p><b>Precio Unitario: </b>{precio} Bs.</p>
-      <p><b>Cantidad: </b>{cantidad} u</p>
+      <p><b>Precio U: </b>{precio} Bs.</p>
+      <p><b>Cantidad: </b>{cantidad} U.</p>
       <p></p>
     </Card>
   );

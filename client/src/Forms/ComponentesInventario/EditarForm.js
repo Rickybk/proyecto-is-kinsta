@@ -216,15 +216,14 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                         },
                     ]}
                 >
-                    <InputNumber
+                    <Input
                         style={{ width: '100%' }}
                         prefix="U."
                         className="inputs"
                         id="cantidad"
                         min={1}
-                        max={999999}
                         type='number'
-                        maxLength='6'
+                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -241,17 +240,16 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                     },
                 ]}
             >
-                <InputNumber
+                <Input
                     className="inputs"
                     prefix="Bs."
                     id="costoU"
                     min={1}
-                    max={9999.99}
                     type='number'
-                    maxLength='6'
                     precision={2}
                     step={0.5}
                     style={{ width: '100%' }}
+                    onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
@@ -267,17 +265,16 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                     },
                 ]}
             >
-                <InputNumber
+                <Input
                     className="inputs"
                     prefix="Bs."
                     id="precio"
                     min={1}
-                    max={9999.99}
                     type='number'
                     precision={2}
                     step={0.5}
                     style={{ width: '100%' }}
-                    maxLength='6'
+                    onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
@@ -285,7 +282,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                     label="Seleccionar Fecha de Caducidad"
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
-                    initialValue={fechaCaducidad}
+                    //initialValue={fechaCaducidad}
                     rules={[{ required: false, },
                     ]}
                 >
@@ -301,7 +298,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                 </Form.Item>
 
             <Form.Item
-                label="Descripcion"
+                label="Descripción"
                 labelCol={{ span: 24 }}
                 name="descripcion"
                 initialValue={descripcion}
@@ -314,7 +311,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                 ]}
             >
                 <TextArea id="descripcion" className="inputs" rows={3}
-                    placeholder='Ingrese una descripcion del producto'
+                    placeholder='Ingrese una descripción del producto'
                     maxLength={100}
                 />
             </Form.Item>
