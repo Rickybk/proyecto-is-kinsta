@@ -2,8 +2,10 @@ import { Modal, Form, DatePicker, Button, Input, InputNumber, message } from 'an
 import UpdateModal from './UpdateModal';
 import Upload from './Upload';
 import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { TextArea } = Input;
+
 
 //Lo usamos para guardar los valores de los inputs de los forms
 const values = {
@@ -55,6 +57,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
         values.descripcion = document.getElementById("descripcion").value;
     }
 
+
     const handleOk = async () => {
         if (validData()) {
             saveData();
@@ -87,7 +90,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
             return 1;   
         }
     }
-
+ 
 
     return (
         <Modal
@@ -282,10 +285,11 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                     label="Seleccionar Fecha de Caducidad"
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
-                    //initialValue={fechaCaducidad}
+                    initialValue={fechaCaducidad ? dayjs(fechaCaducidad, 'YYYY-MM-DD') : ''}
                     rules={[{ required: false, },
                     ]}
                 >
+
                     <DatePicker
                         style={{ width: '100%' }}
                         id="fechaCad"
