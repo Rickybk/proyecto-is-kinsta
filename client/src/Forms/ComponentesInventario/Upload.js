@@ -96,8 +96,8 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
     formData.append('image', file);
     try {
       //'http://localhost:8080/api/upload'
-      //`${process.env.REACT_APP_SERVERURL}/api/upload`
-      const response = await axios.post('http://localhost:8080/api/upload', formData, {
+      //`${process.env.REACT_APP_SERVERURL}/api/upload/`
+      const response = await axios.post('`${process.env.REACT_APP_SERVERURL}/api/upload/`', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
