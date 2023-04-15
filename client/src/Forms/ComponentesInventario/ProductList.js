@@ -10,7 +10,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         async function fetchData() {
             //"http://localhost:8080/store/allproducts"
             //`${process.env.REACT_APP_SERVERURL}/store/allproducts`
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/allproducts`);
+            const response = await fetch("http://localhost:8080/store/allproducts");
             const jsonData = await response.json();
             setProducts(jsonData);
         }
@@ -40,6 +40,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                         costo={item.costo_unitario}
                         precio={item.precio_unitario}
                         cantidad={item.total}
+                        fechaCaducidad={item.fecha_caducidad}
                         descripcion={item.descripcion}
                         setRefresh={setRefresh} />
                 </List.Item >

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
-function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
+function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCaducidad, descripcion, setRefresh }) {
   
   const [modalEditar, setEditar] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
@@ -30,13 +30,13 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
   return (
     <Card
       style={{
-        width: 200,
+        width: 210,
         textAlign: 'center'
       }}
       cover={
         <img
           style={{
-            width: 100,
+            width: 110,
             height: 150,
             objectFit: 'cover',
             margin: 'auto',
@@ -56,7 +56,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             imagen={imagen}
             precio={precio}
             costo={costo}
+            cantidad={cantidad}
             descripcion={descripcion}
+            fechaCaducidad={fechaCaducidad}
             setRefresh={setRefresh}
           />
         </>,
@@ -72,10 +74,10 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
           />
         </>
       ]}
-      title={title}
+      title={<b>{title}</b>}
     >
-      <p><b>Precio Unitario: </b>{precio} Bs.</p>
-      <p><b>Cantidad: </b>{cantidad} u</p>
+      <p><b>Precio U: </b>{precio} Bs.</p>
+      <p><b>Cantidad: </b>{cantidad} U.</p>
       <p></p>
     </Card>
   );
