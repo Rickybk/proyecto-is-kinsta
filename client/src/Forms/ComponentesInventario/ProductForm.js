@@ -6,13 +6,12 @@ const { TextArea } = Input;
 
 
 
-const FormProducto = ({ getImgUrlForm }) => {
+const FormProducto = ({ getImgUrlForm, imagen}) => {
 
-    var imgUrl = "";
+    var imgUrl = imagen;
 
     const getImgUrlUpload = (data) => {
         imgUrl = data;
-        console.log("Url desde form: ", imgUrl);
         getImgUrlForm(imgUrl);
     }
 
@@ -32,6 +31,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                 || eventCode.includes("end")
                 || eventCode.includes("backspace")
                 || eventCode.includes("period")
+                || eventCode.includes("tab")
                 || (eventCode.includes("numpad") && eventCode.length === 7)))
         ) {
             e.preventDefault();
@@ -61,7 +61,7 @@ const FormProducto = ({ getImgUrlForm }) => {
                     rules={[{ required: false, }
                     ]}
                 >
-                    <Upload getImgUrlUpload={getImgUrlUpload} />
+                    <Upload getImgUrlUpload={getImgUrlUpload} imagenUrl={imagen}/>
                 </Form.Item>
 
                 <Form.Item
@@ -73,12 +73,20 @@ const FormProducto = ({ getImgUrlForm }) => {
                             required: true,
                             message: 'Por favor ingrese el nombre del Producto!',
                         },
+                        {
+                            min: 3,
+                            message: 'El nombre del producto debe tener al menos 3 caracteres!',
+                        },
+                        {
+                            max: 39,
+                            message: 'El nombre del producto no puede tener más de 40 caracteres!',
+                        },
+                    
                     ]}
                 >
                     <Input id="nombre"
                         className="inputs"
                         placeholder='Ingrese nombre del producto'
-                        minLength='3'
                         maxLength='40'
                         type='text'
                         onSubmit={clearInput}
@@ -97,12 +105,14 @@ const FormProducto = ({ getImgUrlForm }) => {
                         },
                     ]}
                 >
-                    <InputNumber
+                    <Input
                         style={{ width: '100%' }}
                         prefix="U."
                         className="inputs"
                         id="cantidad"
                         min={1}
+                        type='number'
+                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -118,12 +128,16 @@ const FormProducto = ({ getImgUrlForm }) => {
                         },
                     ]}
                 >
-                    <InputNumber
+                    <Input
                         style={{ width: '100%' }}
                         prefix="Bs."
                         className="inputs"
                         id="costoU"
                         min={1}
+                        type='number'
+                        precision={2}
+                        step={0.5}
+                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -139,12 +153,16 @@ const FormProducto = ({ getImgUrlForm }) => {
                         },
                     ]}
                 >
-                    <InputNumber
+                    <Input
                         style={{ width: '100%' }}
                         prefix="Bs."
                         className="inputs"
                         id="precio"
                         min={1}
+                        type='number'
+                        precision={2}
+                        step={0.5}
+                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -167,15 +185,21 @@ const FormProducto = ({ getImgUrlForm }) => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Descripcion"
+                    label="Descripción"
                     labelCol={{ span: 24 }}
                     name="descripcion"
                     rules={[{ required: false, },
+                        {
+                            max: 99,
+                            message: 'La descripción no puede tener más de 100 caracteres!',
+                        },
+                    
                     ]}
                 >
                     <TextArea id="descripcion" className="inputs" rows={3}
-                        placeholder='Ingrese una descripcion del producto'
+                        placeholder='Ingrese una descripción del producto'
                         maxLength={100}
+                        style={{resize: 'none'}}
                     />
                 </Form.Item>
 

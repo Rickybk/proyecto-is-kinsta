@@ -1,10 +1,10 @@
 import ProductModal from './ProductModal';
 import './ListaBotones.css';
 
-function Botons(){
+function Botons({setRefresh}){
     return(
         <div className="botones">
-            <ProductModal />
+            <ProductModal setRefresh={setRefresh}/>
         </div>
     );
 }

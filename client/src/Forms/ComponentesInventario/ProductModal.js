@@ -1,6 +1,7 @@
 import { Button, Modal, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
+import CreateModal from './CreateModal';
 
 const values = {
     image: "",
@@ -12,13 +13,13 @@ const values = {
     descripcion: ""
 }
 
-var imgUrl = "";
+var imgUrl = "Sin imagen";
 
 const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const ProductModal = () => {
+const ProductModal = ({ setRefresh }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,22 +27,27 @@ const ProductModal = () => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
         if (validData()) {
             saveData();
-            uploadDB();
-            document.getElementById("productForm").reset();
+            const respuesta=await uploadDB();
+            setRefresh(true);
+            if(respuesta===1){
+                await message.error("El producto "+ values.nombreProducto +" ya existente ");
+            } else {
+                message.success("Producto creado exitosamente");
+                document.getElementById("productForm").reset();
+            } 
+            imgUrl = "Sin imagen";
         } else {
-            message.warning('Todos los campos deben llenarse');
+            message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
     };
 
     function validData() {
         var valid = true;
-        if (imgUrl === undefined) {
-            valid = false;
-        }
-        if (!document.getElementById("nombre").value) {
+        var nombre = document.getElementById("nombre").value;
+        if (!nombre || nombre.length < 3) {
             valid = false;
         }
         if (!document.getElementById("cantidad").value) {
@@ -64,6 +70,10 @@ const ProductModal = () => {
         values.precio = document.getElementById("precio").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
+
+        if (!values.fechaCaducidad) {
+            values.fechaCaducidad = null;
+        }
     }
 
     const uploadDB = async () => {
@@ -74,11 +84,14 @@ const ProductModal = () => {
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
-        const data = await res.json();
-        console.log(data);
+        const jsonData = await res.json();
+        if(jsonData.data === 1){
+            return 1;   
+        }
     }
 
     const handleCancel = () => {
+        imgUrl = "Sin imagen";
         setIsModalOpen(false);
     };
 
@@ -98,16 +111,18 @@ const ProductModal = () => {
                 onCancel={handleCancel}
                 width="25%"
                 footer={[
-                    <Button id="boton" form="productForm" key="create" type="primary" onClick={handleOk}>
-                        Crear
-                    </Button>,
+                    <CreateModal
+                        handleOk={handleOk}
+                        isModalOpen={false}
+                        //onClose={onClose}
+                        setRefresh={setRefresh} />,
                     <Button key="cancel" onClick={handleCancel}>
                         Cancelar
                     </Button>
                 ]}
                 destroyOnClose="true"
             >
-                <ProductForm getImgUrlForm={getImgUrlForm} />
+                <ProductForm getImgUrlForm={getImgUrlForm} imagen={imgUrl} />
             </Modal>
         </>
     );

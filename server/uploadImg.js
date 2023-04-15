@@ -32,25 +32,18 @@ async function createAndUploadFile(auth, fileImg) {
     //Handle la respuesta
     switch (response.status) {
         case 200:
-            console.log(`File ${fileImg.originalname} uploaded to Google Drive with ID: ${response.data}`);
-            console.log('File Created ID:', response.data);
             const fileIdResponse = response.data.id;
-            return getDirectLink(auth, fileIdResponse);
+            return getDirectLink();
         default:
-            console.log('Error creating file:', response.errors);
             return "Error";
     }
     //Obtener enlace directo
-    async function getDirectLink(fileIdResponse) {
-        console.log('Obteniendo enlace directo para el archivo con ID:', fileIdResponse.id);
+    async function getDirectLink() {
         const file = await driveService.files.get({
             fileId: response.data.id,
             fields: 'webContentLink'
         });
-
         const directLink = file.data.webContentLink.replace('&export=download', '');
-        console.log('Enlace directo:', directLink);
-
         return directLink;
     }
 }

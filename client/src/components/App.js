@@ -10,17 +10,18 @@ function App() {
         <ConfigProvider
             theme={{
                 "token": {
-                    "colorPrimary": "#66bde6",
+                    "colorPrimary": "#83563f", 
                     "colorPrimaryBorder": "#4da8cf",
                     "colorPrimaryBorderHover": "#abdefa",
                     "colorSuccess": "#b86fd6",
                     "colorWarning": "#ff9966",
                     "colorError": "#eb636b",
                     "colorInfo": "#77ddec",
-                    "colorBgContainer": "#abdefa",
-                    "colorBgElevated": "#e4f4fd",
-                    "colorBgLayout": "#c9e9fc"
-                }
+                    "colorBgContainer": "#E7D5C7", 
+                    "colorBgElevated": "#f5e5d0", 
+                    "colorBgLayout": "#F8EDE3" 
+                } 
+                //algorithm: theme.darkAlgorithm
             }}
         >
             <AppLayout />
@@ -76,8 +77,8 @@ function Content() {
             }}
         >
             <Routes>
-                <Route path="/" element={<div><h1>Tienda J&B</h1></div>}></Route>
-                <Route path="/inventario" element={<div><h1>INVENTARIO</h1></div>}></Route>
+                <Route path="/" element={<div><h1 style={{fontSize: 50}}>Tienda J&B</h1></div>}></Route>
+                <Route path="/inventario" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
             </Routes>
         </Header>
 
