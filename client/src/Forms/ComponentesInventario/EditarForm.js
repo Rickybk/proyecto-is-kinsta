@@ -1,15 +1,20 @@
-import { Modal, Form, Button, Input, InputNumber, message } from 'antd'
+import { Modal, Form, DatePicker, Button, Input, InputNumber, message } from 'antd'
 import UpdateModal from './UpdateModal';
 import Upload from './Upload';
+import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { TextArea } = Input;
+
 
 //Lo usamos para guardar los valores de los inputs de los forms
 const values = {
     imagen: "",
     nombreProducto: "",
+    cantidad: "",
     costoUnitario: "",
     precio: "",
+    fechaCaducidad: '',
     descripcion: ""
 }
 
@@ -19,20 +24,21 @@ const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, costo, descripcion, setRefresh }) => {
+const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, precio, costo, fechaCaducidad, descripcion, setRefresh }) => {
 
     function validData() {
         var valid = true;
-        if(imgUrl === "Peso exedido"){
-            valid = false;
-        }
-        if (!document.getElementById("nombre").value) {
+        var nombre = document.getElementById("nombre").value;
+        if (!nombre || nombre.length < 3) {
             valid = false;
         }
         if (!document.getElementById("costoU").value) {
             valid = false;
         }
         if (!document.getElementById("precio").value) {
+            valid = false;
+        }
+        if (!document.getElementById("cantidad").value) {
             valid = false;
         }
         return valid;
@@ -45,23 +51,27 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
             values.imagen = imgUrl;
         }
         values.nombreProducto = document.getElementById("nombre").value;
+        values.cantidad = document.getElementById("cantidad").value;
         values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
+        values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
     }
+
 
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            await updateProduct();
-            onClose();
-        } else {
-            if(imgUrl === "Peso exedido"){
-                message.error('El peso maximo de la imagen debe ser de 2MB!');   
-            }else{
-                message.warning('Los campos obligatorios deben llenarse');
-            }
+            const respuesta = await updateProduct();
+            if(respuesta===1){
+                await message.error("El producto "+ values.nombreProducto +" ya existente ");
+            } else {
+                message.success("Producto actualizado exitosamente");
+                onClose();
+            } 
             
+        } else {
+                message.warning('Los campos obligatorios deben llenarse correctamente');     
         }
     };
 
@@ -69,15 +79,19 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
     const updateProduct = async () => {
         // `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto
         //"http://localhost:8080/store/products/" + idProducto
-        const url = `${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto;
+        const url = "http://localhost:8080/store/products/" + idProducto;
         console.log(url);
         const res = await fetch(url, {
             method: "PUT",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
+        const jsonData = await res.json();
+        if(jsonData.data === 1){
+            return 1;   
+        }
     }
-
+ 
 
     return (
         <Modal
@@ -103,16 +117,18 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, imagen, precio, cos
         >
             <EditarForm
                 nombre={nombre}
+                cantidad={cantidad}
                 imagen={imagen}
                 costo={costo}
                 precio={precio}
+                fechaCaducidad={fechaCaducidad}
                 descripcion={descripcion} />
         </Modal>
     );
 }
 
 
-const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
+const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, descripcion }) => {
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -141,6 +157,8 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
             e.preventDefault();
         }
     };
+    console.log("aaaaa   "+nombre);
+    console.log("aaaaa   "+fechaCaducidad);
     return (
         <Form
             id="editForm"
@@ -171,6 +189,14 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                         required: true,
                         message: 'Por favor ingrese el nombre del Producto!',
                     },
+                    {
+                        min: 3,
+                        message: 'El nombre del producto debe tener al menos 3 caracteres!',
+                    },
+                    {
+                        max: 39,
+                        message: 'El nombre del producto no puede tener más de 40 caracteres!',
+                    },
                 ]}
             >
                 <Input id="nombre"
@@ -181,6 +207,30 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     onSubmit={clearInput}
                 />
             </Form.Item>
+
+            <Form.Item
+                    label="Cantidad"
+                    labelCol={{ span: 24 }}
+                    name="cantidad"
+                    initialValue={cantidad}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor la cantidad del producto!'
+                        },
+                    ]}
+                >
+                    <Input
+                        style={{ width: '100%' }}
+                        prefix="U."
+                        className="inputs"
+                        id="cantidad"
+                        min={1}
+                        type='number'
+                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
+                        onKeyDown={numberInputKeyDown} />
+                </Form.Item>
+
 
             <Form.Item
                 label="Costo Unitario"
@@ -194,15 +244,16 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     },
                 ]}
             >
-                <InputNumber
+                <Input
                     className="inputs"
                     prefix="Bs."
                     id="costoU"
                     min={1}
-                    maxLength='6'
+                    type='number'
                     precision={2}
                     step={0.5}
                     style={{ width: '100%' }}
+                    onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
@@ -218,29 +269,56 @@ const EditarForm = ({ nombre, imagen, costo, precio, descripcion }) => {
                     },
                 ]}
             >
-                <InputNumber
+                <Input
                     className="inputs"
                     prefix="Bs."
                     id="precio"
                     min={1}
+                    type='number'
                     precision={2}
                     step={0.5}
                     style={{ width: '100%' }}
-                    maxLength='6'
+                    onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                     onKeyDown={numberInputKeyDown} />
             </Form.Item>
 
             <Form.Item
-                label="Descripcion"
+                    label="Seleccionar Fecha de Caducidad"
+                    labelCol={{ span: 24 }}
+                    name="fechaCaducidad"
+                    initialValue={fechaCaducidad ? dayjs(fechaCaducidad, 'YYYY-MM-DD') : ''}
+                    rules={[{ required: false, },
+                    ]}
+                >
+
+                    <DatePicker
+                        style={{ width: '100%' }}
+                        id="fechaCad"
+                        className="inputs"
+                        placeholder='Inserte la fecha'
+                        disabledDate={(current) => {
+                            return moment().add(-1, 'days') >= current;
+                        }}
+                    />
+                </Form.Item>
+
+            <Form.Item
+                label="Descripción"
                 labelCol={{ span: 24 }}
                 name="descripcion"
                 initialValue={descripcion}
                 rules={[{ required: false, },
+                    {
+                        max: 99,
+                        message: 'La descripción no puede tener más de 100 caracteres!',
+                    },
+                
                 ]}
             >
                 <TextArea id="descripcion" className="inputs" rows={3}
-                    placeholder='Ingrese una descripcion del producto'
+                    placeholder='Ingrese una descripción del producto'
                     maxLength={100}
+                    style={{resize: 'none'}}
                 />
             </Form.Item>
         </Form>
