@@ -40,13 +40,14 @@ const ProductModal = ({ setRefresh }) => {
             } 
             imgUrl = "Sin imagen";
         } else {
-            message.warning('Todos los campos obligatorios deben llenarse');
+            message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
     };
 
     function validData() {
         var valid = true;
-        if (!document.getElementById("nombre").value) {
+        var nombre = document.getElementById("nombre").value;
+        if (!nombre || nombre.length < 3) {
             valid = false;
         }
         if (!document.getElementById("cantidad").value) {

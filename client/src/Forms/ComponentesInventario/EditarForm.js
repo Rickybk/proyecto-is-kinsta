@@ -28,7 +28,8 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
 
     function validData() {
         var valid = true;
-        if (!document.getElementById("nombre").value) {
+        var nombre = document.getElementById("nombre").value;
+        if (!nombre || nombre.length < 3) {
             valid = false;
         }
         if (!document.getElementById("costoU").value) {
@@ -70,7 +71,7 @@ const EditarModal = ({ visible, onClose, idProducto, nombre, cantidad, imagen, p
             } 
             
         } else {
-                message.warning('Los campos obligatorios deben llenarse');     
+                message.warning('Los campos obligatorios deben llenarse correctamente');     
         }
     };
 
@@ -317,6 +318,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                 <TextArea id="descripcion" className="inputs" rows={3}
                     placeholder='Ingrese una descripción del producto'
                     maxLength={100}
+                    style={{resize: 'none'}}
                 />
             </Form.Item>
         </Form>

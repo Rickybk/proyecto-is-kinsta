@@ -199,6 +199,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                     <TextArea id="descripcion" className="inputs" rows={3}
                         placeholder='Ingrese una descripción del producto'
                         maxLength={100}
+                        style={{resize: 'none'}}
                     />
                 </Form.Item>
 
