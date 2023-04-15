@@ -138,6 +138,7 @@ const App = ({ getImgUrlUpload, imagenUrl }) => {
         onChange={handleChange}
         beforeUpload={beforeUpload}
         onRemove={handleRemove}
+        disabled={loading}
         accept="image/png, image/jpeg"
       >
         {fileList.length >= 1 ? null : uploadButton}
