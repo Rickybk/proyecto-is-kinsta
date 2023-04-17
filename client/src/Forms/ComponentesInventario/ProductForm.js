@@ -140,7 +140,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
-
+                    
                 <Form.Item
                     label="Precio Unitario"
                     labelCol={{ span: 24 }}
@@ -171,6 +171,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
                     rules={[{ required: false, },
+                        
                     ]}
                 >
                     <DatePicker
@@ -181,7 +182,22 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         disabledDate={(current) => {
                             return moment().add(-1, 'days') >= current;
                         }}
-                    />
+                        onKeyDown={(e) => {
+                            const maxCharacters = 10;
+                            const currentValue = e.target.value || '';
+                            const key = e.key;
+                          
+                            // Permite solo números y guión (-) y permite borrar incluso después de alcanzar el número máximo de caracteres
+                            if (!(/^[0-9-]+$/.test(key) || key === 'Backspace' || key === 'Delete')) {
+                              e.preventDefault();
+                            }
+                          
+                            // Verifica que la longitud del texto no exceda el número máximo de caracteres
+                            if (currentValue.length >= maxCharacters && key !== 'Backspace' && key !== 'Delete') {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
                 </Form.Item>
 
                 <Form.Item
