@@ -225,20 +225,25 @@ const updateProduct = async (req, res) => {
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;
-    const newLote = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
-      [cantidad, fechaCaducidad, idLot, idProduct]
-    );
+
+
+    const newLoteParams = [cantidad];
+if (fechaCaducidad) {
+  newLoteParams.push(fechaCaducidad);
+} else {
+  newLoteParams.push(null);
+}
+newLoteParams.push(idLot, idProduct);
+
+const newLote = await pool.query(
+  "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
+  newLoteParams
+);
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
     ])).rows[0].total;
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
-
-
-    if (newProduct.rowCount === 0)
-      return res.status(404).json({ message: "OK" });
-
       return res.status(200).json({ message: `El producto con ID ${idProduct} ha sido actualizado correctamente` });
     } catch (error) {
       return res.status(500).json({ message: `Error actualizando producto: ${error.message}` });
@@ -265,9 +270,7 @@ const updateLote = async (req, res) => {
     ])).rows[0].total;
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
-    if (newLot.rows.length === 0)
-      return res.status(404).json({ message: "Lote no encontrado" });
-
+    
     return res.json(newLot.rows[0]);
   } catch (error) {
     res.json({ error: error.message });
