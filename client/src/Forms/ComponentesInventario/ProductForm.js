@@ -23,17 +23,19 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
     };
 
     const numberInputKeyDown = (e) => {
-        const eventCode = e.code.toLowerCase();
-        if (!(e.code !== null
-            && (eventCode.includes("digit")
-                || eventCode.includes("arrow")
-                || eventCode.includes("home")
-                || eventCode.includes("end")
-                || eventCode.includes("backspace")
-                || eventCode.includes("period")
-                || eventCode.includes("tab")
-                || (eventCode.includes("numpad") && eventCode.length === 7)))
-        ) {
+        
+        const key = e.key;
+        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete'  ))
+        {
+            e.preventDefault();
+        }
+    };
+
+    const DecimalInput = (e) => {
+       
+        const key = e.key;
+        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ))
+        {
             e.preventDefault();
         }
     };
@@ -105,14 +107,13 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         },
                     ]}
                 >
-                    <Input
+                    <InputNumber
                         style={{ width: '100%' }}
                         prefix="U."
                         className="inputs"
                         id="cantidad"
                         min={1}
-                        type='number'
-                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
+                        maxLength={6}
                         onKeyDown={numberInputKeyDown} />
                 </Form.Item>
 
@@ -128,17 +129,16 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         },
                     ]}
                 >
-                    <Input
+                    <InputNumber
                         style={{ width: '100%' }}
                         prefix="Bs."
                         className="inputs"
                         id="costoU"
                         min={1}
-                        type='number'
+                        maxLength={6}
                         precision={2}
                         step={0.5}
-                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
-                        onKeyDown={numberInputKeyDown} />
+                        onKeyDown={DecimalInput} />
                 </Form.Item>
                     
                 <Form.Item
@@ -153,17 +153,16 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         },
                     ]}
                 >
-                    <Input
+                    <InputNumber
                         style={{ width: '100%' }}
                         prefix="Bs."
                         className="inputs"
                         id="precio"
-                        min={1}
-                        type='number'
+                        
+                        maxLength={6}
                         precision={2}
                         step={0.5}
-                        onInput={(e)=>e.target.value=e.target.value.slice(0,6)}
-                        onKeyDown={numberInputKeyDown} />
+                        onKeyDown={DecimalInput} />
                 </Form.Item>
 
                 <Form.Item
