@@ -145,7 +145,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
     const numberInputKeyDown = (e) => {
         
         const key = e.key;
-        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete' ))
+        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight' ))
         {
             e.preventDefault();
         }
@@ -154,7 +154,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
     const DecimalInput = (e) => {
         
         const key = e.key;
-        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ))
+        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight' ))
         {
             e.preventDefault();
         }
@@ -273,7 +273,7 @@ const EditarForm = ({ nombre, cantidad, imagen, costo, precio, fechaCaducidad, d
                     className="inputs"
                     prefix="Bs."
                     id="precio"
-                    
+                    min={1}
                     maxLength={6}
                     precision={2}
                     step={0.5}

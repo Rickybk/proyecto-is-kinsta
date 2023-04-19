@@ -25,7 +25,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
     const numberInputKeyDown = (e) => {
         
         const key = e.key;
-        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete'  ))
+        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight'  ))
         {
             e.preventDefault();
         }
@@ -34,7 +34,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
     const DecimalInput = (e) => {
        
         const key = e.key;
-        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ))
+        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight' ))
         {
             e.preventDefault();
         }
@@ -158,7 +158,7 @@ const FormProducto = ({ getImgUrlForm, imagen}) => {
                         prefix="Bs."
                         className="inputs"
                         id="precio"
-                        
+                        min={1}
                         maxLength={6}
                         precision={2}
                         step={0.5}
