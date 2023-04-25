@@ -7,6 +7,7 @@ const {
   createACategorie,
   deleteACategorie,
   updateACategorie,
+  getProductOfCategorie,
   getAllProducts,
   getProduct,
   getLots,
@@ -37,6 +38,8 @@ router.post("/store/categories", createACategorie);
 router.delete("/store/categories/:id", deleteACategorie);
 
 router.put("/store/categories/:id", updateACategorie);
+
+router.get("/store/productsCategoria/:idCategorie", getProductOfCategorie);
 
 router.get("/store/allproducts", getAllProducts);
 
