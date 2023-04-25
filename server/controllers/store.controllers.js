@@ -40,23 +40,32 @@ const getAllCategories = async (req, res) => {
 };
 
 const getACategorie = async (req, res) => {
-  const result = await pool.query("SELECT * FROM categorias");
-  console.log(result);
-  res.json(result.rows[0]);
-};
-
-const createACategorie = async (req, res) => {
-  const { name } = req.body;
-
+  const id = req.params.id;
   try {
+    const { rows } = await pool.query("SELECT nombre_categoria FROM categorias WHERE id_categoria = $1", [id]);
+    res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo la categoria");
+  }
+};
+const createACategorie = async (req, res) => {
+  const {nombreCategoria} = req.body;
+  try {
+    const existingProduct = await pool.query(
+      "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
+      [nombreCategoria]      
+    );   
+    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
+      return res.status(200).json({ data: 1 });
+    } 
     const result = await pool.query(
       "INSERT INTO categorias (nombre_categoria) VALUES ($1)",
-      [name]
+      [nombreCategoria]
     );
-
     res.json(result.rows[0]);
   } catch (error) {
-    console.log("El nombre de la categoria ya existe!");
+    console.log("Error añadiendo categoria");
     res.json({ error: error.message });
   }
 };
@@ -76,18 +85,22 @@ const deleteACategorie = (req, res) => {
 const updateACategorie = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name_categorie } = req.body;
+    const { nombreCategoria} = req.body;
+    const existingProduct = await pool.query(
+      "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
+      [nombreCategoria]      
+    );   
+    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
+      return res.status(200).json({ data: 1 });
+    } 
+    
     const newCategorie = await pool.query(
-      "UPDATE categorias SET nombre_categoria = $1 WHERE id_categoria = $2 RETURNING *",
-      [name_categorie, id]
+      "UPDATE categorias SET nombre_categoria = $1 WHERE id_categoria = $2",
+      [nombreCategoria, id]
     );
-
-    if (newCategorie.rows.length === 0)
-      return res.status(404).json({ message: "Categoria no encontrada" });
-
     return res.json(newCategorie.rows[0]);
   } catch (error) {
-    console.log("Algo salio mal en la categoria");
+    console.log("Error modificando categoria");
     res.json({ error: error.message });
   }
 

@@ -30,13 +30,13 @@ router.get("/time", getDbTime);
 
 router.get("/store/categories", getAllCategories);
 
-router.get("/store/categories/1", getACategorie);
+router.get("/store/categories/:id", getACategorie);
 
-router.post("/store/categories/create", createACategorie);
+router.post("/store/categories", createACategorie);
 
-router.delete("/store/categories/delete/:id", deleteACategorie);
+router.delete("/store/categories/:id", deleteACategorie);
 
-router.put("/store/categories/update/:id", updateACategorie);
+router.put("/store/categories/:id", updateACategorie);
 
 router.get("/store/allproducts", getAllProducts);
 
