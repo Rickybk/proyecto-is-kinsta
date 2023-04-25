@@ -15,10 +15,11 @@ function MenuInventario() {
 
   return (
     <div>
+      {/*
       <Affix offsetTop={50}>
         <div><Botons setRefresh={setRefresh}/></div>
-      </Affix>
-      <div className="row" style={{overflow:'scroll'}}>
+    </Affix>*/}
+      <div className="row">
         <ProductList setRefresh={setRefresh} isRefresh={isRefresh}/>
       </div>
     </div>

@@ -1,28 +1,24 @@
 import ProductModal from './ProductModal';
-import {Input,Affix} from 'antd'
-import { useState } from 'react';
+import {Input} from 'antd'
 import './ListaBotones.css';
 
-const {Search} = Input
 
 
 function Botons({setRefresh}){
-    const onSearch = () => {
-        console.log("hola");
-    }
 
-    return(
-
+    return({/*
         <div className="botones">
             <ProductModal setRefresh={setRefresh}/>
-            <Search
-                placeholder="input search text"
+            <Input.Search
+                placeholder="Buscar por nombre"
                 allowClear
-                enterButton="Search"
-                onSearch={onSearch}
-                style={{width:200}}
+                enterButton="Buscar"
+                value={search}
+                onChange={handleInputChange}
+                onSearch={handleSearch}
+                style={{ width: 250 }}
             />
-        </div>
+</div>*/}
     );
 }
 

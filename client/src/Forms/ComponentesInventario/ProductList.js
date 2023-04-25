@@ -1,27 +1,60 @@
 import { useEffect, useState } from "react";
-import { List, Pagination } from 'antd';
+import { List, Input,Affix } from 'antd';
 import Producto from './CuadroProducto';
+import ProductModal from './ProductModal';
+import './ListaBotones.css';
 
 const ProductList = ({ setRefresh, isRefresh }) => {
 
+    const [search, setSearch] = useState('');
     const [products, setProducts] = useState([]);
 
+    async function fetchData() {
+        //"http://localhost:8080/store/allproducts"
+        //`${process.env.REACT_APP_SERVERURL}/store/allproducts/`
+        const response = await fetch("http://localhost:8080/store/allproducts");
+        const jsonData = await response.json();
+        setProducts(jsonData);
+    }
+
     useEffect(() => {
-        async function fetchData() {
-            //"http://localhost:8080/store/allproducts"
-            //`${process.env.REACT_APP_SERVERURL}/store/allproducts/`
-            const response = await fetch("http://localhost:8080/store/allproducts");
-            const jsonData = await response.json();
-            setProducts(jsonData);
-        }
         if (isRefresh) {
             fetchData();
             setRefresh(false);
         }
     }, [setRefresh, isRefresh]);
 
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+        setSearch(value);
+      
+        if (value === '') {
+          fetchData();
+        }else{
+            const filteredData = products.filter((item) => item.nombre_producto.toLowerCase().includes(search.toLowerCase()));
+            setProducts(filteredData);
+        }
+      };
+
+
     return (
-        
+        <>
+            <Affix>
+            <div className="botones">
+                <ProductModal setRefresh={setRefresh}/>
+                <Input
+                    placeholder="Buscar Producto"
+                    allowClear
+                    enterButton="Buscar"
+                    value={search}
+                    onChange={handleInputChange}
+                    style={{ width: 200,
+                            left: 10
+                    }}
+                />
+            </div>
+            </Affix>
+
             <List
                 grid={{
                     xs: 1,
@@ -52,6 +85,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     </List.Item >
                 )}
             /> 
+        </>
     );
 }
 
