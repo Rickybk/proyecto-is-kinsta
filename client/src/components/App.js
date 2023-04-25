@@ -1,9 +1,10 @@
 import { Layout, Menu, ConfigProvider, theme ,Affix} from 'antd';
 import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { ShopOutlined, HomeOutlined, DollarCircleOutlined } from '@ant-design/icons';
+import { ShopOutlined, HomeOutlined, DollarCircleOutlined,TagsOutlined } from '@ant-design/icons';
 import Home from '../Forms/Home';
 import MenuInventario from '../Forms/InventarioMenu';
+import Categoria from '../Forms/ComponentesInventario/Categoria';
 
 function App() {
     return (
@@ -60,6 +61,7 @@ function SideMenu() {
                     { label: "TIENDA J&B",icon: <image href=''/>,disabled:true },
                     { label: "Home", key: "/", icon: <HomeOutlined /> },
                     { label: "Inventario", key: "/inventario", icon: <ShopOutlined /> },
+                    { label: "Categoría", key: "/categoria", icon: <TagsOutlined /> },
                     { label: "Transacciones", key: "/", icon: <DollarCircleOutlined /> }
                 ]}>
                 
@@ -91,6 +93,7 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><h1 style={{fontSize: 50}}>Tienda J&B</h1></div>}></Route>
                 <Route path="/inventario" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
+                <Route path="/categoria" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
             </Routes>
         </Header>
         </Affix>
@@ -99,6 +102,7 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><Home /></div>}></Route>
                 <Route path="/inventario" element={<div><MenuInventario /></div>}></Route>
+                <Route path="/categoria" element={<div><Categoria /></div>}></Route>
             </Routes>
         </Content>
 
