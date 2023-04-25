@@ -1,14 +1,14 @@
-import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Card, Button, Modal } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Card, Button} from 'antd';
 import EditarModal from './EditarForm'
 import DeleteModal from './DeleteModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
-function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
+function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCaducidad, descripcion, setRefresh }) {
+  
   const [modalEditar, setEditar] = useState(false);
-  const [modalLote, setLote] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
 
   const abrirModalEdit = () => {
@@ -30,19 +30,20 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
   return (
     <Card
       style={{
-        width: 200,
+        width: 210,
         textAlign: 'center'
       }}
       cover={
         <img
           style={{
-            width: 100,
+            width: 110,
             height: 150,
             objectFit: 'cover',
-            margin: 'auto'
+            margin: 'auto',
+            marginTop: '20px'
           }}
           alt="Algo salio mal..."
-          src={!imagen ? defaultLogo : imagen}
+          src={imagen === "Sin imagen" ? defaultLogo : imagen}
         />
       }
       actions={[
@@ -55,7 +56,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             imagen={imagen}
             precio={precio}
             costo={costo}
+            cantidad={cantidad}
             descripcion={descripcion}
+            fechaCaducidad={fechaCaducidad}
             setRefresh={setRefresh}
           />
         </>,
@@ -71,10 +74,10 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
           />
         </>
       ]}
-      title={title}
+      title={<b>{title}</b>}
     >
-      <p><b>Precio Unitario: </b>{precio} Bs.</p>
-      <p><b>Cantidad: </b>{cantidad} u</p>
+      <p><b>Precio U: </b>{precio} Bs.</p>
+      <p><b>Cantidad: </b>{cantidad} U.</p>
       <p></p>
     </Card>
   );
