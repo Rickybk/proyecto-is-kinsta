@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List } from 'antd';
+import { List, Pagination } from 'antd';
 import Producto from './CuadroProducto';
 
 const ProductList = ({ setRefresh, isRefresh }) => {
@@ -21,31 +21,37 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     }, [setRefresh, isRefresh]);
 
     return (
-        <List
-            grid={{
-                xs: 1,
-                sm: 2,
-                md: 3,
-                lg: 4,
-                xl: 5,
-                xxl: 6
-            }}
-            dataSource={products}
-            renderItem={(item) => (
-                <List.Item>
-                    <Producto
-                        idProducto={item.id_producto}
-                        imagen={item.imagen}
-                        title={item.nombre_producto}
-                        costo={item.costo_unitario}
-                        precio={item.precio_unitario}
-                        cantidad={item.total}
-                        fechaCaducidad={item.fecha_caducidad}
-                        descripcion={item.descripcion}
-                        setRefresh={setRefresh} />
-                </List.Item >
-            )}
-        />
+        
+            <List
+                grid={{
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 4,
+                    xl: 5,
+                    xxl: 6
+                }}
+                pagination={{
+                    onChange: page =>{
+                        console.log(page);
+                    },pageSize:15,
+                }}
+                dataSource={products}
+                renderItem={(item) => (
+                    <List.Item>
+                        <Producto
+                            idProducto={item.id_producto}
+                            imagen={item.imagen}
+                            title={item.nombre_producto}
+                            costo={item.costo_unitario}
+                            precio={item.precio_unitario}
+                            cantidad={item.total}
+                            fechaCaducidad={item.fecha_caducidad}
+                            descripcion={item.descripcion}
+                            setRefresh={setRefresh} />
+                    </List.Item >
+                )}
+            /> 
     );
 }
 
