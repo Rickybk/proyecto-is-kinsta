@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, Input,Affix } from 'antd';
+import { List, Input,Affix,Select } from 'antd';
 import Producto from './CuadroProducto';
 import ProductModal from './ProductModal';
 import './ListaBotones.css';
@@ -8,6 +8,14 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     const [search, setSearch] = useState('');
     const [products, setProducts] = useState([]);
+    const [sort, setSort] = useState('default');
+    
+    useEffect(() => {
+        if (isRefresh) {
+            fetchData();
+            setRefresh(false);
+        }
+    }, [setRefresh, isRefresh]);
 
     async function fetchData() {
         //"http://localhost:8080/store/allproducts"
@@ -16,13 +24,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         const jsonData = await response.json();
         setProducts(jsonData);
     }
-
-    useEffect(() => {
-        if (isRefresh) {
-            fetchData();
-            setRefresh(false);
-        }
-    }, [setRefresh, isRefresh]);
 
     const handleInputChange = (event) => {
         const value = event.target.value;
@@ -36,6 +37,20 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         }
       };
 
+      const handleSort = (value) => {
+        setSort(value); // Actualizar el estado del criterio de ordenamiento
+        let sortedData = [...products]; // Hacer una copia de la lista de productos
+        if (value === 1) {
+            sortedData.sort((a, b) => a.nombre_producto.localeCompare(b.nombre_producto)); // Ordenar por nombre de producto en orden ascendente
+        } else if (value === 2) {
+            sortedData.sort((a, b) => b.nombre_producto.localeCompare(a.nombre_producto)); // Ordenar por nombre de producto en orden descendente
+        } else if (value === 3) {
+            sortedData.sort((a, b) => a.precio_unitario - b.precio_unitario); // Ordenar por precio de producto en orden ascendente
+        } else if (value === 4) {
+            sortedData.sort((a, b) => b.precio_unitario - a.precio_unitario); // Ordenar por precio de producto en orden descendente
+        }
+        setProducts(sortedData); // Actualizar la lista de productos con la lista ordenada
+    };
 
     return (
         <>
@@ -51,6 +66,37 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     style={{ width: 200,
                             left: 10
                     }}
+                />
+                <Select
+                    showSearch
+                    style={{
+                    width: 200,
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    onChange={handleSort}
+                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                    filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                    }
+                    options={[
+                    {
+                        value: 1,
+                        label: 'A-Z',
+                    },
+                    {
+                        value: 2,
+                        label: 'Z-A',
+                    },
+                    {
+                        value: 3,
+                        label: 'Menor Precio',
+                    },
+                    {
+                        value: 4,
+                        label: 'Mayor Precio',
+                    }
+                    ]}
                 />
             </div>
             </Affix>
