@@ -1,15 +1,21 @@
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Card, Button} from 'antd';
+import { EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
+import { Card, Button } from 'antd';
 import EditarModal from './EditarForm'
 import DeleteModal from './DeleteModal';
+import BuyModal from './BuyModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
 function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCaducidad, descripcion, setRefresh }) {
-  
+
   const [modalEditar, setEditar] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
+  const [buyModal, setBuy] = useState(false);
+
+  const openBuyModal = () => {
+    setBuy(true);
+  }
 
   const abrirModalEdit = () => {
     setEditar(true);
@@ -17,6 +23,10 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
 
   const abrirModalBorrar = () => {
     setBorrar(true);
+  }
+
+  const closeBuyModal = () => {
+    setBuy(false);
   }
 
   const cerrarModalEdit = () => {
@@ -47,11 +57,22 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
         />
       }
       actions={[
+        <>
+          <Button name="modalBorrar" onClick={openBuyModal}><DollarOutlined/></Button>
+          <BuyModal
+            visible={buyModal}
+            onClose={closeBuyModal}
+            idProducto={idProducto}
+            nombreProducto={title}
+            setRefresh={setRefresh}
+            closeModal={closeBuyModal}
+          />
+        </>,
         <><Button name="modalEditar" onClick={abrirModalEdit}><EditOutlined /></Button>
           <EditarModal
             visible={modalEditar}
             onClose={cerrarModalEdit}
-            idProducto={idProducto} 
+            idProducto={idProducto}
             nombre={title}
             imagen={imagen}
             precio={precio}
@@ -69,8 +90,8 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
             onClose={cerrarModalBorrar}
             idProducto={idProducto}
             nombreProducto={title}
-            setRefresh={setRefresh} 
-            cerrarModal={cerrarModalBorrar}  
+            setRefresh={setRefresh}
+            cerrarModal={cerrarModalBorrar}
           />
         </>
       ]}

@@ -5,6 +5,7 @@ import { ShopOutlined, HomeOutlined, DollarCircleOutlined,TagsOutlined } from '@
 import Home from '../Forms/Home';
 import MenuInventario from '../Forms/InventarioMenu';
 import Categoria from '../Forms/ComponentesInventario/Categoria';
+import MenuTransacciones from '../Forms/TransaccionesMenu';
 
 function App() {
     return (
@@ -61,8 +62,8 @@ function SideMenu() {
                     { label: "TIENDA J&B",icon: <image href=''/>,disabled:true },
                     { label: "Home", key: "/", icon: <HomeOutlined /> },
                     { label: "Inventario", key: "/inventario", icon: <ShopOutlined /> },
-                    { label: "Categoría", key: "/categoria", icon: <TagsOutlined /> },
-                    { label: "Transacciones", key: "/", icon: <DollarCircleOutlined /> }
+                    { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
+                    { label: "Transacciones", key: "/transacciones", icon: <DollarCircleOutlined /> }
                 ]}>
                 
             </Menu>
@@ -93,7 +94,8 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><h1 style={{fontSize: 50}}>Tienda J&B</h1></div>}></Route>
                 <Route path="/inventario" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
-                <Route path="/categoria" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
+                <Route path="/categorias" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
+                <Route path="/transacciones" element={<div><h1 style={{fontSize: 50}}>Transacciones</h1></div>}></Route>
             </Routes>
         </Header>
         </Affix>
@@ -102,7 +104,8 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><Home /></div>}></Route>
                 <Route path="/inventario" element={<div><MenuInventario /></div>}></Route>
-                <Route path="/categoria" element={<div><Categoria /></div>}></Route>
+                <Route path="/categorias" element={<div><Categoria /></div>}></Route>
+                <Route path="/transacciones" element={<div><MenuTransacciones /></div>}></Route>
             </Routes>
         </Content>
 
