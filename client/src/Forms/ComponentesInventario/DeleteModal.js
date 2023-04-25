@@ -12,7 +12,7 @@ const DeleteModal = ({visible,onClose,idProducto,nombreProducto, setRefresh,cerr
     const deleteProductDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto, {
+        const res = await fetch("http://localhost:8080/store/products/" + idProducto, {
             method: "DELETE"
         });
         return res;
