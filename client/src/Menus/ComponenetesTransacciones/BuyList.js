@@ -1,20 +1,31 @@
 import { Space, Table, Popconfirm, Button, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DeleteBuyModal from './DeleteBuyModal'
+import BuyEditModal from './BuyEditModal';
 import { useState } from 'react';
+
 
 const { Column } = Table;
 
 const BuyList = ({ setRefresh }) => {
 
     const [deleteModal, setDelete] = useState(false);
+    const [editModal, setEdit] = useState(false);
 
     const openDeleteModal = () => {
         setDelete(true);
     }
 
+    const openEditModal = () => {
+        setEdit(true);
+    }
+
     const closeDeleteModal = () => {
         setDelete(false);
+    }
+
+    const closeEditModal = () => {
+        setEdit(false);
     }
 
     const [dataSource, setDataSource] = useState([
@@ -63,7 +74,14 @@ const BuyList = ({ setRefresh }) => {
                 key="action"
                 render={(_, record) => (
                     <Space size="middle">
-                        <Button name="modalEditarCat" ><EditOutlined /></Button>
+                        <Button name="modalEditarCat" onClick={openEditModal}><EditOutlined /></Button>
+                        <BuyEditModal
+                            visible={editModal}
+                            onClose={closeEditModal}
+                            closeModal={closeEditModal}
+                            setRefresh={setRefresh}
+                            record={record.key}
+                        />
 
                         <Popconfirm title="¿Estas seguro de eliminar esta compra?" onConfirm={() => handleDelete(record.key)}>
                             <Button name="modalEliminarCat" onClick={openDeleteModal}><DeleteOutlined /></Button>

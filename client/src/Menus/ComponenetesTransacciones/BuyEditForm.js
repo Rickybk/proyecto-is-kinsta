@@ -1,10 +1,9 @@
 import { Form, DatePicker, InputNumber } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
+//import { useState } from 'react';
 
 const BuyEditForm = ({ nombreProducto}) => {
 
-    const [costoTotal, setCostoTotal] = useState(0);
 
     const numberInputKeyDown = (e) => {
         
@@ -24,13 +23,6 @@ const BuyEditForm = ({ nombreProducto}) => {
         }
     };
 
-    const calcularTotal = e =>  {
-        var cantidad = document.getElementById("cantidad").value;
-        console.log(cantidad);
-        var costoU = document.getElementById("costoU").value;
-        console.log(costoU);
-        setCostoTotal(cantidad * costoU);
-    }
 
     return (
         <>
@@ -56,7 +48,7 @@ const BuyEditForm = ({ nombreProducto}) => {
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor la cantidad del producto!'
+                            message: 'Por favor ingrese la cantidad del producto!'
                         },
                     ]}
                 >
@@ -68,7 +60,7 @@ const BuyEditForm = ({ nombreProducto}) => {
                         min={1}
                         maxLength={6}
                         onKeyDown={numberInputKeyDown}
-                        onKeyUp={calcularTotal} 
+                        //onKeyUp={calcularTotal} 
                     />
                 </Form.Item>
 
@@ -94,12 +86,12 @@ const BuyEditForm = ({ nombreProducto}) => {
                         precision={2}
                         step={0.5}
                         onKeyDown={DecimalInput}
-                        onKeyUp={calcularTotal} 
+                        //onKeyUp={calcularTotal} 
                     />
                 </Form.Item>
 
                 <Form.Item
-                    label="Seleccionar Fecha de Caducidad"
+                    label="Seleccionar Fechaaa de Caducidad"
                     labelCol={{ span: 24 }}
                     name="fechaCaducidad"
                     rules={[{ required: false, },
@@ -141,6 +133,17 @@ const BuyEditForm = ({ nombreProducto}) => {
                     
                     ]}
                 >
+                    <InputNumber
+                        style={{ width: '100%' }}
+                        prefix="Bs."
+                        className="inputs"
+                        id="costoU"
+                        min={0}
+                        maxLength={10}
+                        precision={2}
+                        onKeyDown={DecimalInput}
+                        //onKeyUp={calcularTotal} 
+                    />
                 </Form.Item>
 
             </Form>

@@ -126,7 +126,7 @@ const getProductOfCategorie = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const result = await pool.query("SELECT DISTINCT p.id_producto, p.nombre_producto, p.costo_unitario, p.precio_unitario, p.id_categoria, p.descripcion, p.total, p.imagen, l.cantidad, l.fecha_caducidad FROM productos p, lotes l WHERE p.id_producto = l.id_producto ORDER BY p.nombre_producto ASC;");
+    const result = await pool.query("SELECT DISTINCT p.id_producto, p.nombre_producto, p.precio_unitario, p.id_categoria, p.descripcion, p.total, p.imagen, l.cantidad, l.fecha_caducidad, l.costo_unitario FROM productos p, lotes l WHERE p.id_producto = l.id_producto ORDER BY p.nombre_producto ASC;");
 
     console.log(result);
 
