@@ -49,7 +49,7 @@ router.get('/store/products/lot/:idProduct', getBuy);
 
 router.post("/store/products/:idCategory", createProduct);
 
-router.post("/store/products/lot/:idProduct", createBuy);
+router.post("/store/products/buy/:idProduct", createBuy);
 
 router.delete("/store/products/:idProduct", deleteProduct);
 

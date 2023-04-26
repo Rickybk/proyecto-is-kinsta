@@ -184,11 +184,13 @@ const createBuy = async (req, res) => {
     const idProduct = req.params.idProduct;
     const {
       cantidad,
-      fechaCaducidad
+      fechaCaducidad,
+      costo_unitario
     } = req.body;
+    const totalCosto = parseFloat(costo_unitario) * parseInt(cantidad);
     const newLot = await pool.query(
-      "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad) VALUES ($1, $2, $3)",
-      [idProduct, cantidad, fechaCaducidad]
+      "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad, costo_unitario, costo_total) VALUES ($1, $2, $3, $4, $5)",
+      [idProduct, cantidad, fechaCaducidad, costo_unitario, totalCosto]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
@@ -201,8 +203,7 @@ const createBuy = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "No se pudo crear el lote." });
   }
-};
-
+  };
 const deleteProduct = async (req, res) => {
 
   const id = req.params.idProduct;
