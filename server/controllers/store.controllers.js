@@ -158,9 +158,9 @@ const getBuy = async (req, res) => {
 }
 const createProduct = async (req, res) => {
   try {
-    const { nombreProducto, cantidad, costoUnitario, precio, fechaCaducidad, descripcion, image } =
+    const {nombreProducto, precio, descripcion, image} =
       req.body;
-
+    const { idCategory } = req.params;
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1",
       [nombreProducto]      
@@ -169,8 +169,8 @@ const createProduct = async (req, res) => {
       return res.status(200).json({ data: 1 });
     } 
     const newProduct = await pool.query(
-      "INSERT INTO productos (nombre_producto, costo_unitario, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, $4, $5, $6, 2)",
-      [nombreProducto, costoUnitario, precio, descripcion, cantidad, image]
+      "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      [nombreProducto, costoUnitario, precio, descripcion, cantidad, image, idCategory]
     );
     const idPro = (await pool.query("SELECT id_producto FROM productos WHERE nombre_producto = $1", [
       nombreProducto
