@@ -280,7 +280,7 @@ const newLote = await pool.query(
     }
 };
 
-const updateLote = async (req, res) => {
+const updateBuy = async (req, res) => {
   try {
     const { idLot } = req.params;
     const { idProduct } = req.params;
@@ -322,7 +322,7 @@ module.exports = {
   deleteProduct,
   deleteLot,
   updateProduct,
-  updateLote,
+  updateBuy,
   getDbTime,
   uploadImg
 };

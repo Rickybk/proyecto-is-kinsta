@@ -16,7 +16,7 @@ const {
   deleteProduct,
   deleteLot,
   updateProduct,
-  updateLote,
+  updateBuy,
   getDbTime,
   uploadImg
 } = require("../controllers/store.controllers");
@@ -57,6 +57,6 @@ router.delete("/store/products/lot/:idLot", deleteLot);
 
 router.put("/store/products/:idProduct", updateProduct);
 
-router.put("/store/products/lot/:idLot/:idProduct", updateLote);
+router.put("/store/products/lot/:idLot/:idProduct", updateBuy);
 
 module.exports = router;
