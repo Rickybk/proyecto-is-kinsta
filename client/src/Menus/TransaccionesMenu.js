@@ -12,7 +12,7 @@ function MenuInventario() {
     }
 
     return (
-        <div className="row" style={{ overflow: 'scroll' }}>
+        <div className="transacciones" >
             <BuyList setRefresh={setRefresh} isRefresh={isRefresh} />
         </div>
     );
