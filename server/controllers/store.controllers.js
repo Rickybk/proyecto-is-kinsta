@@ -169,18 +169,10 @@ const createProduct = async (req, res) => {
       return res.status(200).json({ data: 1 });
     } 
     const newProduct = await pool.query(
-      "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [nombreProducto, costoUnitario, precio, descripcion, cantidad, image, idCategory]
+      "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
+      [nombreProducto, precio, descripcion, image, idCategory]
     );
-    const idPro = (await pool.query("SELECT id_producto FROM productos WHERE nombre_producto = $1", [
-      nombreProducto
-    ])).rows[0].id_producto;
-
-    const newLot = await pool.query(
-      "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad) VALUES ($1, $2, $3)",
-      [idPro, cantidad, fechaCaducidad]
-    );
-    return res.status(200).json(`Añadidos ${newProduct.rowCount} registros de productos y ${newLot.rowCount} registros de lotes`);
+    return res.status(200).json(`Añadidos ${newProduct.rowCount} registros de productos`);
   } catch (error) {
     return res.status(500).json(`Error añadiendo producto: ${error.toString()} \n ${error.stack}`);
   }
@@ -255,25 +247,20 @@ const updateProduct = async (req, res) => {
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;
-
-
-    const newLoteParams = [cantidad];
-if (fechaCaducidad) {
-  newLoteParams.push(fechaCaducidad);
-} else {
-  newLoteParams.push(null);
-}
-newLoteParams.push(idLot, idProduct);
-
-const newLote = await pool.query(
-  "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
-  newLoteParams
-);
+    const newLote = await pool.query(
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
+      [cantidad, fechaCaducidad, idLot, idProduct]
+    );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
     ])).rows[0].total;
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
+
+
+    if (newProduct.rowCount === 0)
+      return res.status(404).json({ message: "OK" });
+
       return res.status(200).json({ message: `El producto con ID ${idProduct} ha sido actualizado correctamente` });
     } catch (error) {
       return res.status(500).json({ message: `Error actualizando producto: ${error.message}` });

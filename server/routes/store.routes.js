@@ -47,7 +47,7 @@ router.get('/store/products/:idProduct', getProduct);
 
 router.get('/store/products/lot/:idProduct', getBuy);
 
-router.post("/store/products", createProduct);
+router.post("/store/products/:idCategory", createProduct);
 
 router.post("/store/products/lot/:idProduct", createBuy);
 
