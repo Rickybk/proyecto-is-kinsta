@@ -223,7 +223,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const deleteLot = async (req, res) => {
+const deleteBuy = async (req, res) => {
   const idLot = req.params.idLot;
   try {
     const result1 = await pool.query('DELETE FROM lotes WHERE id_lote = $1', [idLot]);
@@ -320,7 +320,7 @@ module.exports = {
   createProduct,
   createBuy,
   deleteProduct,
-  deleteLot,
+  deleteBuy,
   updateProduct,
   updateBuy,
   getDbTime,

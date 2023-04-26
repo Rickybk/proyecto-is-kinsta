@@ -14,7 +14,7 @@ const {
   createProduct,
   createBuy,
   deleteProduct,
-  deleteLot,
+  deleteBuy,
   updateProduct,
   updateBuy,
   getDbTime,
@@ -53,7 +53,7 @@ router.post("/store/products/lot/:idProduct", createBuy);
 
 router.delete("/store/products/:idProduct", deleteProduct);
 
-router.delete("/store/products/lot/:idLot", deleteLot);
+router.delete("/store/products/lot/:idLot", deleteBuy);
 
 router.put("/store/products/:idProduct", updateProduct);
 
