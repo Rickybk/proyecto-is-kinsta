@@ -1,9 +1,7 @@
 import './InventarioMenu.css';
 import React from 'react';
-import Botons from './ComponentesInventario/ListaBotones';
 import { useState } from 'react';
-import { Affix } from 'antd'
-import BuyList from './ComponentesInventario/BuyList'
+import BuyList from './ComponenetesTransacciones/BuyList'
 
 function MenuInventario() {
 

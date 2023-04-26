@@ -1,5 +1,5 @@
 import { Button} from 'antd';
-import CategoryList from './CategoryList'
+import CategoryList from './ComponentesCategorias/CategoryList'
 import { useState } from 'react';
 
 function Categoria() {

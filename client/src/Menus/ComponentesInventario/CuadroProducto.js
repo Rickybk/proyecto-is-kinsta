@@ -2,7 +2,7 @@ import { EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons'
 import { Card, Button } from 'antd';
 import EditarModal from './EditarForm'
 import DeleteModal from './DeleteModal';
-import BuyModal from './BuyModal';
+import BuyModal from '../ComponenetesTransacciones/BuyModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
