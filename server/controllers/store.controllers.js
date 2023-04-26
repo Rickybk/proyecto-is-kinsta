@@ -149,11 +149,11 @@ const getProduct = async (req, res) => {
 const getBuy = async (req, res) => {
   const idProduct = req.params.idProduct;
   try {
-    const result = await pool.query("SELECT * FROM lotes WHERE id_producto = $1", [idProduct]);
+    const result = await pool.query("SELECT id_lote, cantidad, fecha_caducidad, costo_unitario, costo_total FROM lotes WHERE id_producto = $1", [idProduct]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error obteniendo lotes");
+    res.status(500).send("Error obteniendo compras");
   }
 }
 const createProduct = async (req, res) => {
@@ -274,14 +274,15 @@ const updateBuy = async (req, res) => {
     const { idProduct } = req.params;
     const {
       cantidad,
-      fecha_caducidad
+      fecha_caducidad,
+      costo_unitario
     } = req.body;
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;
     const newLot = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
-      [cantidad, fecha_caducidad, idLot, idProduct]
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_unitario = $5 WHERE id_lote = $3 AND id_producto = $4 ",
+      [cantidad, fecha_caducidad, idLot, idProduct, costo_unitario]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
