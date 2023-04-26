@@ -10,9 +10,9 @@ const {
   getProductOfCategorie,
   getAllProducts,
   getProduct,
-  getLots,
+  getBuy,
   createProduct,
-  createLot,
+  createBuy,
   deleteProduct,
   deleteLot,
   updateProduct,
@@ -39,17 +39,17 @@ router.delete("/store/categories/:id", deleteACategorie);
 
 router.put("/store/categories/:id", updateACategorie);
 
-router.get("/store/productsCategoria/:idCategorie", getProductOfCategorie);
+router.get("/store/productsCategoria/:id", getProductOfCategorie);
 
 router.get("/store/allproducts", getAllProducts);
 
 router.get('/store/products/:idProduct', getProduct);
 
-router.get('/store/products/lot/:idProduct', getLots);
+router.get('/store/products/lot/:idProduct', getBuy);
 
 router.post("/store/products", createProduct);
 
-router.post("/store/products/lot/:idProduct", createLot);
+router.post("/store/products/lot/:idProduct", createBuy);
 
 router.delete("/store/products/:idProduct", deleteProduct);
 
@@ -57,6 +57,6 @@ router.delete("/store/products/lot/:idLot", deleteLot);
 
 router.put("/store/products/:idProduct", updateProduct);
 
-router.put("/store/products/lot/:idLot/:idProduct",updateLote);
+router.put("/store/products/lot/:idLot/:idProduct", updateLote);
 
 module.exports = router;

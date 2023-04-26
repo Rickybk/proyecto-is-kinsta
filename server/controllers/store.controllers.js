@@ -146,7 +146,7 @@ const getProduct = async (req, res) => {
     res.status(500).send("Error obteniendo el producto");
   }
 };
-const getLots = async (req, res) => {
+const getBuy = async (req, res) => {
   const idProduct = req.params.idProduct;
   try {
     const result = await pool.query("SELECT * FROM lotes WHERE id_producto = $1", [idProduct]);
@@ -187,7 +187,7 @@ const createProduct = async (req, res) => {
 };
 
 
-const createLot = async (req, res) => {
+const createBuy = async (req, res) => {
   try {
     const idProduct = req.params.idProduct;
     const {
@@ -316,9 +316,9 @@ module.exports = {
   getProductOfCategorie,
   getAllProducts,
   getProduct,
-  getLots,
+  getBuy,
   createProduct,
-  createLot,
+  createBuy,
   deleteProduct,
   deleteLot,
   updateProduct,
