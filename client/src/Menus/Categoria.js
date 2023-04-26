@@ -1,4 +1,5 @@
 import { Button} from 'antd';
+import React from 'react';
 import CategoryList from './ComponentesCategorias/CategoryList'
 import { useState } from 'react';
 
