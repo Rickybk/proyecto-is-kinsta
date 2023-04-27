@@ -18,7 +18,8 @@ const {
   updateProduct,
   updateBuy,
   getDbTime,
-  uploadImg
+  uploadImg,
+  getAllBuy
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -45,7 +46,7 @@ router.get("/store/allproducts", getAllProducts);
 
 router.get('/store/products/:idProduct', getProduct);
 
-router.get('/store/products/lot/:idProduct', getBuy);
+router.get('/store/products/buy/:idProduct', getBuy);
 
 router.post("/store/products/:idCategory", createProduct);
 
@@ -53,10 +54,12 @@ router.post("/store/products/buy/:idProduct", createBuy);
 
 router.delete("/store/products/:idProduct", deleteProduct);
 
-router.delete("/store/products/lot/:idLot", deleteBuy);
+router.delete("/store/products/buy/:idLot", deleteBuy);
 
 router.put("/store/products/:idProduct", updateProduct);
 
 router.put("/store/products/buy/:idLot/:idProduct", updateBuy);
+
+router.get("/store/products/allbuy/1", getAllBuy);
 
 module.exports = router;

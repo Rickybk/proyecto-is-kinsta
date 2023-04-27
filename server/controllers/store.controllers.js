@@ -282,7 +282,18 @@ const updateBuy = async (req, res) => {
     res.json({ error: error.message });
   }
 };
+const getAllBuy = async (req, res) => {
 
+  try {
+  const getBuy = await pool.query("SELECT p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto");
+  console.log(getBuy.rows);
+  res.json(getBuy.rows);
+  } catch (err) {
+  console.error(err.message);
+  res.status(500).send("Server error");
+  }
+  
+  };
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -300,5 +311,6 @@ module.exports = {
   updateProduct,
   updateBuy,
   getDbTime,
-  uploadImg
+  uploadImg,
+  getAllBuy
 };
