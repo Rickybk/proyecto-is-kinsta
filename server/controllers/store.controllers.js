@@ -185,12 +185,12 @@ const createBuy = async (req, res) => {
     const {
       cantidad,
       fechaCaducidad,
-      costo_unitario
+      costo_total
     } = req.body;
-    const totalCosto = parseFloat(costo_unitario) * parseInt(cantidad);
+    const costoUnitario = parseFloat(costo_total) / parseInt(cantidad);
     const newLot = await pool.query(
       "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad, costo_unitario, costo_total) VALUES ($1, $2, $3, $4, $5)",
-      [idProduct, cantidad, fechaCaducidad, costo_unitario, totalCosto]
+      [idProduct, cantidad, fechaCaducidad, costoUnitario, costo_total]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
