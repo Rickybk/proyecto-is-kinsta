@@ -1,6 +1,6 @@
 import { EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { Card, Button } from 'antd';
-import EditarModal from './EditarForm'
+import EditarModal from './ProductModal'
 import DeleteModal from './DeleteModal';
 import BuyModal from '../ComponenetesTransacciones/BuyModal';
 import React, { useState } from 'react';
@@ -68,18 +68,13 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCa
             closeModal={closeBuyModal}
           />
         </>,
-        <><Button name="modalEditar" onClick={abrirModalEdit}><EditOutlined /></Button>
+        <>
           <EditarModal
-            visible={modalEditar}
-            onClose={cerrarModalEdit}
             idProducto={idProducto}
-            nombre={title}
+            nombreProducto={title}
             imagen={imagen}
             precio={precio}
-            costo={costo}
-            cantidad={cantidad}
             descripcion={descripcion}
-            fechaCaducidad={fechaCaducidad}
             setRefresh={setRefresh}
           />
         </>,

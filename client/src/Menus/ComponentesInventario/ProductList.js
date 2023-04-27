@@ -88,7 +88,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     style={{
                     width: 200,
                     }}
-                    placeholder="Search to Select"
+                    placeholder="Ordenar por..."
                     optionFilterProp="children"
                     onChange={handleSort}
                     filterOption={(input, option) => (option?.label ?? '').includes(input)}

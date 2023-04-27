@@ -1,6 +1,6 @@
 import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 
@@ -77,34 +77,17 @@ const BuyList = ({ setRefresh }) => {
         setEditingKey('');
     };
 
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '1',
-            firstName: 'John',
-            lastName: 'Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            firstName: 'Jim',
-            lastName: 'Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            firstName: 'Joe',
-            lastName: 'Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ]);
+    const [dataSource, setDataSource] = useState([]);
 
+    useEffect(() => {
+        fetchBuys();
+    },[]);
 
+    async function fetchBuys() {
+        const response = await fetch("http://localhost:8080/store/products/allbuy/1");
+        const jsonData = await response.json();
+        setDataSource(jsonData);
+    }
 
     const handleDelete = (key) => {
         // Borrar bd
@@ -141,31 +124,31 @@ const BuyList = ({ setRefresh }) => {
     const columns = [
         {
             title: 'Producto',
-            dataIndex: 'lastName',
+            dataIndex: 'nombre_producto',
             width: '15%',
             editable: false,
         },
         {
             title: 'Cantidad',
-            dataIndex: 'age',
+            dataIndex: 'cantidad',
             width: '15%',
             editable: true,
         },
         {
             title: 'Costo unitario(Bs.)',
-            dataIndex: 'age',
+            dataIndex: 'costo_unitario',
             width: '15%',
             editable: false,
         },
         {
             title: 'Fecha de caducidad',
-            dataIndex: 'lastName',
+            dataIndex: 'fecha_caducidad',
             width: '15%',
             editable: true,
         },
         {
             title: 'Costo total',
-            dataIndex: 'address',
+            dataIndex: 'costo_total',
             width: '15%',
             editable: true,
         },    

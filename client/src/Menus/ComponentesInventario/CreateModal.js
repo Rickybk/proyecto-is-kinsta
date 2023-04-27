@@ -1,7 +1,7 @@
 import { Modal, Button } from 'antd';
 import { useState } from 'react';
 
-const CreateModal = ({ handleOk, setRefresh }) => {
+const CreateModal = ({ handleOk, setRefresh, isEdit }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,10 +22,11 @@ const CreateModal = ({ handleOk, setRefresh }) => {
     return (
         <>
             <Button onClick={showModal}>
-                Crear
+                {isEdit ? "Editar" : "Crear"}
             </Button>
             <Modal
-                title="¿Está seguro de agregar el nuevo producto?"
+                title={isEdit ? "¿Está seguro de modificar la información del producto?" :
+                    "¿Está seguro de agregar el nuevo producto?"}
                 open={isModalOpen}
                 onCancel={handleCancel}
                 width="25%"

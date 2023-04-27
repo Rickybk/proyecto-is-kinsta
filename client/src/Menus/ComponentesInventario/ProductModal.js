@@ -1,15 +1,14 @@
-import { Button, Modal, message } from 'antd';
+import { Button, Modal, message, Select } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
 import CreateModal from './CreateModal';
+import { EditOutlined } from '@ant-design/icons';
 
 const values = {
     image: "",
     nombreProducto: "",
-    cantidad: "",
-    costoUnitario: "",
     precio: "",
-    fechaCaducidad: "",
+    id_categoria: 2,
     descripcion: ""
 }
 
@@ -19,7 +18,11 @@ const getImgUrlForm = (data) => {
     imgUrl = data;
 }
 
-const ProductModal = ({ setRefresh }) => {
+const setIdCategoria = (id_categoria) => {
+    values.id_categoria = id_categoria;
+}
+
+const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU, descripcion }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,14 +33,18 @@ const ProductModal = ({ setRefresh }) => {
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            const respuesta=await uploadDB();
+            const respuesta = await uploadDB();
             setRefresh(true);
-            if(respuesta===1){
-                await message.error("El producto "+ values.nombreProducto +" ya existente ");
+            if (respuesta === 1) {
+                await message.error("El producto " + values.nombreProducto + " ya existente ");
             } else {
-                message.success("Producto creado exitosamente");
-                document.getElementById("productForm").reset();
-            } 
+                if (idProducto) {
+                    message.success("Producto actualizado exitosamente");
+                } else {
+                    message.success("Producto creado exitosamente");
+                    document.getElementById("productForm").reset();
+                }
+            }
             imgUrl = "Sin imagen";
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
@@ -50,12 +57,6 @@ const ProductModal = ({ setRefresh }) => {
         if (!nombre || nombre.length < 3) {
             valid = false;
         }
-        if (!document.getElementById("cantidad").value) {
-            valid = false;
-        }
-        if (!document.getElementById("costoU").value) {
-            valid = false;
-        }
         if (!document.getElementById("precio").value) {
             valid = false;
         }
@@ -65,28 +66,21 @@ const ProductModal = ({ setRefresh }) => {
     const saveData = () => {
         values.image = imgUrl;
         values.nombreProducto = document.getElementById("nombre").value;
-        values.cantidad = document.getElementById("cantidad").value;
-        values.costoUnitario = document.getElementById("costoU").value;
         values.precio = document.getElementById("precio").value;
-        values.fechaCaducidad = document.getElementById("fechaCad").value;
         values.descripcion = document.getElementById("descripcion").value;
-
-        if (!values.fechaCaducidad) {
-            values.fechaCaducidad = null;
-        }
     }
 
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products", {
+        const res = await fetch("http://localhost:8080/store/products/" + values.id_categoria, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
         const jsonData = await res.json();
-        if(jsonData.data === 1){
-            return 1;   
+        if (jsonData.data === 1) {
+            return 1;
         }
     }
 
@@ -97,11 +91,11 @@ const ProductModal = ({ setRefresh }) => {
 
     return (
         <>
-            <Button type="primary" onClick={showModal}>
-                Añadir Producto
+            <Button type={idProducto ? "default" : "primary"} onClick={showModal}>
+                {idProducto ? <EditOutlined /> : "Añadir Producto"}
             </Button>
             <Modal
-                title="Añadir Producto"
+                title={idProducto ? "Editar Producto" : "Añadir Producto"}
                 style={{
                     top: 0,
                     left: "37%",
@@ -114,15 +108,23 @@ const ProductModal = ({ setRefresh }) => {
                     <CreateModal
                         handleOk={handleOk}
                         isModalOpen={false}
-                        //onClose={onClose}
-                        setRefresh={setRefresh} />,
+                        setRefresh={setRefresh}
+                        isEdit={idProducto ? true : false}
+                    />,
                     <Button key="cancel" onClick={handleCancel}>
                         Cancelar
                     </Button>
                 ]}
                 destroyOnClose="true"
             >
-                <ProductForm getImgUrlForm={getImgUrlForm} imagen={imgUrl} />
+                <ProductForm
+                    getImgUrlForm={getImgUrlForm}
+                    imagen={imagen ? imagen : imgUrl}
+                    descripcion={descripcion}
+                    nombreProducto={nombreProducto}
+                    setIdCategoria={setIdCategoria}
+                    precioU={precioU}
+                />
             </Modal>
         </>
     );

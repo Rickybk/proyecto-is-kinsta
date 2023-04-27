@@ -14,7 +14,7 @@ const uploadImg = (req, res, next) => {
     }
 
     const file = req.file;
-    
+
     if (!file) {
       const error = new Error("Please upload a file");
       error.httpStatusCode = 400;
@@ -50,15 +50,15 @@ const getACategorie = async (req, res) => {
   }
 };
 const createACategorie = async (req, res) => {
-  const {nombreCategoria} = req.body;
+  const { nombreCategoria } = req.body;
   try {
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
-      [nombreCategoria]      
-    );   
+      [nombreCategoria]
+    );
     if (existingProduct.rows[0].cantidad_encontrada !== '0') {
       return res.status(200).json({ data: 1 });
-    } 
+    }
     const result = await pool.query(
       "INSERT INTO categorias (nombre_categoria) VALUES ($1)",
       [nombreCategoria]
@@ -85,15 +85,15 @@ const deleteACategorie = (req, res) => {
 const updateACategorie = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombreCategoria} = req.body;
+    const { nombreCategoria } = req.body;
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
-      [nombreCategoria]      
-    );   
+      [nombreCategoria]
+    );
     if (existingProduct.rows[0].cantidad_encontrada !== '0') {
       return res.status(200).json({ data: 1 });
-    } 
-    
+    }
+
     const newCategorie = await pool.query(
       "UPDATE categorias SET nombre_categoria = $1 WHERE id_categoria = $2",
       [nombreCategoria, id]
@@ -115,7 +115,7 @@ const getProductOfCategorie = async (req, res) => {
     WHERE p.id_producto = l.id_producto 
     AND p.id_categoria = $1 
     ORDER BY p.nombre_producto ASC;`,
-     [id]);
+      [id]);
     console.log(rows);
     res.status(200).json(rows);
   } catch (error) {
@@ -159,16 +159,16 @@ const getBuy = async (req, res) => {
 }
 const createProduct = async (req, res) => {
   try {
-    const {nombreProducto, precio, descripcion, image} =
+    const { nombreProducto, precio, descripcion, image } =
       req.body;
     const { idCategory } = req.params;
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1",
-      [nombreProducto]      
-    );   
+      [nombreProducto]
+    );
     if (existingProduct.rows[0].cantidad_encontrada !== '0') {
       return res.status(200).json({ data: 1 });
-    } 
+    }
     const newProduct = await pool.query(
       "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
       [nombreProducto, precio, descripcion, image, idCategory]
@@ -204,7 +204,7 @@ const createBuy = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "No se pudo crear el lote." });
   }
-  };
+};
 const deleteProduct = async (req, res) => {
 
   const id = req.params.idProduct;
@@ -230,17 +230,17 @@ const deleteBuy = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { idProduct } = req.params;
-    const { nombreProducto,precio, descripcion, imagen,idCategory} = req.body;
+    const { nombreProducto, precio, descripcion, imagen, idCategory } = req.body;
     //const { idCategory } = req.params;
-    
+
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1 AND id_producto <> $2",
-      [nombreProducto, idProduct]      
-    );  
+      [nombreProducto, idProduct]
+    );
     if (existingProduct.rows[0].cantidad_encontrada !== '0') {
       console.log("entre");
       return res.status(200).json({ data: 1 });
-    } 
+    }
     const newProduct = await pool.query(
       "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
       [nombreProducto, precio, descripcion, imagen, idCategory, idProduct]
@@ -249,10 +249,10 @@ const updateProduct = async (req, res) => {
     if (newProduct.rowCount === 0)
       return res.status(404).json({ message: "OK" });
 
-      return res.status(200).json({ message: `El producto con ID ${idProduct} ha sido actualizado correctamente` });
-    } catch (error) {
-      return res.status(500).json({ message: `Error actualizando producto: ${error.message}` });
-    }
+    return res.status(200).json({ message: `El producto con ID ${idProduct} ha sido actualizado correctamente` });
+  } catch (error) {
+    return res.status(500).json({ message: `Error actualizando producto: ${error.message}` });
+  }
 };
 
 const updateBuy = async (req, res) => {
@@ -277,7 +277,7 @@ const updateBuy = async (req, res) => {
     ])).rows[0].total;
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
-    
+
     return res.json(newLot.rows[0]);
   } catch (error) {
     res.json({ error: error.message });
@@ -286,15 +286,15 @@ const updateBuy = async (req, res) => {
 const getAllBuy = async (req, res) => {
 
   try {
-  const getBuy = await pool.query("SELECT p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto");
-  console.log(getBuy.rows);
-  res.json(getBuy.rows);
+    const getBuy = await pool.query("SELECT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto");
+    console.log(getBuy.rows);
+    res.json(getBuy.rows);
   } catch (err) {
-  console.error(err.message);
-  res.status(500).send("Server error");
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-  
-  };
+
+};
 module.exports = {
   getAllCategories,
   getACategorie,

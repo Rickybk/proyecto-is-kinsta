@@ -1,6 +1,6 @@
 import { Button, Modal, message } from 'antd';
 import BuyEditForm from './BuyEditForm'
-import ConfirmBuyModal from './ConfirmBuyEditModal';
+import ConfirmBuyEditModal from './ConfirmBuyEditModal';
 
 const values = {
     cantidad: "",
@@ -81,10 +81,11 @@ const BuyEditModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
             onCancel={onClose}
             width="25%"
             footer={[
-                <ConfirmBuyModal
+                <ConfirmBuyEditModal
                     handleOk={handleOk}
                     isModalOpen={false}
-                    setRefresh={setRefresh} />,
+                    setRefresh={setRefresh} 
+                />,
                 <Button key="cancel" onClick={handleCancel}>
                     Cancelar
                 </Button>
