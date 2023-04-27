@@ -19,7 +19,8 @@ const EditableCell = ({
     backgroundColor:"#fff6ed"
   }}
   onKeyDown={validation} 
-  maxLength={30}/>;
+  maxLength={30}
+  autoComplete='Off'/>;
   return (
     <td {...restProps}>
       {editing ? (
@@ -149,19 +150,10 @@ const CategoryList = () => {
             const editable = isEditing(record);
             return editable ? (
             <span>
-                <Typography.Link
-                onClick={() => save(record.key)}
-                style={{
-                    marginRight: 8,
-                }}
-                >
-                <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={save}>
+                <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.key)}>
                     <Button name="guardar" >Guardar</Button>
                 </Popconfirm>
-                </Typography.Link>
-                <Popconfirm title="¿Está seguro de querer cancelar?" onConfirm={cancel}>
-                    <Button name="cancelar" >Cancelar</Button>
-                </Popconfirm>
+                    <Button name="cancelar" onClick={cancel}>Cancelar</Button>
             </span>
             ) : (
             <span>
@@ -212,7 +204,9 @@ const CategoryList = () => {
             columns={mergedColumns}
             rowClassName="editable-row"
             pagination={{
-            onChange: cancel,
+            onChange: page=>{
+                console.log(page);
+            },pageSize:7,
             }}
         />
         </Form>
