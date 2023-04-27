@@ -1,6 +1,7 @@
 import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 
 
 
@@ -19,7 +20,7 @@ const EditableCell = ({
     style={{
       backgroundColor:"#fff6ed"
     }}
-    onKeyDown={validation} 
+    onid_loteDown={validation} 
     maxLength={30}/>;
     return (
       <td {...restProps}>
@@ -32,7 +33,7 @@ const EditableCell = ({
             rules={[
               {
                 required: true,
-                message: `Ingrese el nombre de la categoría!`,
+                message: `llene el campo por favor!`,
               },
             ]}
           >
@@ -63,18 +64,18 @@ const BuyList = ({ setRefresh }) => {
     const [form] = Form.useForm();
 
  
-    const [editingKey, setEditingKey] = useState('');
-    const isEditing = (record) => record.key === editingKey;
+    const [editingid_lote, setEditingid_lote] = useState('');
+    const isEditing = (record) => record.id_lote === editingid_lote;
     const edit = (record) => {
         form.setFieldsValue({
         name: '',
         ...record,
         });
-        setEditingKey(record.key);
+        setEditingid_lote(record.id_lote);
     };
 
     const cancel = () => {
-        setEditingKey('');
+        setEditingid_lote('');
     };
 
     const [dataSource, setDataSource] = useState([]);
@@ -89,19 +90,29 @@ const BuyList = ({ setRefresh }) => {
         setDataSource(jsonData);
     }
 
-    const handleDelete = (key) => {
+    const handleDelete = async (id_lote) => {
         // Borrar bd
+        await deleteProductDB(id_lote);
         // Borrar de la lista
-        const newData = dataSource.filter((item) => item.key !== key);
+        const newData = dataSource.filter((item) => item.id_lote !== id_lote);
         setDataSource(newData);
         message.success("La compra se elimino correctamente");
     };
-    const save = async (key) => {
+    const deleteProductDB = async (id_lote) => {
+        //Ruta para server en localhost: "http://localhost:8080/store/products"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+        const res = await fetch("http://localhost:8080/store/products/buy/" + id_lote, {
+            method: "DELETE"
+        });
+        return res;
+    }
+
+    const save = async (id_lote) => {
         // base DB
         try {
         const row = await form.validateFields();
         const newData = [...dataSource];
-        const index = newData.findIndex((item) => key === item.key);
+        const index = newData.findIndex((item) => id_lote === item.id_lote);
         if (index > -1) {
             const item = newData[index];
             newData.splice(index, 1, {
@@ -109,11 +120,11 @@ const BuyList = ({ setRefresh }) => {
             ...row,
             });
             setDataSource(newData);
-            setEditingKey('');
+            setEditingid_lote('');
         } else {
             newData.push(row);
             setDataSource(newData);
-            setEditingKey('');
+            setEditingid_lote('');
         }
         } catch (errInfo) {
         console.log('Error en la validación:', errInfo);
@@ -145,6 +156,7 @@ const BuyList = ({ setRefresh }) => {
             dataIndex: 'fecha_caducidad',
             width: '15%',
             editable: true,
+            render: (fecha) => dayjs(fecha).format('YYYY-MM-DD')
         },
         {
             title: 'Costo total',
@@ -160,7 +172,7 @@ const BuyList = ({ setRefresh }) => {
             return editable ? (
             <span>
                 <Typography.Link
-                onClick={() => save(record.key)}
+                onClick={() => save(record.id_lote)}
                 style={{
                     marginRight: 8,
                 }}
@@ -173,12 +185,12 @@ const BuyList = ({ setRefresh }) => {
             </span>
             ) : (
             <span>
-                <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                <Typography.Link disabled={editingid_lote !== ''} onClick={() => edit(record)}>
                     <Button name="editar" ><EditOutlined /></Button>
                 </Typography.Link>
 
                 <Typography.Link >
-                    <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={()=>handleDelete(record.key)}>
+                    <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={()=>handleDelete(record.id_lote)}>
                     <Button name="eliminar" 
                     ><DeleteOutlined /></Button>
                     </Popconfirm>
