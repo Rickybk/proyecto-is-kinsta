@@ -65,9 +65,13 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     };
 
     async function handleCategoria(value){
+        if(value === 1){
+            await fetchData();
+        } else {
         const response = await fetch("http://localhost:8080/store/productsCategoria/" + value);
         const jsonData = await response.json();
         setProducts(jsonData);
+        }
     }
 
     return (
