@@ -58,7 +58,7 @@ router.delete("/store/products/buy/:idLot", deleteBuy);
 
 router.put("/store/products/:idProduct", updateProduct);
 
-router.put("/store/products/buy/:idLot/:idProduct", updateBuy);
+router.put("/store/products/buy/:idLot", updateBuy);
 
 router.get("/store/products/allbuy/1", getAllBuy);
 

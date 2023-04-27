@@ -264,19 +264,20 @@ const updateProduct = async (req, res) => {
 const updateBuy = async (req, res) => {
   try {
     const { idLot } = req.params;
-    const { idProduct } = req.params;
     const {
       cantidad,
       fecha_caducidad,
-      costo_unitario
+      costo_total
     } = req.body;
-    const totalCosto = parseFloat(costo_unitario) * parseInt(cantidad);
+    const idProduct = (await pool.query("SELECT id_producto FROM lotes WHERE id_lote = $1", [idLot])).rows[0].id_producto;
+    const costoUnitario = parseFloat(costo_total) / parseInt(cantidad);
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;
+
     const newLot = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_unitario = $3, costo_total = $4 WHERE id_lote = $5 AND id_producto = $6 ",
-      [cantidad, fecha_caducidad, costo_unitario, totalCosto, idLot, idProduct]
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4 WHERE id_lote = $5 AND id_producto = $6 ",
+      [cantidad, fecha_caducidad, costo_total, costoUnitario, idLot, idProduct]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
@@ -292,7 +293,7 @@ const updateBuy = async (req, res) => {
 const getAllBuy = async (req, res) => {
 
   try {
-    const getBuy = await pool.query("SELECT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto");
+    const getBuy = await pool.query("SELECT DISTINCT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto ORDER BY nombre_producto ASC;");
     console.log(getBuy.rows);
     res.json(getBuy.rows);
   } catch (err) {
