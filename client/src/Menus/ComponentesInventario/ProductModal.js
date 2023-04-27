@@ -1,25 +1,23 @@
-import { Button, Modal, message, Select } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
 import CreateModal from './CreateModal';
 import { EditOutlined } from '@ant-design/icons';
 
 const values = {
-    image: "",
+    imagen: "Sin imagen",
     nombreProducto: "",
     precio: "",
-    id_categoria: 2,
+    idCategory: 2,
     descripcion: ""
 }
 
-var imgUrl = "Sin imagen";
-
 const getImgUrlForm = (data) => {
-    imgUrl = data;
+    values.imagen = data;
 }
 
 const setIdCategoria = (id_categoria) => {
-    values.id_categoria = id_categoria;
+    values.idCategory = id_categoria;
 }
 
 const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU, descripcion }) => {
@@ -27,12 +25,16 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
+        if(imagen){
+            values.imagen = imagen;
+        }
         setIsModalOpen(true);
     };
 
     const handleOk = async () => {
         if (validData()) {
             saveData();
+            console.log(values);
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
@@ -45,7 +47,8 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
                     document.getElementById("productForm").reset();
                 }
             }
-            imgUrl = "Sin imagen";
+            values.imagen = "Sin imagen";
+            values.idCategory = 2;
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
@@ -64,7 +67,6 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
     }
 
     const saveData = () => {
-        values.image = imgUrl;
         values.nombreProducto = document.getElementById("nombre").value;
         values.precio = document.getElementById("precio").value;
         values.descripcion = document.getElementById("descripcion").value;
@@ -73,11 +75,21 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products/" + values.id_categoria, {
-            method: "POST",
-            body: JSON.stringify(values),
-            headers: { "Content-Type": "application/json" }
-        });
+        var res;
+        if (idProducto) {
+            res = await fetch("http://localhost:8080/store/products/" + idProducto, {
+                method: "PUT",
+                body: JSON.stringify(values),
+                headers: { "Content-Type": "application/json" }
+            });
+        } else {
+            res = await fetch("http://localhost:8080/store/products/" + values.idCategory, {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: { "Content-Type": "application/json" }
+            });
+        }
+
         const jsonData = await res.json();
         if (jsonData.data === 1) {
             return 1;
@@ -85,7 +97,7 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
     }
 
     const handleCancel = () => {
-        imgUrl = "Sin imagen";
+        values.image = "Sin imagen";
         setIsModalOpen(false);
     };
 
@@ -119,7 +131,7 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
             >
                 <ProductForm
                     getImgUrlForm={getImgUrlForm}
-                    imagen={imagen ? imagen : imgUrl}
+                    imagen={values.imagen}
                     descripcion={descripcion}
                     nombreProducto={nombreProducto}
                     setIdCategoria={setIdCategoria}
