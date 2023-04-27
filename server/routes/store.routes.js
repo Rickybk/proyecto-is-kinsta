@@ -57,6 +57,6 @@ router.delete("/store/products/lot/:idLot", deleteBuy);
 
 router.put("/store/products/:idProduct", updateProduct);
 
-router.put("/store/products/lot/:idLot/:idProduct", updateBuy);
+router.put("/store/products/buy/:idLot/:idProduct", updateBuy);
 
 module.exports = router;

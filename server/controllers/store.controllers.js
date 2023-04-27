@@ -277,12 +277,13 @@ const updateBuy = async (req, res) => {
       fecha_caducidad,
       costo_unitario
     } = req.body;
+    const totalCosto = parseFloat(costo_unitario) * parseInt(cantidad);
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;
     const newLot = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_unitario = $5 WHERE id_lote = $3 AND id_producto = $4 ",
-      [cantidad, fecha_caducidad, idLot, idProduct, costo_unitario]
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_unitario = $3, costo_total = $4 WHERE id_lote = $5 AND id_producto = $6 ",
+      [cantidad, fecha_caducidad, costo_unitario, totalCosto, idLot, idProduct]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
