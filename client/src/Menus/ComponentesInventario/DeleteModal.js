@@ -1,4 +1,4 @@
-import {Modal,Button} from 'antd';
+import {Modal,Button,message} from 'antd';
 
 const DeleteModal = ({visible,onClose,idProducto,nombreProducto, setRefresh,cerrarModal}) =>{
     
@@ -6,12 +6,13 @@ const DeleteModal = ({visible,onClose,idProducto,nombreProducto, setRefresh,cerr
         await deleteProductDB();
         cerrarModal();
         setRefresh(true);
+        message.success("El producto '" + nombreProducto + "' ha sido eliminado exitosamente.");
     };
     
     const deleteProductDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products`
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto, {
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+        const res = await fetch("http://localhost:8080/store/products/" + idProducto, {
             method: "DELETE"
         });
         return res;
@@ -32,7 +33,7 @@ const DeleteModal = ({visible,onClose,idProducto,nombreProducto, setRefresh,cerr
             ]}
             destroyOnClose="true"
         >
-            <p>¿Está seguro de querer eliminar {nombreProducto}</p>
+            <p>¿Está seguro de querer eliminar {nombreProducto}?</p>
         </Modal>
     );
 }

@@ -1,15 +1,21 @@
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Card, Button} from 'antd';
-import EditarModal from './EditarForm'
+import { EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
+import { Card, Button } from 'antd';
+import EditarModal from './ProductModal'
 import DeleteModal from './DeleteModal';
+import BuyModal from '../ComponenetesTransacciones/BuyModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
 
-function Productos({ title, imagen, precio, cantidad, idProducto, costo, descripcion, setRefresh }) {
-  
+function Productos({ title, imagen, precio, cantidad, idProducto, costo, fechaCaducidad, descripcion, setRefresh }) {
+
   const [modalEditar, setEditar] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
+  const [buyModal, setBuy] = useState(false);
+
+  const openBuyModal = () => {
+    setBuy(true);
+  }
 
   const abrirModalEdit = () => {
     setEditar(true);
@@ -17,6 +23,10 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
 
   const abrirModalBorrar = () => {
     setBorrar(true);
+  }
+
+  const closeBuyModal = () => {
+    setBuy(false);
   }
 
   const cerrarModalEdit = () => {
@@ -30,13 +40,13 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
   return (
     <Card
       style={{
-        width: 200,
+        width: 210,
         textAlign: 'center'
       }}
       cover={
         <img
           style={{
-            width: 100,
+            width: 110,
             height: 150,
             objectFit: 'cover',
             margin: 'auto',
@@ -47,15 +57,23 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
         />
       }
       actions={[
-        <><Button name="modalEditar" onClick={abrirModalEdit}><EditOutlined /></Button>
+        <>
+          <Button name="modalBorrar" onClick={openBuyModal}><DollarOutlined/></Button>
+          <BuyModal
+            visible={buyModal}
+            onClose={closeBuyModal}
+            idProducto={idProducto}
+            nombreProducto={title}
+            setRefresh={setRefresh}
+            closeModal={closeBuyModal}
+          />
+        </>,
+        <>
           <EditarModal
-            visible={modalEditar}
-            onClose={cerrarModalEdit}
-            idProducto={idProducto} 
-            nombre={title}
+            idProducto={idProducto}
+            nombreProducto={title}
             imagen={imagen}
             precio={precio}
-            costo={costo}
             descripcion={descripcion}
             setRefresh={setRefresh}
           />
@@ -67,15 +85,15 @@ function Productos({ title, imagen, precio, cantidad, idProducto, costo, descrip
             onClose={cerrarModalBorrar}
             idProducto={idProducto}
             nombreProducto={title}
-            setRefresh={setRefresh} 
-            cerrarModal={cerrarModalBorrar}  
+            setRefresh={setRefresh}
+            cerrarModal={cerrarModalBorrar}
           />
         </>
       ]}
-      title={title}
+      title={<b>{title}</b>}
     >
-      <p><b>Precio Unitario: </b>{precio} Bs.</p>
-      <p><b>Cantidad: </b>{cantidad} u</p>
+      <p><b>Precio U: </b>{precio} Bs.</p>
+      <p><b>Cantidad: </b>{cantidad} U.</p>
       <p></p>
     </Card>
   );
