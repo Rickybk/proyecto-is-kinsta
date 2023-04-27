@@ -58,7 +58,7 @@ const validation = (e) => {
     }
 };
 
-const CategoryList = ({setRefresh}) => {
+const CategoryList = () => {
     const [form] = Form.useForm();
 
     const handleDelete = (key) => {
@@ -139,7 +139,7 @@ const CategoryList = ({setRefresh}) => {
         {
         title: 'Nombre',
         dataIndex: 'name',
-        width: '25%',
+        width: '65%',
         editable: true,
         },
         {
@@ -199,6 +199,9 @@ const CategoryList = ({setRefresh}) => {
     return (
         <Form form={form} component={false}>
         <Table className='tabla'
+            style={{
+                marginRight:"50%"
+            }}
             components={{
             body: {
                 cell: EditableCell,
