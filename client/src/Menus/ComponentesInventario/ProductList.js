@@ -4,17 +4,21 @@ import Producto from './CuadroProducto';
 import ProductModal from './ProductModal';
 import './ListaBotones.css';
 
+const {Option} = Select;
+
 const ProductList = ({ setRefresh, isRefresh }) => {
 
     const [search, setSearch] = useState('');
     const [products, setProducts] = useState([]);
     const [sort, setSort] = useState('default');
-    
+    const [categoria, setCategoria] = useState([]);
+
     useEffect(() => {
         if (isRefresh) {
             fetchData();
             setRefresh(false);
         }
+        fetchCategoria();
     }, [setRefresh, isRefresh]);
 
     async function fetchData() {
@@ -23,6 +27,12 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         const response = await fetch("http://localhost:8080/store/allproducts");
         const jsonData = await response.json();
         setProducts(jsonData);
+    }
+
+    async function fetchCategoria(){
+        const response = await fetch("http://localhost:8080/store/categories");
+        const jsonData = await response.json();
+        setCategoria(jsonData);
     }
 
     const handleInputChange = (event) => {
@@ -51,6 +61,12 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         }
         setProducts(sortedData); // Actualizar la lista de productos con la lista ordenada
     };
+
+    async function handleCategoria(value){
+        const response = await fetch("http://localhost:8080/store/productsCategoria/" + value);
+        const jsonData = await response.json();
+        setProducts(jsonData);
+    }
 
     return (
         <>
@@ -98,7 +114,28 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     }
                     ]}
                 />
+                <Select
+                    showSearch
+                    style={{
+                    width: 200,
+                    }}
+                    placeholder="Seleccionar Categoria"
+                    optionFilterProp="children"
+                    onChange={handleCategoria}
+                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                    filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                    }
+                >  
+                    {categoria.map(cat =>(
+                        <Option key={cat.id_categoria} value={cat.id_categoria}>
+                            {cat.nombre_categoria}
+                        </Option>
+                    ))}
+                </Select>
             </div>
+
+
             </Affix>
 
             <List

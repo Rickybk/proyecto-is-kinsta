@@ -107,21 +107,22 @@ const updateACategorie = async (req, res) => {
 };
 
 const getProductOfCategorie = async (req, res) => {
-  const idCategorie = req.params.idCategorie;
+  const id = req.params.id;
   try {
-    const result = await pool.query(`
-    SELECT DISTINCT p.id_producto, p.nombre_producto, p.costo_unitario, p.precio_unitario, p.id_categoria, p.descripcion, p.total, p.imagen, l.cantidad, l.fecha_caducidad 
+    const { rows } = await pool.query(`
+    SELECT DISTINCT p.id_producto, p.nombre_producto, p.precio_unitario, p.id_categoria, p.descripcion, p.total, p.imagen, l.cantidad, l.costo_unitario, l.fecha_caducidad 
     FROM productos p, lotes l 
     WHERE p.id_producto = l.id_producto 
     AND p.id_categoria = $1 
-    ORDER BY p.nombre_producto ASC;
-  `, [idCategorie]);
-  //console.log(result);
-    res.json(result.rows);
+    ORDER BY p.nombre_producto ASC;`,
+     [id]);
+    console.log(rows);
+    res.status(200).json(rows);
   } catch (error) {
     res.status(500).send("Error obteniendo los productos");
   }
 }
+
 
 
 const getAllProducts = async (req, res) => {
