@@ -13,7 +13,13 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'text' ? <Input /> : <Input />;
+  const inputNode = inputType === 'text' ? <Input/> : 
+  <Input 
+  style={{
+    backgroundColor:"#fff6ed"
+  }}
+  onKeyDown={validation} 
+  maxLength={30}/>;
   return (
     <td {...restProps}>
       {editing ? (
@@ -38,6 +44,19 @@ const EditableCell = ({
   );
 };
 
+const validation = (e) => {
+        
+    const key = e.key;
+    if (!(/^[A-Z a-z À-ÿ\u00f1\u00d1]+$/.test(key) 
+        || key === 'Backspace' 
+        || key === 'Delete' 
+        || key === 'Tab' 
+        || key=== 'ArrowLeft' 
+        || key=== 'ArrowRight' ))
+    {
+        e.preventDefault();
+    }
+};
 
 const CategoryList = ({setRefresh}) => {
     const [form] = Form.useForm();
@@ -152,7 +171,8 @@ const CategoryList = ({setRefresh}) => {
 
                 <Typography.Link >
                     <Popconfirm title={"¿Está seguro de querer eliminar la categoría?"} onConfirm={()=>handleDelete(record.key)}>
-                    <Button name="eliminar" ><DeleteOutlined /></Button>
+                    <Button name="eliminar" 
+                    ><DeleteOutlined /></Button>
                     </Popconfirm>
                 </Typography.Link>
             </span>
@@ -178,7 +198,7 @@ const CategoryList = ({setRefresh}) => {
     });
     return (
         <Form form={form} component={false}>
-        <Table
+        <Table className='tabla'
             components={{
             body: {
                 cell: EditableCell,
