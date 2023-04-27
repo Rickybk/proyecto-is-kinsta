@@ -32,7 +32,9 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     async function fetchCategoria(){
         const response = await fetch("http://localhost:8080/store/categories");
         const jsonData = await response.json();
-        setCategoria(jsonData);
+        setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
+        //setCategoria(jsonData);
+        console.log(JSON.stringify(jsonData));
     }
 
     const handleInputChange = (event) => {
@@ -63,9 +65,14 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     };
 
     async function handleCategoria(value){
+        if(value === 1){
+            console.log(JSON.stringify(products));
+            await fetchData();
+        } else{
         const response = await fetch("http://localhost:8080/store/productsCategoria/" + value);
         const jsonData = await response.json();
         setProducts(jsonData);
+        }
     }
 
     return (
