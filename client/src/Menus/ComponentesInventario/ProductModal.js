@@ -20,7 +20,7 @@ const setIdCategoria = (id_categoria) => {
     values.idCategory = id_categoria;
 }
 
-const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU, descripcion }) => {
+const ProductModal = ({ setRefresh, imagen, idProducto, idCategoria, nombreProducto, precioU, descripcion }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -34,7 +34,6 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            console.log(values);
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
@@ -135,6 +134,7 @@ const ProductModal = ({ setRefresh, imagen, idProducto, nombreProducto, precioU,
                     descripcion={descripcion}
                     nombreProducto={nombreProducto}
                     setIdCategoria={setIdCategoria}
+                    idCategoria={idCategoria}
                     precioU={precioU}
                 />
             </Modal>

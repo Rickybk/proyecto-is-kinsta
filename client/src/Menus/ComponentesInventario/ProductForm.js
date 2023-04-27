@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const { TextArea } = Input;
 const { Option } = Select;
 
-const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, precioU, setIdCategoria, id_cat, descripcion }) => {
+const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, idCategoria, precioU, setIdCategoria, descripcion }) => {
 
     var imgUrl = imagen;
     const [categoria, setCategoria] = useState([]);
@@ -32,12 +32,20 @@ const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, precioU, setIdCat
 
     useEffect(() => {
         fetchCategoria();
-    },[]);
+    }, []);
 
     async function fetchCategoria() {
         const response = await fetch("http://localhost:8080/store/categories");
         const jsonData = await response.json();
         setCategoria(jsonData);
+    }
+
+    function getIdCategory(){
+        if(idCategoria){
+            setIdCategoria(idCategoria);
+            return idCategoria;
+        }
+        return 2;
     }
 
     return (
@@ -126,11 +134,11 @@ const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, precioU, setIdCat
                     ]}
                 >
                     <Select
-                        defaultValue={id_cat ? id_cat : 2}
+                        defaultValue={getIdCategory()}
                         id='categoria'
                         onChange={(value) => {
                             setIdCategoria(value);
-                          }} 
+                        }}
                         style={{ width: '100%' }}
                         optionFilterProp="children"
                         filterOption={(input, option) => (option?.label ?? '').includes(input)}
