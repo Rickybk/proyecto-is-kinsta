@@ -229,7 +229,9 @@ const deleteBuy = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { idProduct } = req.params;
-    const { nombreProducto, costoUnitario, precio, descripcion, imagen, cantidad, fechaCaducidad } = req.body;
+    const { nombreProducto,precio, descripcion, imagen,idCategory} = req.body;
+    //const { idCategory } = req.params;
+    
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1 AND id_producto <> $2",
       [nombreProducto, idProduct]      
@@ -239,25 +241,9 @@ const updateProduct = async (req, res) => {
       return res.status(200).json({ data: 1 });
     } 
     const newProduct = await pool.query(
-      "UPDATE productos SET nombre_producto = $1, costo_unitario = $2, precio_unitario = $3, descripcion = $4, imagen = $5 WHERE id_producto = $6 ",
-      [nombreProducto, costoUnitario, precio, descripcion, imagen, idProduct]
+      "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
+      [nombreProducto, precio, descripcion, imagen, idCategory, idProduct]
     );
-    const idLot = (await pool.query("SELECT id_lote FROM lotes WHERE id_producto = $1", [
-      idProduct
-    ])).rows[0].id_lote;
-    const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
-      idLot
-    ])).rows[0].cantidad;
-    const newLote = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2 WHERE id_lote = $3 AND id_producto = $4 ",
-      [cantidad, fechaCaducidad, idLot, idProduct]
-    );
-    const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
-      idProduct
-    ])).rows[0].total;
-    const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
-    await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
-
 
     if (newProduct.rowCount === 0)
       return res.status(404).json({ message: "OK" });
