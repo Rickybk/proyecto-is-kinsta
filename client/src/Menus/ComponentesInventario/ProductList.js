@@ -32,7 +32,9 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     async function fetchCategoria(){
         const response = await fetch("http://localhost:8080/store/categories");
         const jsonData = await response.json();
-        setCategoria(jsonData);
+        setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
+        //setCategoria(jsonData);
+        console.log(JSON.stringify(jsonData));
     }
 
     const handleInputChange = (event) => {
