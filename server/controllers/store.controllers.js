@@ -219,6 +219,13 @@ const deleteProduct = async (req, res) => {
 const deleteBuy = async (req, res) => {
   const idLot = req.params.idLot;
   try {
+    const cantidad = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [idLot])).rows[0].cantidad;
+    const idProduct = (await pool.query("SELECT id_producto FROM lotes WHERE id_lote = $1", [idLot])).rows[0].id_producto;
+    const total = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
+      idProduct
+    ])).rows[0].total;
+    const nuevoTotal = parseInt(total)-parseInt(cantidad);
+    await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [nuevoTotal, idProduct]);
     const result1 = await pool.query('DELETE FROM lotes WHERE id_lote = $1', [idLot]);
     return res.status(200).send(`Eliminados ${result1.rowCount} registros de compras`);
   } catch (error) {
