@@ -59,7 +59,7 @@ const validation = (e) => {
     }
 };
 
-const CategoryList = () => {
+const CategoryList = ({setRefresh}) => {
     const [form] = Form.useForm();
 
     const handleDelete = (key) => {
@@ -110,11 +110,12 @@ const CategoryList = () => {
         setEditingKey('');
     };
     const save = async (key) => {
+        
         try {
         const row = await form.validateFields();
         const newData = [...data];
         const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
+        if (index > -1 ) {
             const item = newData[index];
             newData.splice(index, 1, {
             ...item,
@@ -192,7 +193,8 @@ const CategoryList = () => {
         <Form form={form} component={false}>
         <Table className='tabla'
             style={{
-                marginRight:"50%"
+                marginRight:"50%",
+                marginTop:"2%"
             }}
             components={{
             body: {
@@ -206,7 +208,7 @@ const CategoryList = () => {
             pagination={{
             onChange: page=>{
                 console.log(page);
-            },pageSize:7,
+            },pageSize:6,
             }}
         />
         </Form>
