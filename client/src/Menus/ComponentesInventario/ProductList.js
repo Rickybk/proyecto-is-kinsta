@@ -17,8 +17,8 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         if (isRefresh) {
             fetchData();
             setRefresh(false);
-        }
-        fetchCategoria();
+            fetchCategoria();
+        }    
     }, [setRefresh, isRefresh]);
 
     async function fetchData() {

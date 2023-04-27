@@ -157,7 +157,7 @@ const getBuy = async (req, res) => {
 }
 const createProduct = async (req, res) => {
   try {
-    const { nombreProducto, precio, descripcion, image } =
+    const { nombreProducto, precio, descripcion, imagen } =
       req.body;
     const { idCategory } = req.params;
     const existingProduct = await pool.query(
@@ -169,7 +169,7 @@ const createProduct = async (req, res) => {
     }
     const newProduct = await pool.query(
       "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
-      [nombreProducto, precio, descripcion, image, idCategory]
+      [nombreProducto, precio, descripcion, imagen, idCategory]
     );
     return res.status(200).json(`Añadidos ${newProduct.rowCount} registros de productos`);
   } catch (error) {
