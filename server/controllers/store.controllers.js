@@ -110,11 +110,10 @@ const getProductOfCategorie = async (req, res) => {
   const id = req.params.id;
   try {
     const { rows } = await pool.query(`
-    SELECT DISTINCT p.id_producto, p.nombre_producto, p.precio_unitario, p.id_categoria, p.descripcion, p.total, p.imagen, l.cantidad, l.costo_unitario, l.fecha_caducidad 
-    FROM productos p, lotes l 
-    WHERE p.id_producto = l.id_producto 
-    AND p.id_categoria = $1 
-    ORDER BY p.nombre_producto ASC;`,
+    SELECT DISTINCT id_producto, nombre_producto, precio_unitario, id_categoria, descripcion, total, imagen 
+    FROM productos
+    WHERE id_categoria = $1 
+    ORDER BY nombre_producto ASC;`,
       [id]);
     console.log(rows);
     res.status(200).json(rows);
