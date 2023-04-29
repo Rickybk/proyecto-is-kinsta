@@ -4,7 +4,8 @@ import { useState } from 'react';
 
 const BuyForm = ({ nombreProducto}) => {
 
-    const [costoTotal, setCostoTotal] = useState(0);
+    const[cantidad, setCantidad] = useState(1);
+    const[costoTotal, setCostoTotal] = useState(1);
 
     const numberInputKeyDown = (e) => {
         
@@ -23,14 +24,6 @@ const BuyForm = ({ nombreProducto}) => {
             e.preventDefault();
         }
     };
-
-    const calcularTotal = e =>  {
-        var cantidad = document.getElementById("cantidad").value;
-        console.log(cantidad);
-        var costoU = document.getElementById("costoU").value;
-        console.log(costoU);
-        setCostoTotal(cantidad * costoU);
-    }
 
     return (
         <>
@@ -68,19 +61,19 @@ const BuyForm = ({ nombreProducto}) => {
                         min={1}
                         maxLength={6}
                         onKeyDown={numberInputKeyDown}
-                        onKeyUp={calcularTotal} 
+                        onChange={setCantidad}
                     />
                 </Form.Item>
 
                 <Form.Item
-                    label="Costo Unitario"
+                    label="Costo Total"
                     labelCol={{ span: 24 }}
-                    name="costoUnitario"
+                    name="costoTotal"
                     initialValue={1}
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor ingrese el costo unitario del producto!'
+                            message: 'Por favor ingrese el costo total del producto!'
                         },
                     ]}
                 >
@@ -88,13 +81,13 @@ const BuyForm = ({ nombreProducto}) => {
                         style={{ width: '100%' }}
                         prefix="Bs."
                         className="inputs"
-                        id="costoU"
+                        id="costoTotal"
                         min={1}
                         maxLength={6}
                         precision={2}
                         step={0.5}
                         onKeyDown={DecimalInput}
-                        onKeyUp={calcularTotal} 
+                        onChange={setCostoTotal} 
                     />
                 </Form.Item>
 
@@ -143,7 +136,7 @@ const BuyForm = ({ nombreProducto}) => {
                     
                     ]}
                 >
-                    <p>Costo total: {costoTotal}</p>
+                    <p>Costo unitario: {Math.round((costoTotal / cantidad) * 100) / 100} Bs.</p>
                 </Form.Item>
 
             </Form>

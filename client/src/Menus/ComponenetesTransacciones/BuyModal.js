@@ -5,8 +5,7 @@ import ConfirmBuyModal from './ConfirmBuyModal';
 const values = {
     cantidad: "",
     fechaCaducidad: "",
-    //Definir si pedimos el costo unitario o el costo total de la compra. 
-    costoUnitario: "",
+    costo_total: "",
 }
 
 const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose, closeModal }) => {
@@ -28,11 +27,7 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
         if (!document.getElementById("cantidad").value) {
             valid = false;
         }
-        //OJO
-        if (!document.getElementById("costoU").value) {
-            valid = false;
-        }
-        if (!document.getElementById("precio").value) {
+        if (!document.getElementById("costoTotal").value) {
             valid = false;
         }
         return valid;
@@ -40,9 +35,8 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
 
     const saveData = () => {
         values.cantidad = document.getElementById("cantidad").value;
-        values.costoUnitario = document.getElementById("costoU").value;
+        values.costo_total = document.getElementById("costoTotal").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
-
         if (!values.fechaCaducidad) {
             values.fechaCaducidad = null;
         }
@@ -51,7 +45,7 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products", {
+        const res = await fetch("http://localhost:8080/store/products/buy/" + idProducto, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
