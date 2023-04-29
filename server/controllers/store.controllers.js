@@ -148,7 +148,7 @@ const getProduct = async (req, res) => {
 const getBuy = async (req, res) => {
   const idProduct = req.params.idProduct;
   try {
-    const result = await pool.query("SELECT id_lote, cantidad, fecha_caducidad, costo_unitario, costo_total FROM lotes WHERE id_producto = $1", [idProduct]);
+    const result = await pool.query("SELECT id_lote, cantidad, fecha_caducidad, costo_unitario, costo_total, fecha_compra FROM lotes WHERE id_producto = $1", [idProduct]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -297,7 +297,7 @@ const updateBuy = async (req, res) => {
 const getAllBuy = async (req, res) => {
 
   try {
-    const getBuy = await pool.query("SELECT DISTINCT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total FROM productos p, lotes l WHERE p.id_producto = l.id_producto ORDER BY nombre_producto ASC;");
+    const getBuy = await pool.query("SELECT DISTINCT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total, l.fecha_compra FROM productos p, lotes l WHERE p.id_producto = l.id_producto ORDER BY nombre_producto ASC;");
     console.log(getBuy.rows);
     res.json(getBuy.rows);
   } catch (err) {
