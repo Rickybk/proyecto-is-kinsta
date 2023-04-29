@@ -1,6 +1,6 @@
 import {Button,Table,message,Form,Popconfirm,Typography,Input} from 'antd';
 import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 
 const EditableCell = ({
@@ -61,86 +61,82 @@ const validation = (e) => {
 
 const CategoryList = ({setRefresh}) => {
     const [form] = Form.useForm();
+    //const [categoria, setCategoria] = useState([]);
 
-    const handleDelete = (key) => {
-        // Borrar bd
-        // Borrar de la lista
-        const newData = data.filter((item) => item.key !== key);
-        setData(newData);
-        message.success("La categoría se eliminó correctamente");
-    };
-
-    const [data, setData] = useState([
-        {
-            key: '1',
-            name: 'Enlatados',
-        },
-        {
-            key: '2',
-            name: 'Lácteos',
-        },
-        {
-            key: '3',
-            name: 'Postres',
-        },
-        {
-            key: '4',
-            name: 'Dulces',
-        },
-        {
-            key: '5',
-            name: 'Refrescos',
-        },
-        {
-            key: '6',
-            name: 'Bebidas Alcoholicas',
-        },
-    ]);
-    const [editingKey, setEditingKey] = useState('');
-    const isEditing = (record) => record.key === editingKey;
+    const [editingid_Categoria, setEditingid_Categoria] = useState('');
+    const isEditing = (record) => record.id_categoria === editingid_Categoria;
     const edit = (record) => {
         form.setFieldsValue({
         name: '',
         ...record,
         });
-        setEditingKey(record.key);
+        setEditingid_Categoria(record.id_categoria);
     };
 
     const cancel = () => {
-        setEditingKey('');
+        setEditingid_Categoria('');
     };
-    const save = async (key) => {
-        
+
+    const [dataSource, setDataSource] = useState([]);
+    useEffect(() => {
+        fetchCategoria();
+    },[]);   //dataSource,setDataSource     rompe el server
+
+    async function fetchCategoria() {
+        const response = await fetch("http://localhost:8080/store/categories");
+        const jsonData = await response.json();
+        //setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
+        //setCategoria(jsonData);
+        setDataSource(jsonData);
+    }
+
+    const handleDelete = async (id_categoria) => {
+        // Borrar bd
+        await deleteProductDB(id_categoria);
+        // Borrar de la lista
+        const newData = dataSource.filter((item) => item.id_categoria !== id_categoria);
+        setDataSource(newData);
+        message.success("La categoría se eliminó correctamente");
+    };
+
+    const deleteProductDB = async (id_categoria) => {
+        //Ruta para server en localhost: "http://localhost:8080/store/categories"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+        const res = await fetch("http://localhost:8080/store/categories/" + id_categoria, {
+            method: "DELETE"
+        });
+        return res;
+    }
+
+    const save = async (id_categoria) => {
         try {
-        const row = await form.validateFields();
-        const newData = [...data];
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1 ) {
-            const item = newData[index];
-            newData.splice(index, 1, {
-            ...item,
-            ...row,
-            });
-            setData(newData);
-            setEditingKey('');
-        } else {
-            newData.push(row);
-            setData(newData);
-            setEditingKey('');
-        }
+            const row = await form.validateFields();
+            const newData = [...dataSource];
+            const index = newData.findIndex((item) => id_categoria === item.id_categoria);
+            if (index > -1 ) {
+                const item = newData[index];
+                newData.splice(index, 1, {
+                ...item,
+                ...row,
+                });
+            setDataSource(newData);
+            setEditingid_Categoria('');
+            } else {
+                newData.push(row);
+                setDataSource(newData);
+                setEditingid_Categoria('');
+            }
         } catch (errInfo) {
-        console.log('Error en la validación:', errInfo);
+            console.log('Error en la validación:', errInfo);
         }
         message.success("La categoría se modificó correctamente");
+        
     };
-
-
-
 
     const columns = [
         {
         title: 'Nombre',
-        dataIndex: 'name',
+        dataIndex: 'nombre_categoria',
         width: '65%',
         editable: true,
         },
@@ -151,21 +147,20 @@ const CategoryList = ({setRefresh}) => {
             const editable = isEditing(record);
             return editable ? (
             <span>
-                <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.key)}>
+                <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.id_categoria)}>
                     <Button name="guardar" >Guardar</Button>
                 </Popconfirm>
                     <Button name="cancelar" onClick={cancel}>Cancelar</Button>
             </span>
             ) : (
             <span>
-                <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                <Typography.Link disabled={editingid_Categoria !== ''} onClick={() => edit(record)}>
                     <Button name="editar" ><EditOutlined /></Button>
                 </Typography.Link>
 
                 <Typography.Link >
-                    <Popconfirm title={"¿Está seguro de querer eliminar la categoría?"} onConfirm={()=>handleDelete(record.key)}>
-                    <Button name="eliminar" 
-                    ><DeleteOutlined /></Button>
+                    <Popconfirm title={"¿Está seguro de querer eliminar la categoría?"} onConfirm={()=>handleDelete(record.id_categoria)}>
+                    <Button name="eliminar"><DeleteOutlined /></Button>
                     </Popconfirm>
                 </Typography.Link>
             </span>
@@ -202,7 +197,7 @@ const CategoryList = ({setRefresh}) => {
             },
             }}
             bordered
-            dataSource={data}
+            dataSource={dataSource}
             columns={mergedColumns}
             rowClassName="editable-row"
             pagination={{
