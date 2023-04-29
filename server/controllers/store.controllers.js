@@ -186,10 +186,15 @@ const createBuy = async (req, res) => {
       fechaCaducidad,
       costo_total
     } = req.body;
+    const fechaActual = new Date();
+    const year = fechaActual.getFullYear();
+    const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
+    const day = ('0' + fechaActual.getDate()).slice(-2);
+    const fechaCompra = `${year}-${month}-${day}`;
     const costoUnitario = parseFloat(costo_total) / parseInt(cantidad);
     const newLot = await pool.query(
-      "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad, costo_unitario, costo_total) VALUES ($1, $2, $3, $4, $5)",
-      [idProduct, cantidad, fechaCaducidad, costoUnitario, costo_total]
+      "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad, costo_unitario, costo_total, fecha_compra) VALUES ($1, $2, $3, $4, $5, $6)",
+      [idProduct, cantidad, fechaCaducidad, costoUnitario, costo_total, fechaCompra]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
