@@ -71,15 +71,36 @@ const createACategorie = async (req, res) => {
 };
 
 const deleteACategorie = (req, res) => {
-
   const id = req.params.id;
-  pool.query('DELETE FROM categorias WHERE id_categoria = $1', [id], (error, result1) => {
-    if (error) {
-      return res.status(500).send('Error eliminando categoria: ' + error);
-    }
-    return res.status(200).send(`Eliminado ${result1.rowCount} categoria`);
-  });
 
+  pool.query('BEGIN', (error) => {
+    if (error) {
+      return res.status(500).send('Error iniciando transacción: ' + error);
+    }
+
+    pool.query('UPDATE productos SET id_categoria = 2 WHERE id_categoria = $1', [id], (error, result) => {
+      if (error) {
+        return pool.query('ROLLBACK', () => {
+          res.status(500).send('Error actualizando productos: ' + error);
+        });
+      }
+
+      pool.query('DELETE FROM categorias WHERE id_categoria = $1', [id], (error, result) => {
+        if (error) {
+          return pool.query('ROLLBACK', () => {
+            res.status(500).send('Error eliminando categoría: ' + error);
+          });
+        }
+
+        pool.query('COMMIT', (error) => {
+          if (error) {
+            return res.status(500).send('Error finalizando transacción: ' + error);
+          }
+          return res.status(200).send(`Eliminado ${result.rowCount} categoría`);
+        });
+      });
+    });
+  });
 };
 
 const updateACategorie = async (req, res) => {
