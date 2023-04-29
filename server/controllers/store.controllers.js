@@ -34,7 +34,7 @@ const getDbTime = async (req, res) => {
 }
 
 const getAllCategories = async (req, res) => {
-  const result = await pool.query("SELECT * FROM categorias");
+  const result = await pool.query("SELECT * FROM categorias ORDER BY nombre_categoria ASC;");
   console.log(result);
   res.json(result.rows);
 };
