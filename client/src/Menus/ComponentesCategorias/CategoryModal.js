@@ -6,6 +6,7 @@ import { EditOutlined } from '@ant-design/icons';
 
 const values = {
     nombreCategoria: ""
+
 }
 
 
@@ -28,14 +29,10 @@ const CategoryModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
-                await message.error("La categoría " + values.nombreCategoria + " ya existe ");
+                message.error("La categoría " + values.nombreCategoria + " ya existe ");
             } else {
-                if (idCategoria) {
-                    message.success("Categoría actualizada correctamente");
-                } else {
-                    message.success("Categoría creada correctamente");
-                    document.getElementById("categoryForm").reset();
-                }
+                message.success("Categoría creada exitosamente");
+                document.getElementById("categoryForm").reset();         
             }
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
@@ -58,7 +55,8 @@ const CategoryModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products/" + values.id_categoria, {
+        //"http://localhost:8080/store/categories"
+        const res = await fetch("http://localhost:8080/store/categories", {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }

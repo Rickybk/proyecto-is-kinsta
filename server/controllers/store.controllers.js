@@ -63,10 +63,10 @@ const createACategorie = async (req, res) => {
       "INSERT INTO categorias (nombre_categoria) VALUES ($1)",
       [nombreCategoria]
     );
-    res.json(result.rows[0]);
+    return res.json({dato : result.rows[0]});
   } catch (error) {
     console.log("Error añadiendo categoria");
-    res.json({ error: error.message });
+    return res.json({ error: error.message });
   }
 };
 
@@ -106,10 +106,10 @@ const deleteACategorie = (req, res) => {
 const updateACategorie = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombreCategoria } = req.body;
+    const { nombre_categoria } = req.body;
     const existingProduct = await pool.query(
       "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
-      [nombreCategoria]
+      [nombre_categoria]
     );
     if (existingProduct.rows[0].cantidad_encontrada !== '0') {
       return res.status(200).json({ data: 1 });
@@ -117,12 +117,12 @@ const updateACategorie = async (req, res) => {
 
     const newCategorie = await pool.query(
       "UPDATE categorias SET nombre_categoria = $1 WHERE id_categoria = $2",
-      [nombreCategoria, id]
+      [nombre_categoria, id]
     );
-    return res.json(newCategorie.rows[0]);
+    return res.json({categoria: newCategorie.rows[0]});
   } catch (error) {
     console.log("Error modificando categoria");
-    res.json({ error: error.message });
+    return res.json({ error: error.message });
   }
 
 };

@@ -59,8 +59,9 @@ const validation = (e) => {
     }
 };
 
-const CategoryList = ({setRefresh}) => {
+const CategoryList = ({setRefresh, isRefresh}) => {
     const [form] = Form.useForm();
+    const aux = useState(isRefresh);
     //const [categoria, setCategoria] = useState([]);
 
     const [editingid_Categoria, setEditingid_Categoria] = useState('');
@@ -78,9 +79,13 @@ const CategoryList = ({setRefresh}) => {
     };
 
     const [dataSource, setDataSource] = useState([]);
+
     useEffect(() => {
-        fetchCategoria();
-    },[]);   //dataSource,setDataSource     rompe el server
+        if(isRefresh){
+            fetchCategoria();
+            setRefresh(false);
+        }
+    },[aux, dataSource, setDataSource]);   //dataSource,setDataSource     rompe el server
 
     async function fetchCategoria() {
         const response = await fetch("http://localhost:8080/store/categories");
@@ -108,9 +113,22 @@ const CategoryList = ({setRefresh}) => {
         return res;
     }
 
+    const updateCategoryDB = async (id_categoria, row) => {
+        //Ruta para server en localhost: "http://localhost:8080/store/categories"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
+        const res = await fetch("http://localhost:8080/store/categories/" + id_categoria, {
+            method: "PUT",
+            body: JSON.stringify(row),
+            headers: { "Content-Type": "application/json" }
+        });
+        return res;
+    }
+
     const save = async (id_categoria) => {
         try {
             const row = await form.validateFields();
+            console.log(row);
+            updateCategoryDB(id_categoria, row);
             const newData = [...dataSource];
             const index = newData.findIndex((item) => id_categoria === item.id_categoria);
             if (index > -1 ) {
