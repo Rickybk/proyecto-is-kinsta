@@ -193,6 +193,8 @@ const BuyList = ({}) => {
     },[]); ///dataSource, setDataSource
 
     async function fetchBuys() {
+        //Ruta para server en localhost: "http://localhost:8080/store/products/allbuy/1"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`
         const response = await fetch("http://localhost:8080/store/products/allbuy/1");
         const jsonData = await response.json();
         setDataSource(jsonData);
@@ -214,9 +216,9 @@ const BuyList = ({}) => {
         
     };
     const deleteProductDB = async (id_lote) => {
-        //Ruta para server en localhost: "http://localhost:8080/store/products"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products/buy/" + id_lote, {
+        //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
             method: "DELETE"
         });
         return res;
@@ -226,7 +228,9 @@ const BuyList = ({}) => {
     const save = async (id_lote) => {
         var res;
         const row = await form.validateFields();
-        res = await fetch("http://localhost:8080/store/products/buy/" + id_lote, {
+        //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
+        res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
                 method: "PUT",
                 body: JSON.stringify(row),
                 headers: { "Content-Type": "application/json" }

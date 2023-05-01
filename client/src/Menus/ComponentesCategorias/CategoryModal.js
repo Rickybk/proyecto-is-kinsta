@@ -53,10 +53,10 @@ const CategoryModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
     }
 
     const uploadDB = async () => {
-        //Ruta para server en localhost: "http://localhost:8080/store/products"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+        //Ruta para server en localhost: "http://localhost:8080/store/categories"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
         //"http://localhost:8080/store/categories"
-        const res = await fetch("http://localhost:8080/store/categories", {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }

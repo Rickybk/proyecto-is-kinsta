@@ -55,7 +55,7 @@ const BuyEditModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/products"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/products", {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }

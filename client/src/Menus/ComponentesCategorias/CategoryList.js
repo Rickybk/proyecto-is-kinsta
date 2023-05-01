@@ -87,7 +87,9 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
     }, [aux, dataSource, setDataSource]);   //dataSource,setDataSource     rompe el server
 
     async function fetchCategoria() {
-        const response = await fetch("http://localhost:8080/store/categories");
+        //Ruta para server en localhost: "http://localhost:8080/store/categories/"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
         //setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
         //setCategoria(jsonData);
@@ -105,8 +107,8 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
 
     const deleteProductDB = async (id_categoria) => {
         //Ruta para server en localhost: "http://localhost:8080/store/categories"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-        const res = await fetch("http://localhost:8080/store/categories/" + id_categoria, {
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/` + id_categoria, {
             method: "DELETE"
         });
         return res;
@@ -115,7 +117,7 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
     const updateCategoryDB = async (id_categoria, row) => {
         //Ruta para server en localhost: "http://localhost:8080/store/categories"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
-        const res = await fetch("http://localhost:8080/store/categories/" + id_categoria, {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/` + id_categoria, {
             method: "PUT",
             body: JSON.stringify(row),
             headers: { "Content-Type": "application/json" }
