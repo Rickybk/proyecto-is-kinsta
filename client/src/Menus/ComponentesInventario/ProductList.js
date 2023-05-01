@@ -76,7 +76,9 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         if(value === 1){
             await fetchData();
         } else {
-        const response = await fetch("http://localhost:8080/store/productsCategoria/" + value);
+        //Ruta para server en localhost: "http://localhost:8080/store/productsCategoria/"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/productsCategoria/`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/productsCategoria/` + value);
         const jsonData = await response.json();
         setProducts(jsonData);
         }

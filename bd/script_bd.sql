@@ -24,7 +24,8 @@ CREATE TABLE lotes (
                 costo_unitario REAL NOT NULL,
                 costo_total REAL NOT NULL,
                 cantidad INTEGER NOT NULL,                
-                fecha_caducidad DATE
+                fecha_caducidad DATE,
+                fecha_compra DATE
 );
 
 alter table lotes 
