@@ -195,7 +195,7 @@ const BuyList = ({}) => {
     async function fetchBuys() {
         //Ruta para server en localhost: "http://localhost:8080/store/products/allbuy/1"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`
-        const response = await fetch("http://localhost:8080/store/products/allbuy/1");
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
         const jsonData = await response.json();
         setDataSource(jsonData);
         
