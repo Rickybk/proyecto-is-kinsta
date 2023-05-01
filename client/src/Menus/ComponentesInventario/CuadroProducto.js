@@ -1,4 +1,4 @@
-import { EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { Card, Button } from 'antd';
 import EditarModal from './ProductModal'
 import DeleteModal from './DeleteModal';
@@ -6,19 +6,13 @@ import BuyModal from '../ComponenetesTransacciones/BuyModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
-
 function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, descripcion, setRefresh ,setElegido}) {
 
-  const [modalEditar, setEditar] = useState(false);
   const [modalBorrar, setBorrar] = useState(false);
   const [buyModal, setBuy] = useState(false);
 
   const openBuyModal = () => {
     setBuy(true);
-  }
-
-  const abrirModalEdit = () => {
-    setEditar(true);
   }
 
   const abrirModalBorrar = () => {
@@ -27,10 +21,6 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
 
   const closeBuyModal = () => {
     setBuy(false);
-  }
-
-  const cerrarModalEdit = () => {
-    setEditar(false);
   }
 
   const cerrarModalBorrar = () => {

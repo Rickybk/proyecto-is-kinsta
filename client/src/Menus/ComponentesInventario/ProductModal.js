@@ -100,7 +100,7 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
     }
 
     const handleCancel = () => {
-        values.image = "Sin imagen";
+        values.imagen = "Sin imagen";
         setIsModalOpen(false);
     };
 
