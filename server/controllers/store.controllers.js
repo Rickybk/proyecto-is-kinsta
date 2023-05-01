@@ -52,11 +52,11 @@ const getACategorie = async (req, res) => {
 const createACategorie = async (req, res) => {
   const { nombreCategoria } = req.body;
   try {
-    const existingProduct = await pool.query(
-      "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
+    const nameProduct = await pool.query(
+      "SELECT * FROM categorias WHERE LOWER(nombre_categoria) = LOWER($1);",
       [nombreCategoria]
     );
-    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
+    if (nameProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
     const result = await pool.query(
@@ -108,10 +108,10 @@ const updateACategorie = async (req, res) => {
     const { id } = req.params;
     const { nombre_categoria } = req.body;
     const existingProduct = await pool.query(
-      "SELECT COUNT(*) AS cantidad_encontrada FROM categorias WHERE nombre_categoria = $1",
-      [nombre_categoria]
+      "SELECT * FROM categorias WHERE LOWER(nombre_categoria) = LOWER($1) AND id_categoria != $2",
+      [nombre_categoria, id]
     );
-    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
+    if (existingProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
 
@@ -181,11 +181,11 @@ const createProduct = async (req, res) => {
     const { nombreProducto, precio, descripcion, imagen } =
       req.body;
     const { idCategory } = req.params;
-    const existingProduct = await pool.query(
-      "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1",
+    const nameProduct = await pool.query(
+      "SELECT * FROM productos WHERE LOWER(nombre_producto) = LOWER($1);",
       [nombreProducto]
     );
-    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
+    if (nameProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
     const newProduct = await pool.query(
@@ -265,11 +265,10 @@ const updateProduct = async (req, res) => {
     //const { idCategory } = req.params;
 
     const existingProduct = await pool.query(
-      "SELECT COUNT(*) AS cantidad_encontrada FROM productos WHERE nombre_producto = $1 AND id_producto <> $2",
+      "SELECT * FROM productos WHERE LOWER(nombre_producto) = LOWER($1) AND id_producto != $2",
       [nombreProducto, idProduct]
     );
-    if (existingProduct.rows[0].cantidad_encontrada !== '0') {
-      console.log("entre");
+    if (existingProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
     const newProduct = await pool.query(

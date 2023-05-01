@@ -126,8 +126,8 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
     const save = async (id_categoria) => {
         try {
             const row = await form.validateFields();
-            console.log(row);
-            const jsonData = await updateCategoryDB(id_categoria, row);
+            const res = await updateCategoryDB(id_categoria, row);
+            const jsonData = await res.json();
             if (jsonData.data === 1) {
                 message.error("La categoría " + row['nombre_categoria'] + " ya existe ");
             } else {
@@ -145,13 +145,15 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
                     newData.push(row);
                     setDataSource(newData);
                     setEditingid_Categoria('');
+                    
                 }
+                message.success("La categoría se modificó correctamente");
             }
 
         } catch (errInfo) {
             console.log('Error en la validación:', errInfo);
         }
-        message.success("La categoría se modificó correctamente");
+        
 
     };
 
