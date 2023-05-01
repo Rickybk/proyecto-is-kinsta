@@ -20,7 +20,7 @@ const setIdCategoria = (id_categoria) => {
     values.idCategory = id_categoria;
 }
 
-const ProductModal = ({ setRefresh, imagen, idProducto, idCategoria, nombreProducto, precioU, descripcion }) => {
+const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idCategoria, nombreProducto, precioU, descripcion }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -32,13 +32,17 @@ const ProductModal = ({ setRefresh, imagen, idProducto, idCategoria, nombreProdu
     };
 
     const handleOk = async () => {
+        var indiceCat = 0;
         if (validData()) {
             saveData();
             const respuesta = await uploadDB();
-            setRefresh(true);
+            indiceCat = values.idCategory;
+            console.log("indiceCat: ", indiceCat);
+            setElegido(indiceCat);
+            setRefresh(true); 
             if (respuesta === 1) {
-                await message.error("El producto " + values.nombreProducto + " ya existente ");
-            } else {
+                message.error("El producto " + values.nombreProducto + " ya existente "); 
+            }else{
                 if (idProducto) {
                     message.success("Producto actualizado exitosamente");
                 } else {

@@ -10,16 +10,23 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     const [search, setSearch] = useState('');
     const [products, setProducts] = useState([]);
+
     const [sort, setSort] = useState('default');
     const [categoria, setCategoria] = useState([]);
+    const [elegido, setElegido] = useState(1);
 
     useEffect(() => {
         if (isRefresh) {
-            fetchData();
-            setRefresh(false);
             fetchCategoria();
+            if(elegido !== null && elegido !== undefined){
+                handleCategoria(elegido);
+            }else{
+                fetchData();
+            }      
+            setRefresh(false);    
         }    
-    }, [setRefresh, isRefresh]);
+        
+    }, [elegido, setElegido, setRefresh, isRefresh]);
 
     async function fetchData() {
         //"http://localhost:8080/store/allproducts"
@@ -33,8 +40,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         const response = await fetch("http://localhost:8080/store/categories");
         const jsonData = await response.json();
         setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
-        //setCategoria(jsonData);
-        console.log(JSON.stringify(jsonData));
     }
 
     const handleInputChange = (event) => {
@@ -65,6 +70,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     };
 
     async function handleCategoria(value){
+        setElegido(value);
         if(value === 1){
             await fetchData();
         } else {
@@ -74,11 +80,15 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         }
     }
 
+    function handleForm(value){
+        setElegido(value);
+    }
+
     return (
         <>
             <Affix>
             <div className="botones">
-                <ProductModal setRefresh={setRefresh}/>
+                <ProductModal setRefresh={setRefresh} elegido={elegido} setElegido={handleForm}/>
                 <Input
                     placeholder="Buscar Producto"
                     allowClear
@@ -125,6 +135,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     style={{
                     width: 200,
                     }}
+                    value={elegido}
                     placeholder="Seleccionar Categoria"
                     optionFilterProp="children"
                     onChange={handleCategoria}
@@ -171,7 +182,9 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                             idCategoria={item.id_categoria}
                             fechaCaducidad={item.fecha_caducidad}
                             descripcion={item.descripcion}
-                            setRefresh={setRefresh} />
+                            setRefresh={setRefresh} 
+                            setElegido={setElegido}
+                        />
                     </List.Item >
                 )}
             /> 

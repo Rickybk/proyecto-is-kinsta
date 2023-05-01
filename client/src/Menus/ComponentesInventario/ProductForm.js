@@ -48,6 +48,7 @@ const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, idCategoria, prec
         return 2;
     }
 
+
     return (
         <>
             <Form
