@@ -1,7 +1,7 @@
 import { Modal, Button } from 'antd';
 import { useState } from 'react';
 
-const CreateModal = ({ handleOk, setRefresh }) => {
+const ConfirmBuyModal = ({ handleOk, setRefresh }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,10 +22,10 @@ const CreateModal = ({ handleOk, setRefresh }) => {
     return (
         <>
             <Button onClick={showModal}>
-                Crear
+                Comprar
             </Button>
             <Modal
-                title="¿Está seguro de agregar el nuevo producto?"
+                title="¿Está seguro de realizar la compra del producto?"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 width="25%"
@@ -39,11 +39,10 @@ const CreateModal = ({ handleOk, setRefresh }) => {
                 ]}
                 destroyOnClose="true"
             >
-
             </Modal>
         </>
 
     );
 }
 
-export default CreateModal;
+export default ConfirmBuyModal;
