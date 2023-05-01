@@ -1,65 +1,64 @@
-import {Button,Table,message,Form,Popconfirm,Typography,Input} from 'antd';
-import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import { useState,useEffect } from 'react';
+import { Button, Table, message, Form, Popconfirm, Typography, Input } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useState, useEffect } from 'react';
 
 
 const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
 }) => {
-  const inputNode = inputType === 'text' ? <Input/> : 
-  <Input 
-  style={{
-    backgroundColor:"#fff6ed"
-  }}
-  onKeyDown={validation} 
-  maxLength={30}
-  autoComplete='Off'/>;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Ingrese el nombre de la categoría!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
+    const inputNode = inputType === 'text' ? <Input /> :
+        <Input
+            style={{
+                backgroundColor: "#fff6ed"
+            }}
+            onKeyDown={validation}
+            maxLength={30}
+            autoComplete='Off' />;
+    return (
+        <td {...restProps}>
+            {editing ? (
+                <Form.Item
+                    name={dataIndex}
+                    style={{
+                        margin: 0,
+                    }}
+                    rules={[
+                        {
+                            required: true,
+                            message: `Ingrese el nombre de la categoría!`,
+                        },
+                    ]}
+                >
+                    {inputNode}
+                </Form.Item>
+            ) : (
+                children
+            )}
+        </td>
+    );
 };
 
 const validation = (e) => {
-        
+
     const key = e.key;
-    if (!(/^[A-Z a-z À-ÿ\u00f1\u00d1]+$/.test(key) 
-        || key === 'Backspace' 
-        || key === 'Delete' 
-        || key === 'Tab' 
-        || key=== 'ArrowLeft' 
-        || key=== 'ArrowRight' ))
-    {
+    if (!(/^[A-Z a-z À-ÿ\u00f1\u00d1]+$/.test(key)
+        || key === 'Backspace'
+        || key === 'Delete'
+        || key === 'Tab'
+        || key === 'ArrowLeft'
+        || key === 'ArrowRight')) {
         e.preventDefault();
     }
 };
 
-const CategoryList = ({setRefresh, isRefresh}) => {
+const CategoryList = ({ setRefresh, isRefresh }) => {
     const [form] = Form.useForm();
     const aux = useState(isRefresh);
     //const [categoria, setCategoria] = useState([]);
@@ -68,8 +67,8 @@ const CategoryList = ({setRefresh, isRefresh}) => {
     const isEditing = (record) => record.id_categoria === editingid_Categoria;
     const edit = (record) => {
         form.setFieldsValue({
-        name: '',
-        ...record,
+            name: '',
+            ...record,
         });
         setEditingid_Categoria(record.id_categoria);
     };
@@ -81,11 +80,11 @@ const CategoryList = ({setRefresh, isRefresh}) => {
     const [dataSource, setDataSource] = useState([]);
 
     useEffect(() => {
-        if(isRefresh){
+        if (isRefresh) {
             fetchCategoria();
             setRefresh(false);
         }
-    },[aux, dataSource, setDataSource]);   //dataSource,setDataSource     rompe el server
+    }, [aux, dataSource, setDataSource]);   //dataSource,setDataSource     rompe el server
 
     async function fetchCategoria() {
         const response = await fetch("http://localhost:8080/store/categories");
@@ -128,104 +127,109 @@ const CategoryList = ({setRefresh, isRefresh}) => {
         try {
             const row = await form.validateFields();
             console.log(row);
-            updateCategoryDB(id_categoria, row);
-            const newData = [...dataSource];
-            const index = newData.findIndex((item) => id_categoria === item.id_categoria);
-            if (index > -1 ) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                ...item,
-                ...row,
-                });
-            setDataSource(newData);
-            setEditingid_Categoria('');
+            const jsonData = await updateCategoryDB(id_categoria, row);
+            if (jsonData.data === 1) {
+                message.error("La categoría " + row['nombre_categoria'] + " ya existe ");
             } else {
-                newData.push(row);
-                setDataSource(newData);
-                setEditingid_Categoria('');
+                const newData = [...dataSource];
+                const index = newData.findIndex((item) => id_categoria === item.id_categoria);
+                if (index > -1) {
+                    const item = newData[index];
+                    newData.splice(index, 1, {
+                        ...item,
+                        ...row,
+                    });
+                    setDataSource(newData);
+                    setEditingid_Categoria('');
+                } else {
+                    newData.push(row);
+                    setDataSource(newData);
+                    setEditingid_Categoria('');
+                }
             }
+
         } catch (errInfo) {
             console.log('Error en la validación:', errInfo);
         }
         message.success("La categoría se modificó correctamente");
-        
+
     };
 
     const columns = [
         {
-        title: 'Nombre',
-        dataIndex: 'nombre_categoria',
-        width: '65%',
-        editable: true,
+            title: 'Nombre',
+            dataIndex: 'nombre_categoria',
+            width: '65%',
+            editable: true,
         },
         {
-        title: '',
-        dataIndex: 'operation',
-        render: (_, record) => {
-            const editable = isEditing(record);
-            return editable ? (
-            <span>
-                <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.id_categoria)}>
-                    <Button name="guardar" >Guardar</Button>
-                </Popconfirm>
-                    <Button name="cancelar" onClick={cancel}>Cancelar</Button>
-            </span>
-            ) : (
-            <span>
-                <Typography.Link disabled={editingid_Categoria !== ''} onClick={() => edit(record)}>
-                    <Button name="editar" ><EditOutlined /></Button>
-                </Typography.Link>
+            title: '',
+            dataIndex: 'operation',
+            render: (_, record) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <span>
+                        <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.id_categoria)}>
+                            <Button name="guardar" >Guardar</Button>
+                        </Popconfirm>
+                        <Button name="cancelar" onClick={cancel}>Cancelar</Button>
+                    </span>
+                ) : (
+                    <span>
+                        <Typography.Link disabled={editingid_Categoria !== ''} onClick={() => edit(record)}>
+                            <Button name="editar" ><EditOutlined /></Button>
+                        </Typography.Link>
 
-                <Typography.Link >
-                    <Popconfirm title={"¿Está seguro de querer eliminar la categoría?"} onConfirm={()=>handleDelete(record.id_categoria)}>
-                    <Button name="eliminar"><DeleteOutlined /></Button>
-                    </Popconfirm>
-                </Typography.Link>
-            </span>
+                        <Typography.Link >
+                            <Popconfirm title={"¿Está seguro de querer eliminar la categoría?"} onConfirm={() => handleDelete(record.id_categoria)}>
+                                <Button name="eliminar"><DeleteOutlined /></Button>
+                            </Popconfirm>
+                        </Typography.Link>
+                    </span>
 
-            )
-        },
+                )
+            },
         },
     ];
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
-        return col;
+            return col;
         }
         return {
-        ...col,
-        onCell: (record) => ({
-            record,
-            inputType: col.dataIndex === 'text',
-            dataIndex: col.dataIndex,
-            title: col.title,
-            editing: isEditing(record),
-        }),
+            ...col,
+            onCell: (record) => ({
+                record,
+                inputType: col.dataIndex === 'text',
+                dataIndex: col.dataIndex,
+                title: col.title,
+                editing: isEditing(record),
+            }),
         };
     });
     return (
         <Form form={form} component={false}>
-        <Table className='tabla'
-            style={{
-                marginRight:"50%",
-                marginTop:"2%"
-            }}
-            components={{
-            body: {
-                cell: EditableCell,
-            },
-            }}
-            bordered
-            dataSource={dataSource}
-            columns={mergedColumns}
-            rowClassName="editable-row"
-            pagination={{
-            onChange: page=>{
-                console.log(page);
-            },pageSize:6,
-            }}
-        />
+            <Table className='tabla'
+                style={{
+                    marginRight: "50%",
+                    marginTop: "2%"
+                }}
+                components={{
+                    body: {
+                        cell: EditableCell,
+                    },
+                }}
+                bordered
+                dataSource={dataSource}
+                columns={mergedColumns}
+                rowClassName="editable-row"
+                pagination={{
+                    onChange: page => {
+                        console.log(page);
+                    }, pageSize: 6,
+                }}
+            />
         </Form>
-  );
+    );
 
 }
 export default CategoryList;
