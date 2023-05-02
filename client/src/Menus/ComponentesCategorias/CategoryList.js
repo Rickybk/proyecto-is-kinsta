@@ -20,7 +20,17 @@ const EditableCell = ({
             }}
             onKeyDown={validation}
             maxLength={30}
-            autoComplete='Off' />;
+            autoComplete='Off'
+            onCopy={(Event)=>{
+                Event.preventDefault();
+            }}
+            onPaste={(Event)=>{
+                Event.preventDefault();
+            }}
+            onDrop={(Event)=>{
+                Event.preventDefault();
+            }}
+            />;
     return (
         <td {...restProps}>
             {editing ? (
@@ -56,6 +66,7 @@ const validation = (e) => {
         || key === 'ArrowRight')) {
         e.preventDefault();
     }
+    
 };
 
 const CategoryList = ({ setRefresh, isRefresh }) => {
