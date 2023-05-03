@@ -95,7 +95,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     return (
         <>
-            <Affix offsetTop={y-200}>
             <div className="botones" ref={myRef}>
                 <ProductModal setRefresh={setRefresh} elegido={elegido} setElegido={handleForm}/>
                 <Input
@@ -161,8 +160,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                 </Select>
             </div>
 
-
-            </Affix>
 
             <List
                 grid={{
