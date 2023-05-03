@@ -76,6 +76,15 @@ const CategoryForm = ({nombreCategoria}) => {
                         maxLength='30'
                         type='text'
                         onKeyDown={validation}
+                        onCopy={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                        onPaste={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                        onDrop={(Event)=>{
+                            Event.preventDefault();
+                        }}
                     />
                 </Form.Item>
             </Form>
