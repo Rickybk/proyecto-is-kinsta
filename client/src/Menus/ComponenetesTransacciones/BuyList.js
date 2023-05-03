@@ -3,6 +3,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
+import { placement } from 'antd/lib/popconfirm';
 //import EditableCell from "./EditableCell";
 
 
@@ -96,7 +97,7 @@ const EditableCell = ({
           backgroundColor:"#fff6ed"
         }}
         onKeyDown={validation}
-        maxLength={30}
+        maxLength={6}
       />
       
       </Form.Item>
@@ -322,6 +323,7 @@ const BuyList = ({}) => {
                             message.error("Por favor asegúrese que los valores en los campos sean correctos");
                         }
                     }}
+                    placement="bottom"
                     >
                 <Button name="guardar" >Guardar</Button>
                 </Popconfirm>
