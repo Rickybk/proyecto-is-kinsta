@@ -20,7 +20,17 @@ const EditableCell = ({
             }}
             onKeyDown={validation}
             maxLength={30}
-            autoComplete='Off' />;
+            autoComplete='Off'
+            onCopy={(Event)=>{
+                Event.preventDefault();
+            }}
+            onPaste={(Event)=>{
+                Event.preventDefault();
+            }}
+            onDrop={(Event)=>{
+                Event.preventDefault();
+            }}
+            />;
     return (
         <td {...restProps}>
             {editing ? (
@@ -56,6 +66,7 @@ const validation = (e) => {
         || key === 'ArrowRight')) {
         e.preventDefault();
     }
+    
 };
 
 const CategoryList = ({ setRefresh, isRefresh }) => {
@@ -106,7 +117,7 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
     };
 
     const deleteProductDB = async (id_categoria) => {
-        //Ruta para server en localhost: "http://localhost:8080/store/categories"
+        //Ruta para server en localhost: "http://localhost:8080/store/categories/"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
         const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/` + id_categoria, {
             method: "DELETE"

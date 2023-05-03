@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { List, Input,Affix,Select } from 'antd';
 import Producto from './CuadroProducto';
 import ProductModal from './ProductModal';
@@ -14,9 +14,18 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     const [sort, setSort] = useState('default');
     const [categoria, setCategoria] = useState([]);
     const [elegido, setElegido] = useState(1);
+    //Para el Affix
+    const myRef = useRef(null);
+    const [y, setY] = useState(0);
+
 
     useEffect(() => {
         if (isRefresh) {
+            const miElemento = myRef.current;
+            if (miElemento) {
+            const rect = miElemento.getBoundingClientRect();
+            setY(rect.top);
+            }
             fetchCategoria();
             if(elegido !== null && elegido !== undefined){
                 handleCategoria(elegido);
@@ -38,7 +47,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     async function fetchCategoria(){
         //"http://localhost:8080/store/categories"
-        //`${process.env.REACT_APP_SERVERURL}/store/categories`
+        //`${process.env.REACT_APP_SERVERURL}/store/categories/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
         setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
@@ -76,7 +85,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         if(value === 1){
             await fetchData();
         } else {
-        //Ruta para server en localhost: "http://localhost:8080/store/productsCategoria/"
+        //Ruta para server en localhost: "http://localhost:8080/store/productsCategoria"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/productsCategoria/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/productsCategoria/` + value);
         const jsonData = await response.json();
@@ -90,8 +99,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     return (
         <>
-            <Affix>
-            <div className="botones">
+            <div className="botones" ref={myRef}>
                 <ProductModal setRefresh={setRefresh} elegido={elegido} setElegido={handleForm}/>
                 <Input
                     placeholder="Buscar Producto"
@@ -156,8 +164,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                 </Select>
             </div>
 
-
-            </Affix>
 
             <List
                 grid={{

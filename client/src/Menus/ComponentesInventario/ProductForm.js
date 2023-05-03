@@ -35,8 +35,8 @@ const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, idCategoria, prec
     }, []);
 
     async function fetchCategoria() {
-        //Ruta para server en localhost: "http://localhost:8080/store/categories/"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
+    //Ruta para server en localhost: "http://localhost:8080/store/categories"
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
         setCategoria(jsonData);
