@@ -284,11 +284,22 @@ const updateProduct = async (req, res) => {
     if (existingProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
+    const category = await pool.query(
+      "SELECT id_categoria FROM categorias WHERE id_categoria = $1",
+      [idCategory]
+    );
+    if (category.rows.length === 0) {
+      idCategoria = 2;
+        await pool.query(
+        "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
+        [nombreProducto, precio, descripcion, imagen, idCategoria, idProduct]
+      );
+      return res.status(200).json({ data: 2 });
+    }
     const newProduct = await pool.query(
       "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
       [nombreProducto, precio, descripcion, imagen, idCategory, idProduct]
     );
-
     if (newProduct.rowCount === 0)
       return res.status(404).json({ message: "OK" });
 
