@@ -176,17 +176,29 @@ const getBuy = async (req, res) => {
     res.status(500).send("Error obteniendo compras");
   }
 }
+
 const createProduct = async (req, res) => {
   try {
-    const { nombreProducto, precio, descripcion, imagen } =
-      req.body;
-    const { idCategory } = req.params;
+    const { nombreProducto, precio, descripcion, imagen } = req.body;
+    let { idCategory } = req.params;
     const nameProduct = await pool.query(
       "SELECT * FROM productos WHERE LOWER(nombre_producto) = LOWER($1);",
       [nombreProducto]
     );
     if (nameProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
+    }
+    const category = await pool.query(
+      "SELECT id_categoria FROM categorias WHERE id_categoria = $1",
+      [idCategory]
+    );
+    if (category.rows.length === 0) {
+      idCategory = 2;
+      const newProduct = await pool.query(
+        "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
+        [nombreProducto, precio, descripcion, imagen, idCategory]
+      );
+      return res.status(200).json({ data: 2 });
     }
     const newProduct = await pool.query(
       "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
@@ -212,7 +224,8 @@ const createBuy = async (req, res) => {
     const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
     const day = ('0' + fechaActual.getDate()).slice(-2);
     const fechaCompra = `${year}-${month}-${day}`;
-    const costoUnitario = parseFloat(costo_total) / parseInt(cantidad);
+    const costoUnitarioNum = (parseFloat(costo_total) / parseInt(cantidad)).toFixed(2);
+    const costoUnitario = parseFloat(costoUnitarioNum);
     const newLot = await pool.query(
       "INSERT INTO lotes (id_producto, cantidad, fecha_caducidad, costo_unitario, costo_total, fecha_compra) VALUES ($1, $2, $3, $4, $5, $6)",
       [idProduct, cantidad, fechaCaducidad, costoUnitario, costo_total, fechaCompra]
@@ -271,11 +284,22 @@ const updateProduct = async (req, res) => {
     if (existingProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
+    const category = await pool.query(
+      "SELECT id_categoria FROM categorias WHERE id_categoria = $1",
+      [idCategory]
+    );
+    if (category.rows.length === 0) {
+      idCategoria = 2;
+        await pool.query(
+        "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
+        [nombreProducto, precio, descripcion, imagen, idCategoria, idProduct]
+      );
+      return res.status(200).json({ data: 2 });
+    }
     const newProduct = await pool.query(
       "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
       [nombreProducto, precio, descripcion, imagen, idCategory, idProduct]
     );
-
     if (newProduct.rowCount === 0)
       return res.status(404).json({ message: "OK" });
 
@@ -294,7 +318,8 @@ const updateBuy = async (req, res) => {
       costo_total
     } = req.body;
     const idProduct = (await pool.query("SELECT id_producto FROM lotes WHERE id_lote = $1", [idLot])).rows[0].id_producto;
-    const costoUnitario = parseFloat(costo_total) / parseInt(cantidad);
+    const costoUnitarioNum = (parseFloat(costo_total) / parseInt(cantidad)).toFixed(2);
+    const costoUnitario = parseFloat(costoUnitarioNum);
     const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
       idLot
     ])).rows[0].cantidad;

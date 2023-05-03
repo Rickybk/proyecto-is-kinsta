@@ -25,7 +25,7 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
-        if(imagen){
+        if (imagen) {
             values.imagen = imagen;
         }
         setIsModalOpen(true);
@@ -37,21 +37,29 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
             saveData();
             const respuesta = await uploadDB();
             indiceCat = values.idCategory;
-            console.log("indiceCat: ", indiceCat);
-            setElegido(indiceCat);
-            setRefresh(true); 
             if (respuesta === 1) {
-                message.error("El producto " + values.nombreProducto + " ya existente "); 
-            }else{
+                message.error("El producto " + values.nombreProducto + " ya existente ");
+                return;
+            }
+            if (respuesta === 2) {
+                indiceCat = 2;
+                if (idProducto) {
+                    message.warning("La categoría solicitada no existe. El producto se actualizo a la categoría: SIN CATEGORIA.");
+                } else {
+                    message.warning("La categoría solicitada no existe. El producto se creo en la categoría: SIN CATEGORIA.");
+                }
+            } else {
                 if (idProducto) {
                     message.success("Producto actualizado exitosamente");
                 } else {
-                    message.success("Producto creado exitosamente");
-                    document.getElementById("productForm").reset();
+                    message.success("Producto creado exitosamente");         
                 }
             }
+            document.getElementById("productForm").reset();
             values.imagen = "Sin imagen";
             values.idCategory = 2;
+            setElegido(indiceCat);
+            setRefresh(true);
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
@@ -96,6 +104,9 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
         const jsonData = await res.json();
         if (jsonData.data === 1) {
             return 1;
+        }
+        if (jsonData.data === 2) {
+            return 2;
         }
     }
 
