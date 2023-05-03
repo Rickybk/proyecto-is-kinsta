@@ -40,13 +40,15 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     async function fetchData() {
         //"http://localhost:8080/store/allproducts"
         //`${process.env.REACT_APP_SERVERURL}/store/allproducts/`
-        const response = await fetch("http://localhost:8080/store/allproducts");
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/allproducts/`);
         const jsonData = await response.json();
         setProducts(jsonData);
     }
 
     async function fetchCategoria(){
-        const response = await fetch("http://localhost:8080/store/categories");
+        //"http://localhost:8080/store/categories"
+        //`${process.env.REACT_APP_SERVERURL}/store/categories/`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
         setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
     }
@@ -83,7 +85,9 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         if(value === 1){
             await fetchData();
         } else {
-        const response = await fetch("http://localhost:8080/store/productsCategoria/" + value);
+        //Ruta para server en localhost: "http://localhost:8080/store/productsCategoria"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/productsCategoria/`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/productsCategoria/` + value);
         const jsonData = await response.json();
         setProducts(jsonData);
         }

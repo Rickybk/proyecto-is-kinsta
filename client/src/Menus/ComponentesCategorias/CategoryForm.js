@@ -16,8 +16,11 @@ const CategoryForm = ({nombreCategoria}) => {
         fetchCategoria();
     },[]);
 
+
     async function fetchCategoria() {
-        const response = await fetch("http://localhost:8080/store/categories");
+    //Ruta para server en localhost: "http://localhost:8080/store/categories"
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories`);
         const jsonData = await response.json();
         setCategoria(jsonData);
     }

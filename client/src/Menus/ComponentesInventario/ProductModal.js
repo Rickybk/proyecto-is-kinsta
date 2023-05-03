@@ -88,13 +88,15 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
         var res;
         if (idProducto) {
-            res = await fetch("http://localhost:8080/store/products/" + idProducto, {
+            res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + idProducto, {
                 method: "PUT",
                 body: JSON.stringify(values),
                 headers: { "Content-Type": "application/json" }
             });
         } else {
-            res = await fetch("http://localhost:8080/store/products/" + values.idCategory, {
+            //Ruta para server en localhost: "http://localhost:8080/store/products"
+            //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+            res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + values.idCategory, {
                 method: "POST",
                 body: JSON.stringify(values),
                 headers: { "Content-Type": "application/json" }
