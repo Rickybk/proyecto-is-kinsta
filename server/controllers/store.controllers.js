@@ -176,17 +176,29 @@ const getBuy = async (req, res) => {
     res.status(500).send("Error obteniendo compras");
   }
 }
+
 const createProduct = async (req, res) => {
   try {
-    const { nombreProducto, precio, descripcion, imagen } =
-      req.body;
-    const { idCategory } = req.params;
+    const { nombreProducto, precio, descripcion, imagen } = req.body;
+    let { idCategory } = req.params;
     const nameProduct = await pool.query(
       "SELECT * FROM productos WHERE LOWER(nombre_producto) = LOWER($1);",
       [nombreProducto]
     );
     if (nameProduct.rows.length > 0) {
       return res.status(200).json({ data: 1 });
+    }
+    const category = await pool.query(
+      "SELECT id_categoria FROM categorias WHERE id_categoria = $1",
+      [idCategory]
+    );
+    if (category.rows.length === 0) {
+      idCategory = 2;
+      const newProduct = await pool.query(
+        "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
+        [nombreProducto, precio, descripcion, imagen, idCategory]
+      );
+      return res.status(200).json({ data: 2 });
     }
     const newProduct = await pool.query(
       "INSERT INTO productos (nombre_producto, precio_unitario, descripcion,total, imagen, id_categoria) VALUES ($1, $2, $3, 0, $4, $5)",
