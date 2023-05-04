@@ -3,9 +3,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
-import { placement } from 'antd/lib/popconfirm';
-//import EditableCell from "./EditableCell";
-
+import './BuyList.css';
 
 const EditableCell = ({
   editing,
@@ -71,9 +69,9 @@ const EditableCell = ({
 
     >
       <InputNumber
-        style={{ width: '98%', margin: '0 auto', textAlign: 'center' }}
+        style={{ width: '100%', margin: '0 auto', textAlign: 'center'}}
         prefix="Bs."
-        className="inputs"
+        className="inputNumber"
         id="precio"
         min={0}
         maxLength={9}
@@ -171,7 +169,7 @@ const BuyList = ({ }) => {
   const isEditing = (record) => record.id_lote === editingid_lote;
   const edit = (record) => {
     record.fecha_caducidad = record.fecha_caducidad ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
-    record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
+    record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_compra).format('YYYY-MM-DD') : "";
     form.setFieldsValue({
       name: '',
       ...record,
@@ -191,13 +189,9 @@ const BuyList = ({ }) => {
   }, []); ///dataSource, setDataSource
 
   async function fetchBuys() {
-    //Ruta para server en localhost: "http://localhost:8080/store/products/allbuy/1"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
     const jsonData = await response.json();
     setDataSource(jsonData);
-
-
   }
 
   const handleDelete = async (id_lote) => {
