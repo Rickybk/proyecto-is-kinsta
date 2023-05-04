@@ -215,7 +215,7 @@ const BuyList = ({ }) => {
   };
   
   const deleteProductDB = async (id_lote) => {
-    //Ruta para server en localhost: "http://localhost:8080/store/products"
+    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
     const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
       method: "DELETE"
@@ -226,7 +226,7 @@ const BuyList = ({ }) => {
   const save = async (id_lote) => {
     var res;
     const row = await form.validateFields();
-    //Ruta para server en localhost: "http://localhost:8080/store/products"
+    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
     res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
       method: "PUT",

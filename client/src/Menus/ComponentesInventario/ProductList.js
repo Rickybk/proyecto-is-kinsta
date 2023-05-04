@@ -38,7 +38,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     }, [elegido, setElegido, setRefresh, isRefresh]);
 
     async function fetchData() {
-        //"http://localhost:8080/store/allproducts"
+        //"http://localhost:8080/store/allproducts/"
         //`${process.env.REACT_APP_SERVERURL}/store/allproducts/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/allproducts/`);
         const jsonData = await response.json();
@@ -46,7 +46,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
     }
 
     async function fetchCategoria(){
-        //"http://localhost:8080/store/categories"
+        //"http://localhost:8080/store/categories/"
         //`${process.env.REACT_APP_SERVERURL}/store/categories/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
