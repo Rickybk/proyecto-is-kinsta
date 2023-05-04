@@ -3,6 +3,8 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
+import './BuyList.css';
+
 import { placement } from 'antd/lib/popconfirm';
 //import EditableCell from "./EditableCell";
 
@@ -71,9 +73,9 @@ const EditableCell = ({
 
     >
       <InputNumber
-        style={{ width: '98%', margin: '0 auto', textAlign: 'center' }}
+        style={{ width: '100%', margin: '0 auto', textAlign: 'center'}}
         prefix="Bs."
-        className="inputs"
+        className="inputNumber"
         id="precio"
         min={0}
         maxLength={9}
@@ -171,7 +173,7 @@ const BuyList = ({ }) => {
   const isEditing = (record) => record.id_lote === editingid_lote;
   const edit = (record) => {
     record.fecha_caducidad = record.fecha_caducidad ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
-    record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
+    record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_compra).format('YYYY-MM-DD') : "";
     form.setFieldsValue({
       name: '',
       ...record,
