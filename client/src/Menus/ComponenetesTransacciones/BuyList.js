@@ -5,10 +5,6 @@ import dayjs from 'dayjs';
 import moment from "moment";
 import './BuyList.css';
 
-import { placement } from 'antd/lib/popconfirm';
-//import EditableCell from "./EditableCell";
-
-
 const EditableCell = ({
   editing,
   dataIndex,
@@ -193,13 +189,9 @@ const BuyList = ({ }) => {
   }, []); ///dataSource, setDataSource
 
   async function fetchBuys() {
-    //Ruta para server en localhost: "http://localhost:8080/store/products/allbuy/1"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
     const jsonData = await response.json();
     setDataSource(jsonData);
-
-
   }
 
   const handleDelete = async (id_lote) => {

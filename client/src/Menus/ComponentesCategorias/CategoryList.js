@@ -95,16 +95,15 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
             fetchCategoria();
             setRefresh(false);
         }
-    }, [aux, dataSource, setDataSource]);   //dataSource,setDataSource     rompe el server
+    }, [aux, dataSource, setDataSource]);
 
     async function fetchCategoria() {
         //Ruta para server en localhost: "http://localhost:8080/store/categories/"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
-        //setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
-        //setCategoria(jsonData);
-        setDataSource(jsonData);
+        const updatedData = jsonData.filter(item => item.id_categoria !== 2);
+        setDataSource(updatedData);
     }
 
     const handleDelete = async (id_categoria) => {
@@ -239,8 +238,7 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
                 rowClassName="editable-row"
                 pagination={{
                     onChange: page => {
-                        console.log(page);
-                    }, pageSize: 6,
+                    }, pageSize: 10,
                 }}
             />
         </Form>
