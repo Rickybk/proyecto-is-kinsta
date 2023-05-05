@@ -64,7 +64,7 @@ const CategoryForm = ({nombreCategoria}) => {
                         },
                         {
                             min: 3,
-                            message: 'El nombre de la categoría tener al menos 3 caracteres!',
+                            message: 'El nombre de la categoría debe tener al menos 3 caracteres!',
                         },
                         {
                             max: 39,
