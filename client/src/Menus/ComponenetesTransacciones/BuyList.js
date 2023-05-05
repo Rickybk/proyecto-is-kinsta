@@ -90,9 +90,11 @@ const EditableCell = ({
         },
       ]}
     >
-      <Input
+      <InputNumber
+        min={1}
         style={{
-          backgroundColor: "#fff6ed"
+          backgroundColor: "#fff6ed",
+          width: '100%', margin: '0 auto', textAlign: 'center'
         }}
         onKeyDown={validation}
         maxLength={6}
