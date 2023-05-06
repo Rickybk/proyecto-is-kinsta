@@ -334,9 +334,10 @@ const updateBuy = async (req, res) => {
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
 
-    return res.json(newLot.rows[0]);
+    return res.status(200).json(newLot.rows[0]);
   } catch (error) {
-    res.json({ error: error.message });
+    console.error(error);
+    return res.status(500).json({ error: error.message });
   }
 };
 const getAllBuy = async (req, res) => {

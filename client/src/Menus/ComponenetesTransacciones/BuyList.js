@@ -22,6 +22,9 @@ const EditableCell = ({
       rules={[
         {
           validator: (_, value) => {
+            if (!value) {
+              return Promise.resolve();
+            }
             const fech = record.fecha_compra;
             const isValidDate = moment(value, 'YYYY-MM-DD', true).isValid();
             const minDate = moment(fech, 'YYYY-MM-DD');
@@ -73,7 +76,7 @@ const EditableCell = ({
         prefix="Bs."
         className="inputNumber"
         id="precio"
-        min={0}
+        min={1}
         maxLength={9}
         precision={2}
         step={0.5}
@@ -90,9 +93,11 @@ const EditableCell = ({
         },
       ]}
     >
-      <Input
+      <InputNumber
+        min={1}
         style={{
-          backgroundColor: "#fff6ed"
+          backgroundColor: "#fff6ed",
+          width: '100%', margin: '0 auto', textAlign: 'center'
         }}
         onKeyDown={validation}
         maxLength={6}
@@ -195,9 +200,7 @@ const BuyList = ({ }) => {
   }
 
   const handleDelete = async (id_lote) => {
-    // Borrar bd
     const res = await deleteProductDB(id_lote);
-    // Borrar de la lista
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_lote !== id_lote);
       setDataSource(newData);
@@ -220,6 +223,9 @@ const BuyList = ({ }) => {
   const save = async (id_lote) => {
     var res;
     const row = await form.validateFields();
+    if (row.fecha_caducidad === '') {
+      row.fecha_caducidad = null;
+    }
     //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
     res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
@@ -229,7 +235,6 @@ const BuyList = ({ }) => {
     });
 
     fetchBuys();
-    console.log("coro   " + res.status);
     if (res.status === 200) {
       try {
 
