@@ -29,7 +29,7 @@ const CreateModal = ({ handleOk, setRefresh, isEdit }) => {
                     "¿Está seguro de agregar el nuevo producto?"}
                 open={isModalOpen}
                 onCancel={handleCancel}
-                width="25%"
+                width={isEdit ? "35%" : "30%"}
                 footer={[
                     <Button id="boton" form="editForm" key="edit" type="primary" onClick={handleOkModal}>
                         Ok

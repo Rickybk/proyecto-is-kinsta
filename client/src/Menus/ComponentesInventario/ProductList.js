@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { List, Input,Affix,Select } from 'antd';
+import { List, Input,Select } from 'antd';
 import Producto from './CuadroProducto';
 import ProductModal from './ProductModal';
 import './ListaBotones.css';
@@ -10,7 +10,6 @@ const ProductList = ({ setRefresh, isRefresh }) => {
 
     const [search, setSearch] = useState('');
     const [products, setProducts] = useState([]);
-
     const [sort, setSort] = useState('default');
     const [categoria, setCategoria] = useState([]);
     const [elegido, setElegido] = useState(1);
@@ -64,6 +63,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
             setProducts(filteredData);
         }
       };
+
 
       const handleSort = (value) => {
         setSort(value); // Actualizar el estado del criterio de ordenamiento
@@ -151,17 +151,16 @@ const ProductList = ({ setRefresh, isRefresh }) => {
                     placeholder="Seleccionar Categoria"
                     optionFilterProp="children"
                     onChange={handleCategoria}
-                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                    filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                    }
+                    filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
                 >  
                     {categoria.map(cat =>(
-                        <Option key={cat.id_categoria} value={cat.id_categoria}>
+                        <Select.Option key={cat.id_categoria} value={cat.id_categoria} label={cat.nombre_categoria}>
                             {cat.nombre_categoria}
-                        </Option>
+                        </Select.Option>
                     ))}
-                </Select>
+                </Select>                
             </div>
 
 

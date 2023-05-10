@@ -119,7 +119,7 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
 
     return (
         <>
-            <Button type={idProducto ? "default" : "primary"} onClick={showModal}>
+            <Button  type={idProducto ? "default" : "primary"} onClick={showModal}>
                 {idProducto ? <EditOutlined /> : "Añadir Producto"}
             </Button>
             <Modal
