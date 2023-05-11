@@ -26,6 +26,7 @@ const EditableCell = ({
               return Promise.resolve();
             }
             const fech = record.fecha_compra;
+            const maxDate = moment(fech, 'YYYY-MM-DD').add(5, 'years');
             const isValidDate = moment(value, 'YYYY-MM-DD', true).isValid();
             const minDate = moment(fech, 'YYYY-MM-DD');
             const inputDate = moment(value, 'YYYY-MM-DD');
@@ -34,11 +35,14 @@ const EditableCell = ({
               return Promise.reject('Dato invalido. Por favor use el formato YYYY-MM-DD.');
             } else if (inputDate.isBefore(minDate)) {
               return Promise.reject('La fecha no puede ser menor a ' + fech);
+            } else if (inputDate.isAfter(maxDate)) {
+              return Promise.reject('La fecha no puede ser mayor a ' + maxDate.format('YYYY-MM-DD'));
             }
 
             return Promise.resolve();
           },
         },
+        
       ]}
     >
       <Input

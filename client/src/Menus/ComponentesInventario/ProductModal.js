@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ProductForm from './ProductForm'
 import CreateModal from './CreateModal';
 import { EditOutlined } from '@ant-design/icons';
+import './ProductModal.css'
 
 const values = {
     imagen: "Sin imagen",
@@ -119,19 +120,15 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
 
     return (
         <>
-            <Button type={idProducto ? "default" : "primary"} onClick={showModal}>
+            <Button  type={idProducto ? "default" : "primary"} onClick={showModal}>
                 {idProducto ? <EditOutlined /> : "Añadir Producto"}
             </Button>
             <Modal
+                className="modal"
                 title={idProducto ? "Editar Producto" : "Añadir Producto"}
-                style={{
-                    top: 0,
-                    left: "37%",
-                }}
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                width="25%"
                 footer={[
                     <CreateModal
                         handleOk={handleOk}

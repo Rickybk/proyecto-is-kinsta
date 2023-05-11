@@ -3,3 +3,9 @@
     top: 0px;
     z-index: 1;
 }
+
+@media screen and (max-width:768px){
+    .ant-layout-sider-collapsed {
+        width: 80px;
+      }
+}
