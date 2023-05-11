@@ -289,7 +289,7 @@ const updateProduct = async (req, res) => {
       [idCategory]
     );
     if (category.rows.length === 0) {
-      idCategoria = 2;
+      const idCategoria = 2;
         await pool.query(
         "UPDATE productos SET nombre_producto = $1, precio_unitario = $2, descripcion = $3, imagen = $4, id_categoria= $5  WHERE id_producto = $6 ",
         [nombreProducto, precio, descripcion, imagen, idCategoria, idProduct]
