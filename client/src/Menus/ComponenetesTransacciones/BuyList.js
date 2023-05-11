@@ -238,7 +238,7 @@ const BuyList = ({ }) => {
       headers: { "Content-Type": "application/json" }
     });
 
-    fetchBuys();
+    //fetchBuys();
     if (res.status === 200) {
       try {
 
