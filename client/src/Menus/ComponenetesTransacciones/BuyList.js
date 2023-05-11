@@ -197,11 +197,14 @@ const BuyList = ({ }) => {
     async function fetchData() {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
       const jsonData = await response.json();
+      for (var clave in jsonData){
+        jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
+        jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
+      }
       setDataSource(jsonData);
-      console.log(jsonData);
     }
     fetchData();
-  }, []);
+  },[]);
 
   const handleDelete = async (id_lote) => {
     const res = await deleteProductDB(id_lote);
