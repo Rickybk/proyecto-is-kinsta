@@ -49,7 +49,7 @@ const ProductList = ({ setRefresh, isRefresh }) => {
         //`${process.env.REACT_APP_SERVERURL}/store/categories/`
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`);
         const jsonData = await response.json();
-        setCategoria([{id_categoria: 1, nombre_categoria: "TODOS"}, ...jsonData]);
+        setCategoria([{id_categoria: 1, nombre_categoria: "Ver Todas las Categorias"}, ...jsonData]);
     }
 
     const handleInputChange = (event) => {

@@ -6,6 +6,8 @@ import MenuInventario from '../Menus/InventarioMenu';
 import Categoria from '../Menus/Categoria';
 import MenuTransacciones from '../Menus/TransaccionesMenu';
 
+const {Breakpoint} = Layout;
+
 function App() {
     return (
         <ConfigProvider
@@ -52,9 +54,10 @@ function SideMenu() {
 
     return (
         <Affix offsetTop={top}>
-            <Sider theme="light" collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+            <Sider classname="sider" theme="light" collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
             <Menu
                 style={{fontSize:16,
+                        height:'100vh'
                 }}
                 onClick={({ key }) => { navigate(key) }}
                 items={[
@@ -80,6 +83,7 @@ function Content() {
 
 
     return <Layout>
+        
         <Affix offsetTop={top}>
         <Header
             style={{
