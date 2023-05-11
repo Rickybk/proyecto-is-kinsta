@@ -194,14 +194,14 @@ const BuyList = ({ }) => {
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
-    fetchBuys();
-  }, []); ///dataSource, setDataSource
-
-  async function fetchBuys() {
-    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
-    const jsonData = await response.json();
-    setDataSource(jsonData);
-  }
+    async function fetchData() {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+      const jsonData = await response.json();
+      setDataSource(jsonData);
+      console.log(jsonData);
+    }
+    fetchData();
+  }, []);
 
   const handleDelete = async (id_lote) => {
     const res = await deleteProductDB(id_lote);
@@ -303,6 +303,7 @@ const BuyList = ({ }) => {
       editable: true,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD') === 'Invalid Date' ?
         "Sin fecha" : dayjs(fecha).format('YYYY-MM-DD')
+        //dayjs(moment(fecha).add(1,'day')).format('YYYY-MM-DD')
     },
     {
       title: 'Costo total',
