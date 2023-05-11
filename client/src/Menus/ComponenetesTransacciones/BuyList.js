@@ -302,8 +302,7 @@ const BuyList = ({ }) => {
       width: '15%',
       editable: true,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD') === 'Invalid Date' ?
-        "Sin fecha" : dayjs(moment(fecha).add(1,'day')).format('YYYY-MM-DD')
-        //dayjs(moment(fecha).add(1,'day')).format('YYYY-MM-DD')
+        "Sin fecha" : dayjs(fecha).format('YYYY-MM-DD')
     },
     {
       title: 'Costo total',
