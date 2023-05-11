@@ -63,7 +63,7 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
             idProducto={idProducto}
             nombreProducto={title}
             imagen={imagen}
-            precio={precio}
+            precioU={precio}
             idCategoria={idCategoria}
             descripcion={descripcion}
             setRefresh={setRefresh}
