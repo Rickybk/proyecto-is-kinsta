@@ -7,7 +7,7 @@ import Categoria from '../Menus/Categoria';
 import MenuTransacciones from '../Menus/TransaccionesMenu';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTruck, faUsers} from '@fortawesome/free-solid-svg-icons'
-import ProveedorMenu from '../Menus/SupplierMenu';
+import SupplierMenu from '../Menus/SupplierMenu';
 import ClientMenu from '../Menus/ClientMenu';
 
 
@@ -116,7 +116,7 @@ function Content() {
                 <Route path="/categorias" element={<div><Categoria /></div>}></Route>
                 <Route path="/transacciones" element={<div><MenuTransacciones /></div>}></Route>
                 <Route path="/clientes" element={<div><ClientMenu/></div>}></Route>
-                <Route path="/proveedores" element={<div><ProveedorMenu/></div>}></Route>
+                <Route path="/proveedores" element={<div><SupplierMenu/></div>}></Route>
             </Routes>
         </Content>
 

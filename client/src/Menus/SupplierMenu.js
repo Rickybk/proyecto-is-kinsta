@@ -1,8 +1,9 @@
 import React from 'react';
+import SupplierList from './ComponentesProveedores/SupplierList';
 import { useState } from 'react';
 import { Button } from 'antd';
 
-function ProveedorMenu() {
+function SupplierMenu() {
 
   const [isRefresh, setIsRefresh] = useState(true);
   const setRefresh = (status) => {
@@ -12,9 +13,10 @@ function ProveedorMenu() {
   return (
       
       <div className="row">
-          <Button>Añadir Proveedor</Button>
+          <Button type='primary'>Añadir Proveedor</Button>
+          <SupplierList setRefresh={setRefresh} isRefresh={isRefresh} />
       </div>
   );
 }
 
-export default ProveedorMenu;
+export default SupplierMenu;
