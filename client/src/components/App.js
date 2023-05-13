@@ -6,8 +6,9 @@ import MenuInventario from '../Menus/InventarioMenu';
 import Categoria from '../Menus/Categoria';
 import MenuTransacciones from '../Menus/TransaccionesMenu';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTruck} from '@fortawesome/free-solid-svg-icons'
+import {faTruck, faUsers} from '@fortawesome/free-solid-svg-icons'
 import ProveedorMenu from '../Menus/SupplierMenu';
+import ClientMenu from '../Menus/ClientMenu';
 
 
 const {Breakpoint} = Layout;
@@ -69,6 +70,7 @@ function SideMenu() {
                     { label: "Inventario", key: "/", icon: <ShopOutlined /> },
                     { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
                     { label: "Transacciones", key: "/transacciones", icon: <DollarCircleOutlined /> },
+                    { label: "Clientes", key: "/clientes", icon: <FontAwesomeIcon icon={faUsers}/>},
                     { label: "Proveedores", key: "/proveedores", icon: <FontAwesomeIcon icon={faTruck}/>}
                 ]}>
                 
@@ -102,6 +104,7 @@ function Content() {
                 <Route path="/" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
                 <Route path="/categorias" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
                 <Route path="/transacciones" element={<div><h1 style={{fontSize: 50}}>Transacciones</h1></div>}></Route>
+                <Route path="/clientes" element={<div><h1 style={{fontSize: 50}}>Clientes</h1></div>}></Route>
                 <Route path="/proveedores" element={<div><h1 style={{fontSize: 50}}>Proveedores</h1></div>}></Route>
             </Routes>
         </Header>
@@ -112,6 +115,7 @@ function Content() {
                 <Route path="/" element={<div><MenuInventario /></div>}></Route>
                 <Route path="/categorias" element={<div><Categoria /></div>}></Route>
                 <Route path="/transacciones" element={<div><MenuTransacciones /></div>}></Route>
+                <Route path="/clientes" element={<div><ClientMenu/></div>}></Route>
                 <Route path="/proveedores" element={<div><ProveedorMenu/></div>}></Route>
             </Routes>
         </Content>
