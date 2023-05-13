@@ -5,6 +5,10 @@ import { ShopOutlined, DollarCircleOutlined,TagsOutlined } from '@ant-design/ico
 import MenuInventario from '../Menus/InventarioMenu';
 import Categoria from '../Menus/Categoria';
 import MenuTransacciones from '../Menus/TransaccionesMenu';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTruck} from '@fortawesome/free-solid-svg-icons'
+import ProveedorMenu from '../Menus/SupplierMenu';
+
 
 const {Breakpoint} = Layout;
 
@@ -64,7 +68,8 @@ function SideMenu() {
                     { label: "TIENDA J&B",icon: <image href=''/>,disabled:true },
                     { label: "Inventario", key: "/", icon: <ShopOutlined /> },
                     { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
-                    { label: "Transacciones", key: "/transacciones", icon: <DollarCircleOutlined /> }
+                    { label: "Transacciones", key: "/transacciones", icon: <DollarCircleOutlined /> },
+                    { label: "Proveedores", key: "/proveedores", icon: <FontAwesomeIcon icon={faTruck}/>}
                 ]}>
                 
             </Menu>
@@ -97,6 +102,7 @@ function Content() {
                 <Route path="/" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
                 <Route path="/categorias" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
                 <Route path="/transacciones" element={<div><h1 style={{fontSize: 50}}>Transacciones</h1></div>}></Route>
+                <Route path="/proveedores" element={<div><h1 style={{fontSize: 50}}>Proveedores</h1></div>}></Route>
             </Routes>
         </Header>
         </Affix>
@@ -106,6 +112,7 @@ function Content() {
                 <Route path="/" element={<div><MenuInventario /></div>}></Route>
                 <Route path="/categorias" element={<div><Categoria /></div>}></Route>
                 <Route path="/transacciones" element={<div><MenuTransacciones /></div>}></Route>
+                <Route path="/proveedores" element={<div><ProveedorMenu/></div>}></Route>
             </Routes>
         </Content>
 
