@@ -1,11 +1,12 @@
-import { Table, Popconfirm, Button, message, Form, Typography} from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
+
 import EditableCell from "./EditableCell";
 
-const BuyList = ({ }) => {
+const BuyList = ({}) => {
 
   const [form] = Form.useForm();
 
@@ -13,7 +14,6 @@ const BuyList = ({ }) => {
   const [editingid_lote, setEditingid_lote] = useState('');
   const isEditing = (record) => record.id_lote === editingid_lote;
   const edit = (record) => {
-    record.fecha_caducidad = record.fecha_caducidad ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
     record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_compra).format('YYYY-MM-DD') : "";
     form.setFieldsValue({
       name: '',
@@ -66,21 +66,20 @@ const BuyList = ({ }) => {
   const save = async (id_lote) => {
     var res;
     const row = await form.validateFields();
+
     let numero = (row.costo_total/row.cantidad).toFixed(2);
     row.costo_unitario = numero;
-    if (row.fecha_caducidad === '') {
-      row.fecha_caducidad = null;
-    }
+    console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+    console.log(row);
     //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
-      method: "PUT",
-      body: JSON.stringify(row),
-      headers: { "Content-Type": "application/json" }
-    });
+    //res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
+    //  method: "PUT",
+      //body: JSON.stringify(row),
+      //headers: { "Content-Type": "application/json" }
+    //});
 
-    //fetchBuys();
-    if (res.status === 200) {
+    //if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
@@ -95,7 +94,7 @@ const BuyList = ({ }) => {
           setDataSource(newData);
           setEditingid_lote('');
 
-        } else {
+        } else {            
           newData.push(row);
           setDataSource(newData);
           setEditingid_lote('');
@@ -104,10 +103,10 @@ const BuyList = ({ }) => {
         console.log('Error en la validación:', errInfo);
       }
 
-      message.success("La compra se modificó correctamente");
-    } else {
-      message.warning('Problemas de comunicaion con el server');
-    }
+      //message.success("La compra se modificó correctamente");
+    //} else {
+      //message.warning('Problemas de comunicaion con el server');
+    //}
 
   };
 
@@ -121,39 +120,44 @@ const BuyList = ({ }) => {
     {
       title: 'Cantidad',
       dataIndex: 'cantidad',
-      width: '15%',
+      width: '10%',
       editable: true,
     },
     {
-      title: 'Costo unitario(Bs.)',
+      title: 'Precio unitario(Bs.)',
       dataIndex: 'costo_unitario',
-      width: '15%',
+      width: '13%',
       editable: false,
     },
     {
-      title: 'Fecha de compra',
+      title: 'Fecha de venta',
       dataIndex: 'fecha_compra',
-      width: '15%',
+      width: '12%',
       editable: false,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD')
     },
     {
-      title: 'Fecha de caducidad',
-      dataIndex: 'fecha_caducidad',
-      width: '15%',
+      title: 'Precio total(Bs.)',
+      dataIndex: 'costo_total',
+      width: '12%',
       editable: true,
-      render: (fecha) => dayjs(fecha).format('YYYY-MM-DD') === 'Invalid Date' ?
-        "Sin fecha" : dayjs(fecha).format('YYYY-MM-DD')
     },
     {
-      title: 'Costo total',
-      dataIndex: 'costo_total',
-      width: '15%',
-      editable: true,
+        title: 'Cliente',
+        dataIndex: 'cliente',//completar luego
+        width: '15%',
+        editable: true,
+    },
+    {
+        title: 'Pago',
+        dataIndex: 'id_lote',//completar luego
+        width: '10%',
+        editable: true,
     },
     {
       title: '',
       dataIndex: 'operation',
+      width: '15%',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -165,7 +169,7 @@ const BuyList = ({ }) => {
                 try {
                   await save(record.id_lote);
                 } catch (error) {
-                  console.error(error);
+                  //console.error(error);
                   message.error("Por favor asegúrese que los valores en los campos sean correctos");
                 }
               }}
@@ -207,10 +211,14 @@ const BuyList = ({ }) => {
           col.dataIndex === "costo_total"
             ? "number"
             : col.dataIndex === "fecha_caducidad"
-              ? "date"
-              : col.dataIndex === "fecha_compra"
-                ? "date"
-                : "text",
+            ? "date"
+            : col.dataIndex === "id_lote"
+            ? "pago"
+            : col.dataIndex === "cliente"
+            ? "cliente"
+            : col.dataIndex === "fecha_compra"
+            ? "date"
+            : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

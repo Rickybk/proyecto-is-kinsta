@@ -1,10 +1,11 @@
 import { Layout, Menu, ConfigProvider, theme ,Affix} from 'antd';
 import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { ShopOutlined, DollarCircleOutlined,TagsOutlined } from '@ant-design/icons';
+import { ShopOutlined, DollarCircleOutlined,TagsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import MenuInventario from '../Menus/InventarioMenu';
 import Categoria from '../Menus/Categoria';
-import MenuTransacciones from '../Menus/TransaccionesMenu';
+import MenuTransaccionesCompras from '../Menus/TransaccionesMenu';
+import MenuTransaccionesVentas from '../Menus/TransaccionesVenta';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTruck, faUsers} from '@fortawesome/free-solid-svg-icons'
 import SupplierMenu from '../Menus/SupplierMenu';
@@ -69,7 +70,15 @@ function SideMenu() {
                     { label: "TIENDA J&B",icon: <image href=''/>,disabled:true },
                     { label: "Inventario", key: "/", icon: <ShopOutlined /> },
                     { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
-                    { label: "Transacciones", key: "/transacciones", icon: <DollarCircleOutlined /> },
+                    { 
+                        label: "Transacciones", 
+                        key: "/transacciones", 
+                        icon: <DollarCircleOutlined />,
+                        children: [
+                          { label: "Venta", key: "/venta", icon: <ShoppingCartOutlined /> },
+                          { label: "Compra", key: "/compra", icon: <DollarCircleOutlined /> }
+                        ]
+                      },
                     { label: "Clientes", key: "/clientes", icon: <FontAwesomeIcon icon={faUsers}/>},
                     { label: "Proveedores", key: "/proveedores", icon: <FontAwesomeIcon icon={faTruck}/>}
                 ]}>
@@ -103,7 +112,8 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><h1 style={{fontSize: 50}}>Inventario</h1></div>}></Route>
                 <Route path="/categorias" element={<div><h1 style={{fontSize: 50}}>Categoría</h1></div>}></Route>
-                <Route path="/transacciones" element={<div><h1 style={{fontSize: 50}}>Transacciones</h1></div>}></Route>
+                <Route path="/compra" element={<div><h1 style={{fontSize: 50}}>Compra</h1></div>}></Route>
+                <Route path="/venta" element={<div><h1 style={{fontSize: 50}}>Venta</h1></div>}></Route>
                 <Route path="/clientes" element={<div><h1 style={{fontSize: 50}}>Clientes</h1></div>}></Route>
                 <Route path="/proveedores" element={<div><h1 style={{fontSize: 50}}>Proveedores</h1></div>}></Route>
             </Routes>
@@ -114,7 +124,8 @@ function Content() {
             <Routes>
                 <Route path="/" element={<div><MenuInventario /></div>}></Route>
                 <Route path="/categorias" element={<div><Categoria /></div>}></Route>
-                <Route path="/transacciones" element={<div><MenuTransacciones /></div>}></Route>
+                <Route path="/compra" element={<div><MenuTransaccionesCompras /></div>}></Route>
+                <Route path="/venta" element={<div><MenuTransaccionesVentas /></div>}></Route>
                 <Route path="/clientes" element={<div><ClientMenu/></div>}></Route>
                 <Route path="/proveedores" element={<div><SupplierMenu/></div>}></Route>
             </Routes>
