@@ -3,9 +3,10 @@ import SaleForm from './SaleForm'
 import ConfirmSaleModal from './ConfirmSaleModal';
 
 const values = {
+    id_producto: "",
     cantidad: "",
     cliente: "",
-    precioUnitario: "",
+    precio_unitario: "",
 }
 
 var fiado = false;
@@ -21,6 +22,7 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
             saveData();
             //Falta que el amigo Jose tenga listo el back.
             //const respuesta = await uploadDB();
+            console.log(values);
             setRefresh(true);
             message.success("Venta realizada exitosamente");
             closeModal();
@@ -41,8 +43,9 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
     }
 
     const saveData = () => {
+        values.id_producto = idProducto;
         values.cantidad = document.getElementById("cantidad").value;
-        values.precioUnitario = precioUnitario;
+        values.precio_unitario = precioUnitario;
         if (fiado) {
             values.cliente = document.getElementById("cliente").value;
         }
