@@ -506,6 +506,28 @@ const deleteClient = async (req, res) => {
   }
 };
 
+const updateAClient = async (req, res) => {
+  try {
+    const { idCliente } = req.params;
+    const { nombreCliente, numCliente } = req.body;
+    const existingClient = await pool.query(
+      "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1) AND id_cliente != $2",
+      [nombreCliente, idCliente]
+    );
+    if (existingClient.rows.length > 0) {
+      return res.status(200).json({ data: 1 });
+    }
+    const newClient = await pool.query(
+      "UPDATE clientes SET nombre_cliente = $1, num_cliente = $2 WHERE id_cliente = $3",
+      [nombreCliente, numCliente, idCliente]
+    );
+    return res.json({cliente: newClient.rows[0]});
+  } catch (error) {
+    console.log("Error modificando cliente");
+    return res.json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -535,5 +557,6 @@ module.exports = {
   getAllClients,
   getAClient,
   createAClient,
-  deleteClient
+  deleteClient,
+  updateAClient
 };
