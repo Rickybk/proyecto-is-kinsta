@@ -71,5 +71,5 @@ router.get("/store/products/allbuy/1", getAllBuy);
 
 router.post("/store/products/sales/:tipoVenta", createSales);
 router.put("/store/products/sales/:id_venta/:tipoVenta", updateSales);
-
+router.delete("/store/products/sales/:id_venta", deleteSales);
 module.exports = router;

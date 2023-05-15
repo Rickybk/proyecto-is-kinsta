@@ -418,7 +418,22 @@ const updateSales = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
-
+const deleteSales = async (req, res) => {
+  try {
+    const id_venta = req.params.id_venta;
+    const cantidad = (await pool.query("SELECT cantidad_venta FROM ventas WHERE id_venta = $1", [id_venta])).rows[0].cantidad_venta;
+    const idProduct = (await pool.query("SELECT id_producto FROM ventas WHERE id_venta = $1", [id_venta])).rows[0].id_producto;
+    const total = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
+      idProduct
+    ])).rows[0].total;
+    const newTotal = parseInt(total)-parseInt(cantidad);
+    await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [newTotal, idProduct]);
+    const result1 = await pool.query('DELETE FROM ventas WHERE id_venta = $1', [id_venta]);
+    return res.status(200).send(`Eliminados ${result1.rowCount} registros de ventas`);
+  } catch (error) {
+    return res.status(500).send('Error eliminando ventas: ' + error);
+  }
+};
 module.exports = {
   getAllCategories,
   getACategorie,
