@@ -444,6 +444,17 @@ const getSales = async (req, res) => {
     res.status(500).send("Error obteniendo ventas");
   }
 };
+const getAllSales = async (req, res) => {
+  try {
+    const getAllSales = await pool.query("SELECT DISTINCT v.id_venta, p.nombre_producto, c.nombre_cliente, v.cantidad_venta, v.tipo_venta, v.precio_total, v.fecha_venta FROM productos p, ventas v, clientes c WHERE p.id_producto = v.id_producto and v.id_cliente = c.id_cliente ORDER BY nombre_producto ASC;");
+    console.log(getAllSales.rows);
+    res.json(getAllSales.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+
+};
 module.exports = {
   getAllCategories,
   getACategorie,
