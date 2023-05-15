@@ -70,6 +70,6 @@ router.get("/store/products/allbuy/1", getAllBuy);
 /**Ventas*/
 
 router.post("/store/products/sales/:tipoVenta", createSales);
-
+router.put("/store/products/sales/:id_venta/:tipoVenta", updateSales);
 
 module.exports = router;

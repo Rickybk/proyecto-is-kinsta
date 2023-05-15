@@ -386,7 +386,38 @@ const createSales = async (req, res) => {
     res.status(500).json({ error: "No se pudo realizar la venta." });
   }
 };
+const updateSales = async (req, res) => {
+  try {
+    const { id_venta, tipoVenta } = req.params; 
+    const {
+      id_producto,
+      cantidad,
+      cliente,
+      precio_unitario
+    } = req.body;
+    const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[cliente])).rows[0].id_cliente;
+    const precioTotal = (parseFloat(precio_unitario) * parseInt(cantidad)).toFixed(2);
+    const precio_total = parseFloat(precioTotal);
+    const cantVenta = (await pool.query("SELECT cantidad_venta FROM ventas WHERE id_venta = $1", [
+      id_venta
+    ])).rows[0].cantidad_venta;
 
+    const newSale = await pool.query(
+      "UPDATE ventas SET id_cliente = $1, cantidad_venta = $2, tipo_venta = $3, precio_total = $4 WHERE id_venta = $5 AND id_producto = $6",
+      [ idCliente, cantidad, tipoVenta, precio_total, id_venta, id_producto]
+    );
+    const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
+      id_producto
+    ])).rows[0].total;
+    const newTotal = parseInt(cantTotal) + parseInt(cantVenta) - parseInt(cantidad);
+    await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [newTotal, id_producto]);
+
+    return res.status(200).json(newSale.rows[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   getAllCategories,
