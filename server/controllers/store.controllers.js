@@ -455,6 +455,15 @@ const getAllSales = async (req, res) => {
   }
 
 };
+
+/**Clientes*/
+const getAllClients = async (req, res) => {
+  const result = await pool.query("SELECT * FROM clientes ORDER BY nombre_cliente ASC;");
+  console.log(result);
+  res.json(result.rows);
+};
+
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -479,5 +488,7 @@ module.exports = {
   getSales,
   createSales,
   updateSales,
-  deleteSales
+  deleteSales,
+  /**Clientes*/
+  getAllClients
 };
