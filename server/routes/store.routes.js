@@ -68,7 +68,7 @@ router.put("/store/products/buy/:idLot", updateBuy);
 router.get("/store/products/allbuy/1", getAllBuy);
 
 /**Ventas*/
-
+router.get("/store/products/sales/:idProduct", getSales);
 router.post("/store/products/sales/:tipoVenta", createSales);
 router.put("/store/products/sales/:id_venta/:tipoVenta", updateSales);
 router.delete("/store/products/sales/:id_venta", deleteSales);

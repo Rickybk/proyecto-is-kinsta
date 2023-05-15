@@ -434,6 +434,16 @@ const deleteSales = async (req, res) => {
     return res.status(500).send('Error eliminando ventas: ' + error);
   }
 };
+const getSales = async (req, res) => {
+  const idProduct = req.params.idProduct;
+  try {
+    const result = await pool.query("SELECT id_venta, id_cliente, cantidad_venta, tipo_venta , precio_total, fecha_venta FROM ventas WHERE id_producto = $1", [idProduct]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo ventas");
+  }
+};
 module.exports = {
   getAllCategories,
   getACategorie,
