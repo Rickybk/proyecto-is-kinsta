@@ -474,6 +474,27 @@ const getAClient = async (req, res) => {
   }
 };
 
+const createAClient = async (req, res) => {
+  const { nombreCliente, numCliente } = req.body;
+  try {
+    const nameClient = await pool.query(
+      "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1);",
+      [nombreCliente]
+    );
+    if (nameClient.rows.length > 0) {
+      return res.status(200).json({ data: 1 });
+    }
+    const result = await pool.query(
+      "INSERT INTO clientes (nombre_cliente, num_cliente) VALUES ($1, $2)",
+      [nombreCliente, numCliente]
+    );
+    return res.json({dato : result.rows[0]});
+  } catch (error) {
+    console.log("Error añadiendo cliente");
+    return res.json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -501,5 +522,6 @@ module.exports = {
   deleteSales,
   /**Clientes*/
   getAllClients,
-  getAClient
+  getAClient,
+  createAClient
 };

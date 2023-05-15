@@ -26,7 +26,8 @@ const {
   updateSales,
   deleteSales,
   getAllClients,
-  getAClient
+  getAClient,
+  createAClient
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -78,4 +79,5 @@ router.delete("/store/products/sales/:id_venta", deleteSales);
 /**Clientes*/
 router.get("/store/clients", getAllClients);
 router.get("/store/clients/:idCliente", getAClient);
+router.post("/store/clients", createAClient);
 module.exports = router;
