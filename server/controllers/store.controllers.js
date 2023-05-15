@@ -528,6 +528,14 @@ const updateAClient = async (req, res) => {
   }
 };
 
+/**Proveedores*/
+
+const getAllProviders = async (req, res) => {
+  const result = await pool.query("SELECT * FROM proveedores ORDER BY nombre_proveedor ASC;");
+  console.log(result);
+  res.json(result.rows);
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -558,5 +566,7 @@ module.exports = {
   getAClient,
   createAClient,
   deleteClient,
-  updateAClient
+  updateAClient,
+  /**Proveedores*/
+  getAllProviders
 };
