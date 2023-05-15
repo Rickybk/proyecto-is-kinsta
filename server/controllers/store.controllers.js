@@ -568,6 +568,16 @@ const createAProvider = async (req, res) => {
   }
 };
 
+const deleteProvider = async (req, res) => {
+  const idProvider = req.params.idProvider;
+  try {
+    const result = await pool.query('DELETE FROM proveedores WHERE id_proveedor = $1', [idProvider]);
+    return res.status(200).json({ message: `Eliminados ${result.rowCount} proveedores` });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error eliminando proveedor: ' + error });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -602,5 +612,6 @@ module.exports = {
   /**Proveedores*/
   getAllProviders,
   getAProvider,
-  createAProvider
+  createAProvider,
+  deleteProvider
 };
