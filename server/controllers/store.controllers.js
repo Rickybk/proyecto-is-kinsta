@@ -547,6 +547,26 @@ const getAProvider = async (req, res) => {
   }
 };
 
+const createAProvider = async (req, res) => {
+  const { nombreProveedor, numProveedor, descProveedor } = req.body;
+  try {
+    const nameProvider = await pool.query(
+      "SELECT * FROM proveedores WHERE LOWER(nombre_proveedor) = LOWER($1);",
+      [nombreProveedor]
+    );
+    if (nameProvider.rows.length > 0) {
+      return res.status(200).json({ data: 1 });
+    }
+    const result = await pool.query(
+      "INSERT INTO proveedores (nombre_proveedor, num_proveedor, descripcion_proveedor) VALUES ($1, $2, $3)",
+      [nombreProveedor, numProveedor, descProveedor]
+    );
+    return res.json({dato : result.rows[0]});
+  } catch (error) {
+    console.log("Error añadiendo proveedor");
+    return res.json({ error: error.message });
+  }
+};
 
 module.exports = {
   getAllCategories,
@@ -581,5 +601,6 @@ module.exports = {
   updateAClient,
   /**Proveedores*/
   getAllProviders,
-  getAProvider
+  getAProvider,
+  createAProvider
 };

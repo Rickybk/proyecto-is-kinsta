@@ -31,7 +31,8 @@ const {
   deleteClient,
   updateAClient,
   getAllProviders,
-  getAProvider
+  getAProvider,
+  createAProvider
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -89,5 +90,6 @@ router.put("/store/clients/:idCliente", updateAClient);
 /**Proveedores*/
 router.get("/store/providers", getAllProviders);
 router.get("/store/providers/:idProvider", getAProvider);
+router.post("/store/providers", createAProvider);
 
 module.exports = router;
