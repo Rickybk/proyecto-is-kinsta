@@ -463,6 +463,16 @@ const getAllClients = async (req, res) => {
   res.json(result.rows);
 };
 
+const getAClient = async (req, res) => {
+  const idCliente = req.params.idCliente;
+  try {
+    const { rows } = await pool.query("SELECT nombre_cliente, num_cliente FROM clientes WHERE id_cliente = $1", [idCliente]);
+    res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo al cliente");
+  }
+};
 
 module.exports = {
   getAllCategories,
@@ -490,5 +500,6 @@ module.exports = {
   updateSales,
   deleteSales,
   /**Clientes*/
-  getAllClients
+  getAllClients,
+  getAClient
 };
