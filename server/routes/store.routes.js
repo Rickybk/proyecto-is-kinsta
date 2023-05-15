@@ -33,7 +33,8 @@ const {
   getAllProviders,
   getAProvider,
   createAProvider,
-  deleteProvider
+  deleteProvider,
+  updateAProvider
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -93,5 +94,6 @@ router.get("/store/providers", getAllProviders);
 router.get("/store/providers/:idProvider", getAProvider);
 router.post("/store/providers", createAProvider);
 router.delete("/store/providers/:idProvider", deleteProvider);
+router.put("/store/providers/:idProvider", updateAProvider);
 
 module.exports = router;

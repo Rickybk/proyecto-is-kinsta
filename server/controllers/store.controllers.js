@@ -578,6 +578,28 @@ const deleteProvider = async (req, res) => {
   }
 };
 
+const updateAProvider = async (req, res) => {
+  try {
+    const { idProvider } = req.params;
+    const { nombreProveedor, numProveedor, descProveedor } = req.body;
+    const existingProvider = await pool.query(
+      "SELECT * FROM proveedores WHERE LOWER(nombre_proveedor) = LOWER($1) AND id_proveedor != $2",
+      [nombreProveedor, idProvider]
+    );
+    if (existingProvider.rows.length > 0) {
+      return res.status(200).json({ data: 1 });
+    }
+    const newProvider = await pool.query(
+      "UPDATE proveedores SET nombre_proveedor = $1, num_proveedor = $2, descripcion_proveedor = $3 WHERE id_proveedor = $4",
+      [nombreProveedor, numProveedor, descProveedor, idProvider]
+    );
+    return res.json({proveedor: newProvider.rows[0]});
+  } catch (error) {
+    console.log("Error modificando proveedor");
+    return res.json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -613,5 +635,6 @@ module.exports = {
   getAllProviders,
   getAProvider,
   createAProvider,
-  deleteProvider
+  deleteProvider,
+  updateAProvider
 };
