@@ -495,6 +495,17 @@ const createAClient = async (req, res) => {
   }
 };
 
+const deleteClient = async (req, res) => {
+
+  const idCliente = req.params.idCliente;
+  try {
+    const result = await pool.query('DELETE FROM clientes WHERE id_cliente = $1', [idCliente]);
+    return res.status(200).json({ message: `Eliminados ${result.rowCount} clientes` });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error eliminando cliente: ' + error });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -523,5 +534,6 @@ module.exports = {
   /**Clientes*/
   getAllClients,
   getAClient,
-  createAClient
+  createAClient,
+  deleteClient
 };
