@@ -19,7 +19,12 @@ const {
   updateBuy,
   getDbTime,
   uploadImg,
-  getAllBuy
+  getAllBuy,
+  getAllSales,
+  getSales,
+  createSales,
+  updateSales,
+  deleteSales
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -61,5 +66,10 @@ router.put("/store/products/:idProduct", updateProduct);
 router.put("/store/products/buy/:idLot", updateBuy);
 
 router.get("/store/products/allbuy/1", getAllBuy);
+
+/**Ventas*/
+
+router.post("/store/products/sales/:tipoVenta", createSales);
+
 
 module.exports = router;

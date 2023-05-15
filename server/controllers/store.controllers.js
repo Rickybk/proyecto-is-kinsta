@@ -352,6 +352,42 @@ const getAllBuy = async (req, res) => {
   }
 
 };
+/**Ventas*/
+const createSales = async (req, res) => {
+  try {
+    const { tipoVenta } = req.params; 
+    const {
+      id_producto,
+      cantidad,
+      cliente,
+      precio_unitario
+    } = req.body;
+    const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[cliente])).rows[0].id_cliente;
+    const fechaActual = new Date();
+    const year = fechaActual.getFullYear();
+    const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
+    const day = ('0' + fechaActual.getDate()).slice(-2);
+    const fechaVenta = `${year}-${month}-${day}`;
+    const precioTotal = (parseFloat(precio_unitario) * parseInt(cantidad)).toFixed(2);
+    const precio_total = parseFloat(precioTotal);
+    const newsale = await pool.query(
+      "INSERT INTO ventas (id_producto, id_cliente, cantidad_venta, tipo_venta, precio_total, fecha_venta) VALUES ($1, $2, $3, $4, $5, $6)",
+      [id_producto, idCliente, cantidad, tipoVenta, precio_total, fechaVenta]
+    );
+    const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
+      id_producto
+    ])).rows[0].total;
+    const newTotal = parseInt(cantTotal) - parseInt(cantidad);
+    await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [newTotal, id_producto]);
+
+    res.json({ message: "Venta exitosa", sale: newsale.rows[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "No se pudo realizar la venta." });
+  }
+};
+
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -370,5 +406,11 @@ module.exports = {
   updateBuy,
   getDbTime,
   uploadImg,
-  getAllBuy
+  getAllBuy,
+  /**Ventas*/
+  getAllSales,
+  getSales,
+  createSales,
+  updateSales,
+  deleteSales
 };
