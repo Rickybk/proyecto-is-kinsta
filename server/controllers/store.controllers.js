@@ -536,6 +536,18 @@ const getAllProviders = async (req, res) => {
   res.json(result.rows);
 };
 
+const getAProvider = async (req, res) => {
+  const idProvider = req.params.idProvider;
+  try {
+    const { rows } = await pool.query("SELECT nombre_proveedor, num_proveedor FROM proveedores WHERE id_proveedor = $1", [idProvider]);
+    res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error obteniendo al proveedor");
+  }
+};
+
+
 module.exports = {
   getAllCategories,
   getACategorie,
@@ -568,5 +580,6 @@ module.exports = {
   deleteClient,
   updateAClient,
   /**Proveedores*/
-  getAllProviders
+  getAllProviders,
+  getAProvider
 };

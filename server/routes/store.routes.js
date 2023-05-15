@@ -30,7 +30,8 @@ const {
   createAClient,
   deleteClient,
   updateAClient,
-  getAllProviders
+  getAllProviders,
+  getAProvider
 } = require("../controllers/store.controllers");
 
 router.get("/", (req, res) => {
@@ -87,5 +88,6 @@ router.delete("/store/clients/:idCliente", deleteClient);
 router.put("/store/clients/:idCliente", updateAClient);
 /**Proveedores*/
 router.get("/store/providers", getAllProviders);
+router.get("/store/providers/:idProvider", getAProvider);
 
 module.exports = router;
