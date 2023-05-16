@@ -1,26 +1,48 @@
-import { Form, DatePicker, InputNumber } from 'antd';
-import moment from 'moment';
-import { useState } from 'react';
+import { Form,Input,Select } from 'antd';
+import { useEffect, useState } from "react";
 
-const BuyForm = ({ nombreProducto}) => {
+const ClientForm = ({nombreCategoria}) => {
 
-    const[cantidad, setCantidad] = useState(1);
-    const[costoTotal, setCostoTotal] = useState(1);
+    const [categoria, setCategoria] = useState([]);
 
-    const numberInputKeyDown = (e) => {
+    const onFinish = (values) => {
+        console.log('Success:', values);
+    };
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    useEffect(() => {
+        fetchCategoria();
+    },[]);
+
+
+    async function fetchCategoria() {
+    //Ruta para server en localhost: "http://localhost:8080/store/categories"
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories`
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories`);
+        const jsonData = await response.json();
+        setCategoria(jsonData);
+    }
+
+    const validation = (e) => {
         
         const key = e.key;
-        if (!(/^[0-9]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight'  ))
+        if (!(/^[A-Z a-z À-ÿ\u00f1\u00d1]+$/.test(key) 
+            || key === 'Backspace' 
+            || key === 'Delete' 
+            || key === 'Tab' 
+            || key=== 'ArrowLeft' 
+            || key=== 'ArrowRight' ))
         {
             e.preventDefault();
         }
     };
 
     const DecimalInput = (e) => {
-       
+
         const key = e.key;
-        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' ||key === 'Tab' || key=== 'ArrowLeft' || key=== 'ArrowRight' ))
-        {
+        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' || key === 'Tab' || key === 'ArrowLeft' || key === 'ArrowRight')) {
             e.preventDefault();
         }
     };
@@ -28,120 +50,134 @@ const BuyForm = ({ nombreProducto}) => {
     return (
         <>
             <Form
-                id="buyForm"
+                id="categoryForm"
                 initialValues={{
                     remember: true,
                 }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >
-                <Form.Item
-                    labelCol={{ span: 24 }}
-                    name="nombreProducto"
-                >
-                    <p>{nombreProducto}</p>
-                </Form.Item>
+                
 
                 <Form.Item
-                    label="Cantidad"
+                    label="Nombre de contacto de Cliente"
                     labelCol={{ span: 24 }}
-                    name="cantidad"
-                    initialValue={1}
+                    name="nombre"
+                    initialValue={nombreCategoria ? nombreCategoria : ""}
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor la cantidad del producto!'
+                            message: 'Por favor ingrese el nombre del contacto!',
                         },
-                    ]}
-                >
-                    <InputNumber
-                        style={{ width: '100%' }}
-                        prefix="U."
-                        className="inputs"
-                        id="cantidad"
-                        min={1}
-                        maxLength={6}
-                        onKeyDown={numberInputKeyDown}
-                        onChange={setCantidad}
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label="Costo Total"
-                    labelCol={{ span: 24 }}
-                    name="costoTotal"
-                    initialValue={1}
-                    rules={[
                         {
-                            required: true,
-                            message: 'Por favor ingrese el costo total del producto!'
+                            min: 3,
+                            message: 'El nombre del contacto debe tener al menos 3 caracteres!',
                         },
-                    ]}
-                >
-                    <InputNumber
-                        style={{ width: '100%' }}
-                        prefix="Bs."
-                        className="inputs"
-                        id="costoTotal"
-                        min={1}
-                        maxLength={6}
-                        precision={2}
-                        step={0.5}
-                        onKeyDown={DecimalInput}
-                        onChange={setCostoTotal} 
-                    />
-                </Form.Item>
+                        {
+                            max: 39,
+                            message: 'El nombre del contacto no puede tener más de 30 caracteres!',
+                        },
 
-                <Form.Item
-                    label="Seleccionar Fecha de Caducidad"
-                    labelCol={{ span: 24 }}
-                    name="fechaCaducidad"
-                    rules={[{ required: false, },
-                        
                     ]}
                 >
-                    <DatePicker
-                        style={{ width: '100%' }}
-                        id="fechaCad"
+                    <Input id="nombre"
                         className="inputs"
-                        placeholder='Inserte la fecha'
-                        disabledDate={(current) => {
-                            return moment().add(-1, 'days') >= current;
+                        placeholder='Ingrese nombre de la categoría'
+                        maxLength='30'
+                        type='text'
+                        onKeyDown={validation}
+                        onCopy={(Event)=>{
+                            Event.preventDefault();
                         }}
-                        onKeyDown={(e) => {
-                            const maxCharacters = 10;
-                            const currentValue = e.target.value || '';
-                            const key = e.key;
-                          
-                            // Permite solo números y guión (-) y permite borrar incluso después de alcanzar el número máximo de caracteres
-                            if (!(/^[0-9-]+$/.test(key) || key === 'Backspace' || key === 'Delete')) {
-                              e.preventDefault();
-                            }
-                          
-                            // Verifica que la longitud del texto no exceda el número máximo de caracteres
-                            if (currentValue.length >= maxCharacters && key !== 'Backspace' && key !== 'Delete') {
-                              e.preventDefault();
-                            }
-                          }}
-                        />
+                        onPaste={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                        onDrop={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                    />
                 </Form.Item>
 
                 <Form.Item
+                    label="Seleccione el tipo de Dispositivo"
                     labelCol={{ span: 24 }}
-                    name="descripcion"
-                    rules={[{ required: false, },
+                    name="cat"
+                    rules={[
                         {
-                            max: 99,
-                            message: 'La descripción no puede tener más de 100 caracteres!',
+                            required: true,
+                            message: 'Por favor seleccione el tipo de dispositivo!'
                         },
-                    
                     ]}
                 >
-                    <p>Costo unitario: {Math.round((costoTotal / cantidad) * 100) / 100} Bs.</p>
+                    <Select
+                        defaultValue={"Seleccione el Dispositivo"}
+                        id='dispositivo'
+                        onChange={(value) => {
+                            
+                        }}
+                        style={{ width: '100%' }}
+                        optionFilterProp="children"
+                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={[
+                            {
+                              value: '1',
+                              label: 'Teléfono',
+                            },
+                            {
+                              value: '2',
+                              label: 'Celular',
+                            },
+                            ]
+                        }
+                    />
                 </Form.Item>
 
+                <Form.Item
+                    label="Número de Contacto"
+                    labelCol={{ span: 24 }}
+                    name="numero"
+                    min={4000000}
+                    maxLength={8}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor ingrese un número para el contacto!',
+                        },
+                        {
+                            min: 7,
+                            message: 'El número del contacto debe ser mínimo de 7 dígitos ',
+                        },
+                        {
+                            max: 8,
+                            message: 'El número del contacto no puede tener más de 8 dígitos!',
+                        },
+
+                    ]}
+                >
+                    <Input id="numero"
+                        className="inputs"
+                        placeholder='Ingrese el número del Contacto'
+                        maxLength='8'
+                        type='number'
+                        onKeyDown={DecimalInput}
+                        onCopy={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                        onPaste={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                        onDrop={(Event)=>{
+                            Event.preventDefault();
+                        }}
+                    />
+                </Form.Item>
             </Form>
         </>
     );
 };
 
-export default BuyForm;
+export default ClientForm;

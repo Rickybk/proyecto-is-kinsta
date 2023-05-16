@@ -1,6 +1,8 @@
 import { Button, Modal, message } from 'antd';
-import BuyForm from './BuyForm'
-import ConfirmBuyModal from './ConfirmBuyModal';
+import { EditOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import ClientForm from './ClientForm'
+import CreateClientModal from './CreateClientModal';
 
 const values = {
     cantidad: "",
@@ -8,15 +10,30 @@ const values = {
     costo_total: "",
 }
 
-const ClientModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose, closeModal }) => {
+
+const setIdCategoria = (id_categoria) => {
+    values.id_categoria = id_categoria;
+}
+
+const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
 
     const handleOk = async () => {
         if (validData()) {
             saveData();
             const respuesta = await uploadDB();
             setRefresh(true);
-            message.success("Compra realizada exitosamente");
-            closeModal();
+            if (respuesta === 1) {
+                message.error("La categoría " + values.nombreCategoria + " ya existe ");
+            } else {
+                message.success("Categoría creada exitosamente");
+                document.getElementById("categoryForm").reset();         
+            }
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
@@ -24,28 +41,21 @@ const ClientModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose,
 
     function validData() {
         var valid = true;
-        if (!document.getElementById("cantidad").value) {
-            valid = false;
-        }
-        if (!document.getElementById("costoTotal").value) {
+        var nombre = document.getElementById("nombre").value;
+        if (!nombre || nombre.length < 3) {
             valid = false;
         }
         return valid;
     }
 
     const saveData = () => {
-        values.cantidad = document.getElementById("cantidad").value;
-        values.costo_total = document.getElementById("costoTotal").value;
-        values.fechaCaducidad = document.getElementById("fechaCad").value;
-        if (!values.fechaCaducidad) {
-            values.fechaCaducidad = null;
-        }
+        values.nombreCategoria = document.getElementById("nombre").value;
     }
 
     const uploadDB = async () => {
-        //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + idProducto, {
+        //Ruta para server en localhost: "http://localhost:8080/store/categories/"
+        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
@@ -57,32 +67,43 @@ const ClientModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose,
     }
 
     const handleCancel = () => {
-        closeModal();
+        setIsModalOpen(false);
     };
 
     return (
-        <Modal
-            title="Realizar compra"
-            style={{
-                top: 0,
-                left: "37%",
-            }}
-            open={visible}
-            onCancel={onClose}
-            width="25%"
-            footer={[
-                <ConfirmBuyModal
-                    handleOk={handleOk}
-                    isModalOpen={false}
-                    setRefresh={setRefresh} />,
-                <Button key="cancel" onClick={handleCancel}>
-                    Cancelar
-                </Button>
-            ]}
-            destroyOnClose="true"
-        >
-            <BuyForm nombreProducto = {nombreProducto} />
-        </Modal>
+        <>
+            <Button type={idCategoria ? "default" : "primary"} onClick={showModal}>
+                {idCategoria ? <EditOutlined /> : "Añadir Contacto"}
+            </Button>
+            <Modal
+                title={idCategoria ? "Editar Contacto" : "Añadir Contacto"}
+                style={{
+                    top: 0,
+                    left: "37%",
+                }}
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                width="25%"
+                footer={[
+                    <CreateClientModal
+                        handleOk={handleOk}
+                        isModalOpen={false}
+                        setRefresh={setRefresh}
+                        isEdit={idCategoria ? true : false}
+                    />,
+                    <Button key="cancel" onClick={handleCancel}>
+                        Cancelar
+                    </Button>
+                ]}
+                destroyOnClose="true"
+            >
+                <ClientForm
+                    nombreCategoria={nombreCategoria}
+                    setIdCategoria={setIdCategoria}
+                />
+            </Modal>
+        </>
     );
 };
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
-import { AudioOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import ClientList from './ComponentesClientes/ClientList';
+import ClientModal from './ComponentesClientes/ClientModal'
 const { Search } = Input;
 
 
@@ -19,16 +19,18 @@ function ClientMenu() {
   return (
     
       <div className="row">
-          <Button>Añadir Cliente</Button>
-          <Search
-            placeholder="Buscar Cliente"
-            onSearch={onSearch}
-            style={{
-                width: 200,
-            }}
-          />
-
-          <ClientList/>
+          <div style={{
+          }}>
+            <ClientModal>Añadir Cliente</ClientModal>
+            <Search
+              placeholder="Buscar Cliente"
+              onSearch={onSearch}
+              style={{
+                  width: 200,
+              }}
+            />
+          </div>
+          <ClientList setRefresh={setRefresh} isRefresh={isRefresh}/>
       </div>
   );
 }

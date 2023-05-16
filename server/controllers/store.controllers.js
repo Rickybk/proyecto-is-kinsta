@@ -540,7 +540,7 @@ const deleteClient = async (req, res) => {
 const updateAClient = async (req, res) => {
   try {
     const { idCliente } = req.params;
-    const { nombre_Cliente, num_Cliente } = req.body;
+    const { nombre_cliente, num_cliente } = req.body;
     const existingClientResult = await pool.query(
       "SELECT * FROM clientes WHERE id_cliente = $1",
       [idCliente]
@@ -551,7 +551,7 @@ const updateAClient = async (req, res) => {
     }
     const duplicateClientResult = await pool.query(
       "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1) AND id_cliente != $2",
-      [nombre_Cliente, idCliente]
+      [nombre_cliente, idCliente]
     );
     const duplicateClient = duplicateClientResult.rows[0];
     if (duplicateClient) {
@@ -559,7 +559,7 @@ const updateAClient = async (req, res) => {
     }
     const updatedClient = await pool.query(
       "UPDATE clientes SET nombre_cliente = $1, num_cliente = $2 WHERE id_cliente = $3",
-      [nombre_Cliente, num_Cliente, idCliente]
+      [nombre_cliente, num_cliente, idCliente]
     );
     return res.json({ cliente: updatedClient.rows[0] });
   } catch (error) {

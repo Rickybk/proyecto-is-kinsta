@@ -1,9 +1,6 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker, InputNumber } from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
-import moment from "moment";
-
 
 const EditableCell = ({
   editing,
@@ -15,68 +12,36 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode =  inputType === "number" ? (
-    <Form.Item
-      style={{ margin: 0, backgroundColor: 'white' }}
-      name={dataIndex}
-      rules={[
-
-        {
-          validator: (_, value) => {
-            const isValidNumber = /^[0-9]+([.][0-9]+)?$/.test(value);
-            if (isValidNumber) {
-              return Promise.resolve();
-            }
-            return Promise.reject('Por favor ingrese un valor valido');
-          },
-        },
-      ]}
-
-
-    >
-      <InputNumber
-        style={{ width: '100%', margin: '0 auto', textAlign: 'center'}}
-        prefix="Bs."
-        className="inputNumber"
-        id="precio"
-        min={1}
-        maxLength={9}
-        precision={2}
-        step={0.5}
-        onKeyDown={DecimalInput} />
-    </Form.Item>
-  ) : (
-    <Form.Item
-      style={{ margin: 0 }}
-      name={dataIndex}
-      rules={[
-        {
-          required: true,
-          message: `Por favor llene el campo  ${title}!`,
-        },
-      ]}
-    >
-      <InputNumber
-        min={1}
-        style={{
-          backgroundColor: "#fff6ed",
-          width: '100%', margin: '0 auto', textAlign: 'center'
-        }}
-        onKeyDown={validation}
-        maxLength={6}
-      />
-
-    </Form.Item>
-  );
+  const inputNode = inputType === 'text' ? <Input /> :
+  <Input
+            style={{
+                backgroundColor: "#fff6ed"
+            }}
+            maxLength={30}
+            autoComplete='Off'
+            onCopy={(Event)=>{
+                Event.preventDefault();
+            }}
+            onPaste={(Event)=>{
+                Event.preventDefault();
+            }}
+            onDrop={(Event)=>{
+                Event.preventDefault();
+            }}
+            />;
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
           style={{
-            margin: 0, backgroundColor: "#ffffff"
+            margin: 0,
           }}
           rules={[
+            {
+              required: true,
+              message: `Por favor ingrese los datos requeridos!`,
+            },
           ]}
         >
           {inputNode}
@@ -128,84 +93,71 @@ const validationf = (e) => {
   }
 };
 
-const ClientList = ({ }) => {
+const ClientList = ({ setRefresh, isRefresh }) => {
 
   const [form] = Form.useForm();
 
-
-  const [editingid_lote, setEditingid_lote] = useState('');
-  const isEditing = (record) => record.id_lote === editingid_lote;
+  const [editingId_Client, setEditingId_Client] = useState('');
+  const isEditing = (record) => record.id_cliente === editingId_Client;
   const edit = (record) => {
-    record.fecha_caducidad = record.fecha_caducidad ? dayjs(record.fecha_caducidad).format('YYYY-MM-DD') : "";
-    record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_compra).format('YYYY-MM-DD') : "";
     form.setFieldsValue({
       name: '',
       ...record,
     });
-    setEditingid_lote(record.id_lote);
+    setEditingId_Client(record.id_cliente);
 
   };
 
   const cancel = () => {
-    setEditingid_lote('');
+    setEditingId_Client('');
   };
 
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
       const jsonData = await response.json();
-      for (var clave in jsonData){
-        jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-        jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
-      }
       setDataSource(jsonData);
     }
     fetchData();
   },[]);
 
-  const handleDelete = async (id_lote) => {
-    const res = await deleteProductDB(id_lote);
+  const handleDelete = async (idCliente) => {
+    const res = await deleteClient(idCliente);
     if (res.status === 200) {
-      const newData = dataSource.filter((item) => item.id_lote !== id_lote);
+      const newData = dataSource.filter((item) => item.id_cliente !== idCliente);
       setDataSource(newData);
-      message.success("La compra se elimino correctamente");
+      message.success("El contacto del cliente se elimino correctamente");
     } else {
-      message.warning('Problemas de comunicaion con el server');
+      message.warning('Problemas de comunicacion con el server');
     }
 
   };
   
-  const deleteProductDB = async (id_lote) => {
-    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
+  const deleteClient = async (idCliente) => {
+    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/` + idCliente, {
       method: "DELETE"
     });
     return res;
   }
 
-  const save = async (id_lote) => {
+  const save = async (idCliente) => {
     var res;
     const row = await form.validateFields();
-    if (row.fecha_caducidad === '') {
-      row.fecha_caducidad = null;
-    }
-    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
+    console.log(row);
+    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/` + idCliente, {
       method: "PUT",
       body: JSON.stringify(row),
       headers: { "Content-Type": "application/json" }
     });
 
-    //fetchBuys();
+    console.log(res);
     if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
-        const index = newData.findIndex((item) => id_lote === item.id_lote);
+        const index = newData.findIndex((item) => idCliente === item.id_cliente);
 
         if (index > -1) {
           const item = newData[index];
@@ -214,20 +166,18 @@ const ClientList = ({ }) => {
             ...row,
           });
           setDataSource(newData);
-          setEditingid_lote('');
-
+          setEditingId_Client('');
         } else {
           newData.push(row);
           setDataSource(newData);
-          setEditingid_lote('');
+          setEditingId_Client('');
         }
+        message.success("El cliente se modificó correctamente");
       } catch (errInfo) {
         console.log('Error en la validación:', errInfo);
       }
-
-      message.success("La compra se modificó correctamente");
     } else {
-      message.warning('Problemas de comunicaion con el server');
+      message.warning('Problemas de comunicacion con el server');
     }
 
   };
@@ -235,13 +185,13 @@ const ClientList = ({ }) => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'nombre_producto',
+      dataIndex: 'nombre_cliente',
       width: '15%',
-      editable: false,
+      editable: true,
     },
     {
       title: 'Número Teléfono/Celular',
-      dataIndex: 'cantidad',
+      dataIndex: 'num_cliente',
       width: '15%',
       editable: true,
     },
@@ -249,6 +199,7 @@ const ClientList = ({ }) => {
     {
       title: '',
       dataIndex: 'operation',
+      width: '5%',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -258,7 +209,7 @@ const ClientList = ({ }) => {
               title="¿Estas seguro el contacto del cliente?"
               onConfirm={async () => {
                 try {
-                  await save(record.id_lote);
+                  await save(record.id_cliente);
                 } catch (error) {
                   console.error(error);
                   message.error("Por favor asegúrese que los valores en los campos sean correctos");
@@ -273,12 +224,12 @@ const ClientList = ({ }) => {
           </span>
         ) : (
           <span>
-            <Typography.Link disabled={editingid_lote !== ''} onClick={() => edit(record)}>
+            <Typography.Link disabled={editingId_Client !== ''} onClick={() => edit(record)}>
               <Button name="editar" ><EditOutlined /></Button>
             </Typography.Link>
 
             <Typography.Link >
-              <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={() => handleDelete(record.id_lote)}>
+              <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={() => handleDelete(record.id_cliente)}>
                 <Button name="eliminar"
                 ><DeleteOutlined /></Button>
               </Popconfirm>
@@ -299,10 +250,10 @@ const ClientList = ({ }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "costo_total"
-            ? "number"
-            : col.dataIndex === "fecha_caducidad"
-              ? "date"
+          col.dataIndex === "nombreCliente"
+            ? "nombreCliente"
+            : col.dataIndex === "numCliente"
+              ? "numero"
               : col.dataIndex === "fecha_compra"
                 ? "date"
                 : "text",
@@ -317,7 +268,8 @@ const ClientList = ({ }) => {
 
 
   return (
-    <Form form={form} component={false}>
+    <Form form={form} component={false}
+    >
       <Table className='tabla'
         components={{
           body: {
@@ -331,6 +283,7 @@ const ClientList = ({ }) => {
         pagination={{
           onChange: cancel,
         }}
+        style={{width:'80%'}}
       />
     </Form>
   );
