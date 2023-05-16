@@ -523,10 +523,14 @@ const createAClient = async (req, res) => {
 };
 
 const deleteClient = async (req, res) => {
-
   const idCliente = req.params.idCliente;
   try {
-    const result = await pool.query('DELETE FROM clientes WHERE id_cliente = $1', [idCliente]);
+    const newClientId = 7; 
+    const updateSales = `UPDATE ventas SET id_cliente = $1 WHERE id_cliente = $2`;
+    await pool.query(updateSales, [newClientId, idCliente]);
+    const deleteClient = `DELETE FROM clientes WHERE id_cliente = $1`;
+    const result = await pool.query(deleteClient, [idCliente]);
+
     return res.status(200).json({ message: `Eliminados ${result.rowCount} clientes` });
   } catch (error) {
     return res.status(500).json({ message: 'Error eliminando cliente: ' + error });
