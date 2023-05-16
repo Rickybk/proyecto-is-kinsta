@@ -1,7 +1,7 @@
 import React from 'react';
 import SupplierList from './ComponentesProveedores/SupplierList';
 import { useState } from 'react';
-import { Button } from 'antd';
+import SupplierModal from './ComponentesProveedores/SupplierModal';
 
 function SupplierMenu() {
 
@@ -13,7 +13,7 @@ function SupplierMenu() {
   return (
       
       <div className="row">
-          <Button type='primary'>Añadir Proveedor</Button>
+           <SupplierModal setRefresh={setRefresh}></SupplierModal>
           <SupplierList setRefresh={setRefresh} isRefresh={isRefresh} />
       </div>
   );
