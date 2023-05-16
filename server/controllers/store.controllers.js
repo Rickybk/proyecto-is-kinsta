@@ -412,15 +412,16 @@ const createSales = async (req, res) => {
     res.status(500).json({ error: "No se pudo realizar la venta." });
   }
 };
+
 const updateSales = async (req, res) => {
   try {
     const { id_venta, tipoVenta } = req.params; 
     const {
-      id_producto,
       cantidad,
-      cliente,
-      precio_unitario
+      cliente
     } = req.body;
+    const id_producto = (await pool.query("SELECT id_producto FROM ventas WHERE id_venta = $1", [id_venta])).rows[0].id_producto;
+    const precio_unitario = (await pool.query("SELECT precio_unitario FROM productos WHERE id_producto = $1", [id_producto])).rows[0].precio_unitario;
     const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[cliente])).rows[0].id_cliente;
     const precioTotal = (parseFloat(precio_unitario) * parseInt(cantidad)).toFixed(2);
     const precio_total = parseFloat(precioTotal);
@@ -472,7 +473,7 @@ const getSales = async (req, res) => {
 };
 const getAllSales = async (req, res) => {
   try {
-    const getAllSales = await pool.query("SELECT DISTINCT v.id_venta, p.nombre_producto, c.nombre_cliente, v.cantidad_venta, v.tipo_venta, v.precio_total, v.fecha_venta FROM productos p, ventas v, clientes c WHERE p.id_producto = v.id_producto and v.id_cliente = c.id_cliente ORDER BY nombre_producto ASC;");
+    const getAllSales = await pool.query("SELECT DISTINCT v.id_venta, p.nombre_producto, c.id_cliente, c.nombre_cliente, v.cantidad_venta, v.tipo_venta, v.precio_total, p.precio_unitario, v.fecha_venta FROM productos p, ventas v, clientes c WHERE p.id_producto = v.id_producto and v.id_cliente = c.id_cliente ORDER BY nombre_producto ASC;");
     console.log(getAllSales.rows);
     res.json(getAllSales.rows);
   } catch (err) {
@@ -535,7 +536,7 @@ const deleteClient = async (req, res) => {
 const updateAClient = async (req, res) => {
   try {
     const { idCliente } = req.params;
-    const { nombreCliente, numCliente } = req.body;
+    const { nombre_Cliente, num_Cliente } = req.body;
     const existingClientResult = await pool.query(
       "SELECT * FROM clientes WHERE id_cliente = $1",
       [idCliente]
@@ -546,7 +547,7 @@ const updateAClient = async (req, res) => {
     }
     const duplicateClientResult = await pool.query(
       "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1) AND id_cliente != $2",
-      [nombreCliente, idCliente]
+      [nombre_Cliente, idCliente]
     );
     const duplicateClient = duplicateClientResult.rows[0];
     if (duplicateClient) {
@@ -554,7 +555,7 @@ const updateAClient = async (req, res) => {
     }
     const updatedClient = await pool.query(
       "UPDATE clientes SET nombre_cliente = $1, num_cliente = $2 WHERE id_cliente = $3",
-      [nombreCliente, numCliente, idCliente]
+      [nombre_Cliente, num_Cliente, idCliente]
     );
     return res.json({ cliente: updatedClient.rows[0] });
   } catch (error) {
