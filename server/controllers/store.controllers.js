@@ -345,14 +345,14 @@ const updateBuy = async (req, res) => {
       const idProveedor = 7;
         await pool.query(
           "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4, id_proveedor = $5 WHERE id_lote = $6 AND id_producto = $7 ",
-          [cantidad, fecha_caducidad, costo_total, costoUnitario, idLot, idProduct, idProveedor]
+          [cantidad, fecha_caducidad, costo_total, costoUnitario,  idProveedor , idLot, idProduct]
       );
       return res.status(200).json({ data: 2 });
     }  
 
     const newLot = await pool.query(
       "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4, id_proveedor = $5 WHERE id_lote = $6 AND id_producto = $7 ",
-          [cantidad, fecha_caducidad, costo_total, costoUnitario, idLot, idProduct, id_proveedor]
+          [cantidad, fecha_caducidad, costo_total, costoUnitario,id_proveedor, idLot, idProduct]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       idProduct
@@ -607,34 +607,51 @@ const createAProvider = async (req, res) => {
 const deleteProvider = async (req, res) => {
   const idProvider = req.params.idProvider;
   try {
-    const result = await pool.query('DELETE FROM proveedores WHERE id_proveedor = $1', [idProvider]);
+    const providerNew = 7; 
+    const newLote = `UPDATE lotes SET id_proveedor = $1 WHERE id_proveedor = $2`;
+    await pool.query(newLote, [providerNew, idProvider]);
+    const deleteProvider= `DELETE FROM proveedores WHERE id_proveedor = $1`;
+    const result = await pool.query(deleteProvider, [idProvider]);
+
     return res.status(200).json({ message: `Eliminados ${result.rowCount} proveedores` });
   } catch (error) {
     return res.status(500).json({ message: 'Error eliminando proveedor: ' + error });
   }
 };
 
+
+
 const updateAProvider = async (req, res) => {
   try {
     const { idProvider } = req.params;
     const { nombreProveedor, numProveedor, descProveedor } = req.body;
-    const existingProvider = await pool.query(
+    const existingProviderResult = await pool.query(
+      "SELECT * FROM proveedores WHERE id_proveedor = $1",
+      [idProvider]
+    );
+    const existingProvider = existingProviderResult.rows[0];
+    if (!existingProvider) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+    const duplicateProviderResult = await pool.query(
       "SELECT * FROM proveedores WHERE LOWER(nombre_proveedor) = LOWER($1) AND id_proveedor != $2",
       [nombreProveedor, idProvider]
     );
-    if (existingProvider.rows.length > 0) {
+    const duplicateProvider = duplicateProviderResult.rows[0];
+    if (duplicateProvider) {
       return res.status(200).json({ data: 1 });
     }
-    const newProvider = await pool.query(
+    const updatedProvider = await pool.query(
       "UPDATE proveedores SET nombre_proveedor = $1, num_proveedor = $2, descripcion_proveedor = $3 WHERE id_proveedor = $4",
       [nombreProveedor, numProveedor, descProveedor, idProvider]
     );
-    return res.json({proveedor: newProvider.rows[0]});
+    return res.json({ proveedor: updatedProvider.rows[0] });
   } catch (error) {
-    console.log("Error modificando proveedor");
-    return res.json({ error: error.message });
+    console.log("Error modificando proveedor", error);
+    return res.status(500).json({ error: error.message });
   }
 };
+
 
 module.exports = {
   getAllCategories,
