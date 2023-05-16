@@ -28,6 +28,7 @@ const BuyList = ({ }) => {
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [dataSoureceProveedor, setDataSourceProveedor] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -38,6 +39,15 @@ const BuyList = ({ }) => {
         jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
       }
       setDataSource(jsonData);
+    }
+    fetchData();
+  },[]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
+      const jsonData = await response.json();
+      setDataSourceProveedor(jsonData);
     }
     fetchData();
   },[]);
@@ -71,6 +81,7 @@ const BuyList = ({ }) => {
     if (row.fecha_caducidad === '') {
       row.fecha_caducidad = null;
     }
+
     //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
     res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
@@ -121,29 +132,35 @@ const BuyList = ({ }) => {
     {
       title: 'Cantidad',
       dataIndex: 'cantidad',
-      width: '15%',
+      width: '10%',
       editable: true,
     },
     {
       title: 'Costo unitario(Bs.)',
       dataIndex: 'costo_unitario',
-      width: '15%',
+      width: '10%',
       editable: false,
     },
     {
       title: 'Fecha de compra',
       dataIndex: 'fecha_compra',
-      width: '15%',
+      width: '13%',
       editable: false,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD')
     },
     {
       title: 'Fecha de caducidad',
       dataIndex: 'fecha_caducidad',
-      width: '15%',
+      width: '13%',
       editable: true,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD') === 'Invalid Date' ?
         "Sin fecha" : dayjs(fecha).format('YYYY-MM-DD')
+    },
+    {
+      title: 'Proveedor',
+      dataIndex: 'nombre_proveedor',
+      width: '15%',
+      editable: true,
     },
     {
       title: 'Costo total',
@@ -208,11 +225,12 @@ const BuyList = ({ }) => {
             ? "number"
             : col.dataIndex === "fecha_caducidad"
               ? "date"
-              : col.dataIndex === "fecha_compra"
-                ? "date"
+              : col.dataIndex === "nombre_proveedor"
+                ? "proveedor"
                 : "text",
         dataIndex: col.dataIndex,
         title: col.title,
+        dataSoureceProveedor,
         editing: isEditing(record),
       }),
     };

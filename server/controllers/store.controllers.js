@@ -329,38 +329,38 @@ const updateBuy = async (req, res) => {
       cantidad,
       fecha_caducidad,
       costo_total,
-      id_proveedor
+      nombre_proveedor
     } = req.body;
+
     const idProduct = (await pool.query("SELECT id_producto FROM lotes WHERE id_lote = $1", [idLot])).rows[0].id_producto;
     const costoUnitarioNum = (parseFloat(costo_total) / parseInt(cantidad)).toFixed(2);
     const costoUnitario = parseFloat(costoUnitarioNum);
-    const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [
-      idLot
-    ])).rows[0].cantidad;
+    const cantlot = (await pool.query("SELECT cantidad FROM lotes WHERE id_lote = $1", [idLot])).rows[0].cantidad;
+    
     const provider = await pool.query(
-      "SELECT id_proveedor FROM proveedores WHERE id_proveedor = $1",
-      [id_proveedor]
+      "SELECT id_proveedor FROM proveedores WHERE nombre_proveedor = $1",
+      [nombre_proveedor]
     );
-    if (provider.rows.length === 0) {
-      const idProveedor = 7;
-        await pool.query(
-          "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4, id_proveedor = $5 WHERE id_lote = $6 AND id_producto = $7 ",
-          [cantidad, fecha_caducidad, costo_total, costoUnitario,  idProveedor , idLot, idProduct]
-      );
-      return res.status(200).json({ data: 2 });
-    }  
 
-    const newLot = await pool.query(
-      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4, id_proveedor = $5 WHERE id_lote = $6 AND id_producto = $7 ",
-          [cantidad, fecha_caducidad, costo_total, costoUnitario,id_proveedor, idLot, idProduct]
+    let idProveedor;
+    if (provider.rows.length === 0) {
+      // Si el proveedor no existe, asignar un valor por defecto
+      idProveedor = 7; // ID del proveedor "SIN PROVEEDOR"
+    } else {
+      idProveedor = provider.rows[0].id_proveedor;
+    }
+
+    await pool.query(
+      "UPDATE lotes SET cantidad = $1, fecha_caducidad = $2, costo_total = $3, costo_unitario = $4, id_proveedor = $5 WHERE id_lote = $6 AND id_producto = $7",
+      [cantidad, fecha_caducidad, costo_total, costoUnitario, idProveedor, idLot, idProduct]
     );
-    const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
-      idProduct
-    ])).rows[0].total;
+
+    const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [idProduct])).rows[0].total;
     const total = parseInt(cantTotal) - parseInt(cantlot) + parseInt(cantidad);
+
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [total, idProduct]);
 
-    return res.status(200).json(newLot.rows[0]);
+    return res.status(200).json({ data: 2 });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
@@ -417,13 +417,13 @@ const updateSales = async (req, res) => {
   try {
     const { id_venta, tipoVenta } = req.params; 
     const {
-      cantidad,
-      cliente
+      cantidad_venta,
+      nombre_cliente
     } = req.body;
     const id_producto = (await pool.query("SELECT id_producto FROM ventas WHERE id_venta = $1", [id_venta])).rows[0].id_producto;
     const precio_unitario = (await pool.query("SELECT precio_unitario FROM productos WHERE id_producto = $1", [id_producto])).rows[0].precio_unitario;
-    const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[cliente])).rows[0].id_cliente;
-    const precioTotal = (parseFloat(precio_unitario) * parseInt(cantidad)).toFixed(2);
+    const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[nombre_cliente])).rows[0].id_cliente;
+    const precioTotal = (parseFloat(precio_unitario) * parseInt(cantidad_venta)).toFixed(2);
     const precio_total = parseFloat(precioTotal);
     const cantVenta = (await pool.query("SELECT cantidad_venta FROM ventas WHERE id_venta = $1", [
       id_venta
@@ -431,12 +431,12 @@ const updateSales = async (req, res) => {
 
     const newSale = await pool.query(
       "UPDATE ventas SET id_cliente = $1, cantidad_venta = $2, tipo_venta = $3, precio_total = $4 WHERE id_venta = $5 AND id_producto = $6",
-      [ idCliente, cantidad, tipoVenta, precio_total, id_venta, id_producto]
+      [idCliente, cantidad_venta, tipoVenta, precio_total, id_venta, id_producto]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       id_producto
     ])).rows[0].total;
-    const newTotal = parseInt(cantTotal) + parseInt(cantVenta) - parseInt(cantidad);
+    const newTotal = parseInt(cantTotal) + parseInt(cantVenta) - parseInt(cantidad_venta);
     await pool.query("UPDATE productos SET total = $1 WHERE id_producto = $2", [newTotal, id_producto]);
 
     return res.status(200).json(newSale.rows[0]);
@@ -445,6 +445,8 @@ const updateSales = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
 const deleteSales = async (req, res) => {
   try {
     const id_venta = req.params.id_venta;

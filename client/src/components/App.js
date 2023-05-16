@@ -57,11 +57,13 @@ function SideMenu() {
     const [collapsed, setCollapsed] = useState(false);
     const { Sider } = Layout;
     const [top, setTop] = useState(0);
+    
 
     return (
         <Affix offsetTop={top}>
             <Sider classname="sider" theme="light" collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
             <Menu
+                mode="inline"
                 style={{fontSize:16,
                         height:'100vh'
                 }}
@@ -70,7 +72,7 @@ function SideMenu() {
                     { label: "TIENDA J&B",icon: <image href=''/>,disabled:true },
                     { label: "Inventario", key: "/", icon: <ShopOutlined /> },
                     { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
-                    { 
+                    {
                         label: "Transacciones", 
                         key: "/transacciones", 
                         icon: <DollarCircleOutlined />,
@@ -78,7 +80,7 @@ function SideMenu() {
                           { label: "Venta", key: "/venta", icon: <ShoppingCartOutlined /> },
                           { label: "Compra", key: "/compra", icon: <DollarCircleOutlined /> }
                         ]
-                      },
+                    },
                     { label: "Clientes", key: "/clientes", icon: <FontAwesomeIcon icon={faUsers}/>},
                     { label: "Proveedores", key: "/proveedores", icon: <FontAwesomeIcon icon={faTruck}/>}
                 ]}>

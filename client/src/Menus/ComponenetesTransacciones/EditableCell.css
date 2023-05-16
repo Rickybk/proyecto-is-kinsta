@@ -2,7 +2,7 @@
     background-color: #fff6ed;    
 }
 .select{
-    background-color: #f5f4f4; 
+    background-color: #fff6ed; 
     display: grid;
     grid-template-areas: "select";
     align-items: center;

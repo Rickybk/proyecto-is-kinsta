@@ -8,13 +8,15 @@ const EditableCell = ({
   editing,
   dataIndex,
   title,
+  dataSourceCliente,
+  dataSoureceProveedor,
   inputType,
   record,
   index,
   children,
   ...restProps
 }) => {
-  console.log(record);
+ 
   const inputNode = inputType === 'date' ? (
     <Form.Item
       style={{ margin: 0 }}
@@ -97,12 +99,11 @@ const EditableCell = ({
         },
       ]}
       >
-        
         <Select className="select" style={{ width: 120 }} bordered={false}>
-          <Option value="998">
-            998
+          <Option value='Contado'>
+            Contado
           </Option>
-          <Option value="777" >777</Option>
+          <Option value='Credito' >Credito</Option>
         </Select>
         
        
@@ -123,14 +124,12 @@ const EditableCell = ({
               return Promise.resolve();
             } else if (/\s{2,}/.test(value)) {
               return Promise.reject("No se permiten más de un espacio consecutivo");
-            } else if (/^[a-zA-Z]$/.test(value)) {
-              return Promise.resolve();
-            } else if (/^[a-zA-Z][\w\s]*[a-zA-Z]$/.test(value)) {
+            } else if (/^(?:[a-zA-Z][\w\s]*[a-zA-Z]|[a-zA-Z]?)$/.test(value)) {
               return Promise.resolve();
             } else {
               return Promise.reject("El primer y último carácter deben ser una letra");
             }
-          },
+          }
         },
       ]}
     >
@@ -143,6 +142,44 @@ const EditableCell = ({
       />
 
     </Form.Item>
+  ) : inputType === "cliente2" ? (
+    <Form.Item
+  style={{ margin: 0, backgroundColor: 'white' }}
+  name={dataIndex}
+  rules={[
+    {
+      required: true,
+      message: 'Select something!',
+    },
+  ]}
+>
+  <Select className="select" style={{ width: 220 }} bordered={false}>
+    {dataSourceCliente.map((cliente) => (
+      <Option key={cliente.id_cliente} value={cliente.nombre_cliente}>
+        {cliente.nombre_cliente}
+      </Option>
+    ))}
+  </Select>
+</Form.Item>
+  ) : inputType === "proveedor" ? (
+    <Form.Item
+  style={{ margin: 0, backgroundColor: 'white' }}
+  name={dataIndex}
+  rules={[
+    {
+      required: true,
+      message: 'Select something!',
+    },
+  ]}
+>
+  <Select className="select" style={{ width: 220 }} bordered={false}>
+    {dataSoureceProveedor.map((proveedor) => (
+      <Option key={proveedor.id_proveedor} value={proveedor.nombre_proveedor}>
+        {proveedor.nombre_proveedor}
+      </Option>
+    ))}
+  </Select>
+</Form.Item>
   ) : (
     <Form.Item
       style={{ margin: 0 }}
@@ -185,6 +222,7 @@ const EditableCell = ({
     </td>
   );
 };
+
 
 
 const DecimalInput = (e) => {

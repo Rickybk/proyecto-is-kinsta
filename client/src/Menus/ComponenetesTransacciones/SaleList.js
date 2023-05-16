@@ -11,79 +11,91 @@ const BuyList = ({}) => {
   const [form] = Form.useForm();
 
 
-  const [editingid_lote, setEditingid_lote] = useState('');
-  const isEditing = (record) => record.id_lote === editingid_lote;
+  const [editingid_venta, setEditingid_venta] = useState('');
+  const isEditing = (record) => record.id_venta === editingid_venta;
   const edit = (record) => {
     record.fecha_compra = record.fecha_compra ? dayjs(record.fecha_compra).format('YYYY-MM-DD') : "";
     form.setFieldsValue({
       name: '',
       ...record,
     });
-    setEditingid_lote(record.id_lote);
+    setEditingid_venta(record.id_venta);
 
   };
 
   const cancel = () => {
-    setEditingid_lote('');
+    setEditingid_venta('');
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [dataSourceCliente, setDataSourceCliente] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+      //http://localhost:8080/store/products/allsales/1
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allsales/1`);
       const jsonData = await response.json();
       for (var clave in jsonData){
-        jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-        jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
+        jsonData[clave]['fecha_venta'] = moment(jsonData[clave]['fecha_venta']).add(1,'day');
+        jsonData[clave]['tipo_venta'] = jsonData[clave]['tipo_venta'] === 1 ? 'Contado' : 'Credito';
       }
       setDataSource(jsonData);
     }
     fetchData();
   },[]);
 
-  const handleDelete = async (id_lote) => {
-    const res = await deleteProductDB(id_lote);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
+      const jsonData = await response.json();
+      setDataSourceCliente(jsonData);
+    }
+    fetchData();
+  },[]);
+
+  const handleDelete = async (id_venta) => {
+    const res = await deleteProductDB(id_venta);
     if (res.status === 200) {
-      const newData = dataSource.filter((item) => item.id_lote !== id_lote);
+      const newData = dataSource.filter((item) => item.id_venta !== id_venta);
       setDataSource(newData);
-      message.success("La compra se elimino correctamente");
+      message.success("La venta se elimino correctamente");
     } else {
       message.warning('Problemas de comunicaion con el server');
     }
 
   };
   
-  const deleteProductDB = async (id_lote) => {
-    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
+  const deleteProductDB = async (id_venta) => {
+    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + id_venta, {
       method: "DELETE"
     });
     return res;
   }
 
-  const save = async (id_lote) => {
+  const save = async (id_venta) => {
     var res;
     const row = await form.validateFields();
+    let tipoVenta = 2;
+    if(row.tipo_venta === 'Contado'){
+      tipoVenta = 1;
+    }
+    const elementoEncontrado = dataSource.find(item => item.id_venta === id_venta);
+    let precioUnitario;
+    if (elementoEncontrado) {
+      precioUnitario = elementoEncontrado.precio_unitario;
+      row.precio_total=precioUnitario*row.cantidad_venta;
+    }
+    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + id_venta+`/`+tipoVenta, {
+      method: "PUT",
+      body: JSON.stringify(row),
+      headers: { "Content-Type": "application/json" }
+    });
 
-    let numero = (row.costo_total/row.cantidad).toFixed(2);
-    row.costo_unitario = numero;
-    console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-    console.log(row);
-    //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
-    //res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + id_lote, {
-    //  method: "PUT",
-      //body: JSON.stringify(row),
-      //headers: { "Content-Type": "application/json" }
-    //});
-
-    //if (res.status === 200) {
+    if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
-        const index = newData.findIndex((item) => id_lote === item.id_lote);
+        const index = newData.findIndex((item) => id_venta === item.id_venta);
 
         if (index > -1) {
           const item = newData[index];
@@ -92,23 +104,33 @@ const BuyList = ({}) => {
             ...row,
           });
           setDataSource(newData);
-          setEditingid_lote('');
+          setEditingid_venta('');
 
         } else {            
           newData.push(row);
           setDataSource(newData);
-          setEditingid_lote('');
+          setEditingid_venta('');
         }
       } catch (errInfo) {
         console.log('Error en la validación:', errInfo);
       }
 
-      //message.success("La compra se modificó correctamente");
-    //} else {
-      //message.warning('Problemas de comunicaion con el server');
-    //}
+      message.success("La venta se modificó correctamente");
+    } else {
+      message.warning('Problemas de comunicaion con el server');
+    }
 
   };
+
+  const getTipoVenta = (value) => {
+    if (value === 1 || value === 'Contado') {
+      return 'Contado';
+    } else if (value === 2 || value === 'Credito') {
+      return 'Credito';
+    } else {
+      return 'La base de datos tiene un valor corupto';
+    }
+  }
 
   const columns = [
     {
@@ -119,40 +141,41 @@ const BuyList = ({}) => {
     },
     {
       title: 'Cantidad',
-      dataIndex: 'cantidad',
+      dataIndex: 'cantidad_venta',
       width: '10%',
       editable: true,
     },
     {
       title: 'Precio unitario(Bs.)',
-      dataIndex: 'costo_unitario',
+      dataIndex: 'precio_unitario',
       width: '13%',
       editable: false,
     },
     {
       title: 'Fecha de venta',
-      dataIndex: 'fecha_compra',
+      dataIndex: 'fecha_venta',
       width: '12%',
       editable: false,
       render: (fecha) => dayjs(fecha).format('YYYY-MM-DD')
     },
     {
       title: 'Precio total(Bs.)',
-      dataIndex: 'costo_total',
+      dataIndex: 'precio_total',
       width: '12%',
-      editable: true,
+      editable: false,
     },
     {
         title: 'Cliente',
-        dataIndex: 'cliente',//completar luego
+        dataIndex: 'nombre_cliente',
         width: '15%',
         editable: true,
     },
     {
-        title: 'Pago',
-        dataIndex: 'id_lote',//completar luego
-        width: '10%',
-        editable: true,
+      title: 'Tipo venta',
+      dataIndex: 'tipo_venta',
+      width: '10%',
+      render: (value) => getTipoVenta(value),
+      editable: true,
     },
     {
       title: '',
@@ -164,12 +187,12 @@ const BuyList = ({}) => {
           <span>
 
             <Popconfirm
-              title="¿Estas seguro de editar la compra?"
+              title="¿Estas seguro de editar la venta?"
               onConfirm={async () => {
                 try {
-                  await save(record.id_lote);
+                  await save(record.id_venta);
                 } catch (error) {
-                  //console.error(error);
+                  console.error(error);
                   message.error("Por favor asegúrese que los valores en los campos sean correctos");
                 }
               }}
@@ -182,12 +205,12 @@ const BuyList = ({}) => {
           </span>
         ) : (
           <span>
-            <Typography.Link disabled={editingid_lote !== ''} onClick={() => edit(record)}>
+            <Typography.Link disabled={editingid_venta !== ''} onClick={() => edit(record)}>
               <Button name="editar" ><EditOutlined /></Button>
             </Typography.Link>
 
             <Typography.Link >
-              <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={() => handleDelete(record.id_lote)}>
+              <Popconfirm title={"¿Estas seguro de eliminar esta venta?"} onConfirm={() => handleDelete(record.id_venta)}>
                 <Button name="eliminar"
                 ><DeleteOutlined /></Button>
               </Popconfirm>
@@ -208,19 +231,18 @@ const BuyList = ({}) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "costo_total"
+          col.dataIndex === "precio_total"
             ? "number"
-            : col.dataIndex === "fecha_caducidad"
+            : col.dataIndex === "fecha_venta"
             ? "date"
-            : col.dataIndex === "id_lote"
+            : col.dataIndex === "tipo_venta"
             ? "pago"
-            : col.dataIndex === "cliente"
-            ? "cliente"
-            : col.dataIndex === "fecha_compra"
-            ? "date"
+            : col.dataIndex === "nombre_cliente"
+            ? "cliente2"
             : "text",
         dataIndex: col.dataIndex,
         title: col.title,
+        dataSourceCliente,
         editing: isEditing(record),
       }),
     };
