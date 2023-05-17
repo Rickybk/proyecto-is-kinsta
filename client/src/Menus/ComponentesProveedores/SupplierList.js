@@ -191,45 +191,47 @@ const SupplierList = ({setRefresh, isRefresh}) => {
         return res;
       }
     
-
-      const save = async (idProvider) => {
-        var res;
-        const row = await form.validateFields();
-        console.log(row);
-        res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/` + idProvider, {
-          method: "PUT",
-          body: JSON.stringify(row),
-          headers: { "Content-Type": "application/json" }
+      const updateProviderDB = async (id_proveedor, row) => {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/` + id_proveedor, {
+            method: "PUT",
+            body: JSON.stringify(row),
+            headers: { "Content-Type": "application/json" }
         });
-    
-        console.log(res);
-        if (res.status === 200) {
-          try {
-    
-            const newData = [...dataSource];
-            const index = newData.findIndex((item) => idProvider === item.id_proveedor);
-    
-            if (index > -1) {
-              const item = newData[index];
-              newData.splice(index, 1, {
-                ...item,
-                ...row,
-              });
-              setDataSource(newData);
-              setEditingId_Proveedor('');
+        return res;
+    }
+
+    const save = async (idProvider) => {
+        try {
+            const row = await form.validateFields();
+            const res = await updateProviderDB(idProvider, row);
+            const jsonData = await res.json();
+            if (jsonData.data === 1) {
+                message.error("El proveedor " + row['nombre_proveedor'] + " ya existe ");
             } else {
-              newData.push(row);
-              setDataSource(newData);
-              setEditingId_Proveedor('');
+                const newData = [...dataSource];
+                const index = newData.findIndex((item) => idProvider === item.id_proveedor);
+                if (index > -1) {
+                    const item = newData[index];
+                    newData.splice(index, 1, {
+                        ...item,
+                        ...row,
+                    });
+                    setDataSource(newData);
+                    setEditingId_Proveedor('');
+                } else {
+                    newData.push(row);
+                    setDataSource(newData);
+                    setEditingId_Proveedor('');
+                }
+                message.success("Los datos del proveedor se modificaron correctamente");
             }
-            message.success("Los datos del proveedor se modificaron correctamente");
-          } catch (errInfo) {
+        } catch (errInfo) {
             console.log('Error en la validación:', errInfo);
-          }
-        } else {
-          message.warning('Problemas de comunicacion con el server');
         }
-        };
+        
+
+    };
+
     
     const columns = [
         {
@@ -253,6 +255,7 @@ const SupplierList = ({setRefresh, isRefresh}) => {
         {
             title: '',
             dataIndex: 'operation',
+            width: '15%',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
