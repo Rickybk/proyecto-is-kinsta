@@ -1,11 +1,16 @@
-import { Table, Popconfirm, Button, message, Form, Typography} from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
 import EditableCell from "./EditableCell";
 
-const BuyList = ({ }) => {
+const { Search } = Input;
+
+const BuyList = ({ setRefresh, isRefresh }) => {
+
+  const aux = useState(isRefresh);
+  const [search, setSearch] = useState('');
 
   const [form] = Form.useForm();
 
@@ -30,27 +35,38 @@ const BuyList = ({ }) => {
   const [dataSource, setDataSource] = useState([]);
   const [dataSoureceProveedor, setDataSourceProveedor] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
-      const jsonData = await response.json();
-      for (var clave in jsonData){
-        jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-        jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
-      }
-      setDataSource(jsonData);
-    }
-    fetchData();
-  },[]);
+
+
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
-      const jsonData = await response.json();
-      setDataSourceProveedor(jsonData);
+    if (isRefresh) {
+      fetchData();
+      setRefresh(false);
+  }
+  } ,[aux, dataSource, setDataSource]);
+
+  async function fetchData() {
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+    const jsonData = await response.json();
+    for (var clave in jsonData){
+      jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
+      jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
     }
-    fetchData();
-  },[]);
+    setDataSource(jsonData);
+  }
+
+  useEffect(() => {
+    if (isRefresh) {
+      fetchData2();
+      setRefresh(false);
+  }
+  } ,[]);
+  async function fetchData2() {
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
+    const jsonData = await response.json();
+    setDataSourceProveedor(jsonData);
+  }
+
 
   const handleDelete = async (id_lote) => {
     const res = await deleteProductDB(id_lote);
@@ -121,6 +137,22 @@ const BuyList = ({ }) => {
     }
 
   };
+
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setSearch(value);
+  
+    if (value === '') {
+      fetchData();
+    } else {
+      const filteredData = dataSource.filter((item) =>
+        item.nombre_producto.toLowerCase().includes(value.toLowerCase())
+      );
+      setDataSource(filteredData);
+    }
+  };
+
 
   const columns = [
     {
@@ -240,22 +272,46 @@ const BuyList = ({ }) => {
 
 
   return (
-    <Form form={form} component={false}>
-      <Table className='tabla'
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={dataSource}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-      />
-    </Form>
+    <div
+      style={{width: '90%'}}
+    >
+      <Search
+              className='search'
+              placeholder="Buscar producto"
+              bordered={false}
+              onChange={handleInputChange}
+              style={{
+                display:'flex',
+                  width: 200,
+                  border: '2px solid #d9d9d9',
+                  borderRadius: 8,
+                  backgroundColor: 'white' 
+                  
+              }}
+              maxLength='20'
+            />
+      
+        <Form form={form} component={false}
+        >
+          <Table className='tabla'
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={dataSource}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+            style={{width:'100%',
+                    left:'-20%'
+           }}
+          />
+        </Form>
+    </div>
   );
 
 };

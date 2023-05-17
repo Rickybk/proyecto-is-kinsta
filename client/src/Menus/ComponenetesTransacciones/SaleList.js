@@ -1,4 +1,4 @@
-import { Table, Popconfirm, Button, message, Form, Typography } from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
@@ -6,7 +6,12 @@ import moment from "moment";
 
 import EditableCell from "./EditableCell";
 
-const BuyList = ({}) => {
+const { Search } = Input;
+
+const SaleList = ({ setRefresh, isRefresh }) => {
+
+  const aux = useState(isRefresh);
+  const [search, setSearch] = useState('');
 
   const [form] = Form.useForm();
 
@@ -30,28 +35,37 @@ const BuyList = ({}) => {
   const [dataSource, setDataSource] = useState([]);
   const [dataSourceCliente, setDataSourceCliente] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      //http://localhost:8080/store/products/allsales/1
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allsales/1`);
-      const jsonData = await response.json();
-      for (var clave in jsonData){
-        jsonData[clave]['fecha_venta'] = moment(jsonData[clave]['fecha_venta']).add(1,'day');
-        jsonData[clave]['tipo_venta'] = jsonData[clave]['tipo_venta'] === 1 ? 'Contado' : 'Credito';
-      }
-      setDataSource(jsonData);
-    }
-    fetchData();
-  },[]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
-      const jsonData = await response.json();
-      setDataSourceCliente(jsonData);
+    if (isRefresh) {
+      fetchData();
+      setRefresh(false);
+  }
+  } ,[aux, dataSource, setDataSource]);
+
+
+  useEffect(() => {
+    if (isRefresh) {
+      fetchData2();
+      setRefresh(false);
+  }
+  } ,[]);
+
+  async function fetchData() {
+    //http://localhost:8080/store/products/allsales/1
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allsales/1`);
+    const jsonData = await response.json();
+    for (var clave in jsonData){
+      jsonData[clave]['fecha_venta'] = moment(jsonData[clave]['fecha_venta']).add(1,'day');
+      jsonData[clave]['tipo_venta'] = jsonData[clave]['tipo_venta'] === 1 ? 'Contado' : 'Credito';
     }
-    fetchData();
-  },[]);
+    setDataSource(jsonData);
+  }
+  async function fetchData2() {
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
+    const jsonData = await response.json();
+    setDataSourceCliente(jsonData);
+  }
 
   const handleDelete = async (id_venta) => {
     const res = await deleteProductDB(id_venta);
@@ -131,6 +145,21 @@ const BuyList = ({}) => {
       return 'La base de datos tiene un valor corupto';
     }
   }
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setSearch(value);
+  
+    if (value === '') {
+      fetchData();
+    } else {
+      const filteredData = dataSource.filter((item) =>
+        item.nombre_producto.toLowerCase().includes(value.toLowerCase())
+      );
+      setDataSource(filteredData);
+    }
+  };
+
 
   const columns = [
     {
@@ -252,23 +281,47 @@ const BuyList = ({}) => {
 
 
   return (
-    <Form form={form} component={false}>
-      <Table className='tabla'
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={dataSource}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-      />
-    </Form>
+    <div
+      style={{width: '90%'}}
+    >
+      <Search
+              className='search'
+              placeholder="Buscar producto"
+              bordered={false}
+              onChange={handleInputChange}
+              style={{
+                display:'flex',
+                  width: 200,
+                  border: '2px solid #d9d9d9',
+                  borderRadius: 8,
+                  backgroundColor: 'white' 
+                  
+              }}
+              maxLength='20'
+            />
+      
+        <Form form={form} component={false}
+        >
+          <Table className='tabla'
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={dataSource}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+            style={{width:'100%',
+                    left:'-20%'
+           }}
+          />
+        </Form>
+    </div>
   );
 
 };
-export default BuyList;
+export default SaleList;
