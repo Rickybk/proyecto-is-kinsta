@@ -385,10 +385,10 @@ const createSales = async (req, res) => {
     const {
       id_producto,
       cantidad,
-      cliente,
+      id_cliente,
       precio_unitario
     } = req.body;
-    const idCliente = (await pool.query("SELECT id_cliente FROM clientes WHERE nombre_cliente = $1",[cliente])).rows[0].id_cliente;
+   
     const fechaActual = new Date();
     const year = fechaActual.getFullYear();
     const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
@@ -398,7 +398,7 @@ const createSales = async (req, res) => {
     const precio_total = parseFloat(precioTotal);
     const newsale = await pool.query(
       "INSERT INTO ventas (id_producto, id_cliente, cantidad_venta, tipo_venta, precio_total, fecha_venta) VALUES ($1, $2, $3, $4, $5, $6)",
-      [id_producto, idCliente, cantidad, tipoVenta, precio_total, fechaVenta]
+      [id_producto, id_cliente, cantidad, tipoVenta, precio_total, fechaVenta]
     );
     const cantTotal = (await pool.query("SELECT total FROM productos WHERE id_producto = $1", [
       id_producto
@@ -632,7 +632,7 @@ const deleteProvider = async (req, res) => {
 const updateAProvider = async (req, res) => {
   try {
     const { idProvider } = req.params;
-    const { nombreProveedor, numProveedor, descProveedor } = req.body;
+    const { nombre_proveedor, num_proveedor, descripcion_proveedor } = req.body;
     const existingProviderResult = await pool.query(
       "SELECT * FROM proveedores WHERE id_proveedor = $1",
       [idProvider]
@@ -643,7 +643,7 @@ const updateAProvider = async (req, res) => {
     }
     const duplicateProviderResult = await pool.query(
       "SELECT * FROM proveedores WHERE LOWER(nombre_proveedor) = LOWER($1) AND id_proveedor != $2",
-      [nombreProveedor, idProvider]
+      [nombre_proveedor, idProvider]
     );
     const duplicateProvider = duplicateProviderResult.rows[0];
     if (duplicateProvider) {
@@ -651,7 +651,7 @@ const updateAProvider = async (req, res) => {
     }
     const updatedProvider = await pool.query(
       "UPDATE proveedores SET nombre_proveedor = $1, num_proveedor = $2, descripcion_proveedor = $3 WHERE id_proveedor = $4",
-      [nombreProveedor, numProveedor, descProveedor, idProvider]
+      [nombre_proveedor, num_proveedor, descripcion_proveedor, idProvider]
     );
     return res.json({ proveedor: updatedProvider.rows[0] });
   } catch (error) {
