@@ -22,7 +22,7 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
     async function fetchProveedor() {
     //Ruta para server en localhost: "http://localhost:8080/store/categories"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories`
-        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories`);
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers`);
         const jsonData = await response.json();
         setReferencia(jsonData);
     }

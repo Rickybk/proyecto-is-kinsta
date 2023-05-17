@@ -143,7 +143,7 @@ const validationText = (e) => {
 
 const SupplierList = ({setRefresh, isRefresh}) => {
     const [form] = Form.useForm();
-
+    const aux = useState(isRefresh);
     const [editingId_Proveedor, setEditingId_Proveedor] = useState('');
     const isEditing = (record) => record.id_proveedor === editingId_Proveedor;
     const edit = (record) => {
@@ -169,7 +169,7 @@ const SupplierList = ({setRefresh, isRefresh}) => {
           setDataSource(jsonData);
         }
         fetchData();
-      },[]);
+      },[aux, dataSource, setDataSource]);
 
 
       const handleDelete = async (idProvider) => {

@@ -6,9 +6,9 @@ import { EditOutlined } from '@ant-design/icons';
 
 const values = {
     nombreProveedor: "",
-    numReferencia: "",
+    numProveedor: "",
     idProveedor: 2,
-    descripcion: ""
+    descProveedor: ""
 
 }
 
@@ -18,7 +18,7 @@ const setIdProveedor = (id_proveedor) => {
     values.idProveedor = id_proveedor;
 }
 
-const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numReferencia, descripcion}) => {
+const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numProveedor, descripcion}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -56,14 +56,15 @@ const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numReferencia
 
     const saveData = () => {
         values.nombreProveedor = document.getElementById("nombre").value;
-        values.numReferencia = document.getElementById("referencia").value;
-        values.descripcion = document.getElementById("descripcion").value;
+        values.numProveedor = document.getElementById("referencia").value;
+        values.descProveedor = document.getElementById("descripcion").value;
     }
 
     const uploadDB = async () => {
         //Ruta para server en localhost: "http://localhost:8080/store/categories/"
         //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`, {
+        console.log(JSON.stringify(values))
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
@@ -108,7 +109,7 @@ const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numReferencia
             >
                 <SupplierForm
                     nombreProveedor={nombreProveedor}
-                    numReferencia={numReferencia}
+                    numProveedor={numProveedor}
                     setIdProveedor={setIdProveedor}
                 />
             </Modal>
