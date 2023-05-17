@@ -2,6 +2,7 @@ import {Button,Table,message,Form,Popconfirm,Typography,Input, InputNumber} from
 import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import './SupplierList.css';
+const { Search } = Input;
 
 const EditableCell = ({
   editing,
@@ -20,10 +21,14 @@ const EditableCell = ({
         style={{ margin: 0, backgroundColor: '#fff6ed' }}
         name={dataIndex}
         rules={[
-            {
-                required: true,
-                message: `Ingrese el nombre del proveedor!`,
-            },
+          {
+            required: true,
+            message: `Ingrese el nombre del proveedor!`,
+          },
+          {
+            max: 19,
+            message: `Has alcanzado el límite de caracteres!`,
+          },
         ]}
     >
       <Input
@@ -69,13 +74,17 @@ const EditableCell = ({
         {
             required: false,
         },
+        {
+          max: 59,
+          message: `Has alcanzado el límite de caracteres!`,
+        },
       ]}
     >
       <Input
         style={{ width: '100%', backgroundColor:'#fff6ed'}}
         className="SupplierInput"
         id="descripcion"
-        maxLength={40}
+        maxLength={60}
         />
     </Form.Item>
   ):(
@@ -93,8 +102,8 @@ const EditableCell = ({
       <Input
         style={{ width: '100%', backgroundColor:'#fff6ed'}}
         className="SupplierInput"
-        id="descripcion"
-        maxLength={40}
+        id="default"
+        maxLength={60}
         />
     </Form.Item>
   );
@@ -142,20 +151,32 @@ const validationText = (e) => {
 };
 
 const SupplierList = ({setRefresh, isRefresh}) => {
-    const [form] = Form.useForm();
-    const aux = useState(isRefresh);
-    const [editingId_Proveedor, setEditingId_Proveedor] = useState('');
-    const isEditing = (record) => record.id_proveedor === editingId_Proveedor;
-    const edit = (record) => {
-        form.setFieldsValue({
-        name: '',
-        referenceNumber:'',
-        description:'',
-        ...record,
-        });
-        setEditingId_Proveedor(record.id_proveedor);
-    };
+  const [form] = Form.useForm();
+  const [search, setSearch] = useState('');
+  const aux = useState(isRefresh);
+  const [editingId_Proveedor, setEditingId_Proveedor] = useState('');
+  const isEditing = (record) => record.id_proveedor === editingId_Proveedor;
+  const edit = (record) => {
+    form.setFieldsValue({
+      name: '',
+      referenceNumber:'',
+      description:'',
+      ...record,
+    });
+    setEditingId_Proveedor(record.id_proveedor);
+};
 
+const handleInputChange = (event) => {
+  const value = event.target.value;
+  setSearch(value);
+  if (value === '') {
+    fetchData();
+  }else{
+    const filteredData = dataSource.filter((item) => item.nombre_proveedor.toLowerCase().includes(search.toLowerCase()));
+    setDataSource(filteredData);
+  }
+};
+  
     const cancel = () => {
         setEditingId_Proveedor('');
     };
@@ -163,14 +184,17 @@ const SupplierList = ({setRefresh, isRefresh}) => {
     const [dataSource, setDataSource] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-          const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
-          const jsonData = await response.json();
-          setDataSource(jsonData);
-        }
+      if (isRefresh) {
         fetchData();
-      },[aux, dataSource, setDataSource]);
-
+        setRefresh(false);
+      }
+    } ,[aux, dataSource, setDataSource]);
+  
+      async function fetchData() {
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
+        const jsonData = await response.json();
+        setDataSource(jsonData);
+      }
 
       const handleDelete = async (idProvider) => {
         const res = await deleteProvider(idProvider);
@@ -181,7 +205,6 @@ const SupplierList = ({setRefresh, isRefresh}) => {
         } else {
           message.warning('Problemas de comunicación con el server');
         }
-    
       };
       
       const deleteProvider = async (idProvider) => {
@@ -228,10 +251,7 @@ const SupplierList = ({setRefresh, isRefresh}) => {
         } catch (errInfo) {
             console.log('Error en la validación:', errInfo);
         }
-        
-
     };
-
     
     const columns = [
         {
@@ -300,11 +320,22 @@ const SupplierList = ({setRefresh, isRefresh}) => {
         };
     });
     return (
+      <div>
+        <div style={{marginLeft:'200px', marginTop:'-30px'}}>
+        <Search
+          placeholder="Buscar Proveedor"
+          onChange={handleInputChange}
+          style={{
+            display:'inline-block',
+            width: 200,
+          }}
+        />
+      </div>,
+      <div>
         <Form form={form} component={false}>
         <Table
             style={{
                 marginRight: "10%",
-                marginTop: "2%"
             }}
             components={{
             body: {
@@ -321,8 +352,8 @@ const SupplierList = ({setRefresh, isRefresh}) => {
             }}
         />
         </Form>
+      </div>
+      </div>
   );
 }
 export default SupplierList;
-
-
