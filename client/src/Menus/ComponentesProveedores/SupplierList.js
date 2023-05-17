@@ -1,6 +1,7 @@
-import {Button,Table,message,Form,Popconfirm,Typography,Input} from 'antd';
+import {Button,Table,message,Form,Popconfirm,Typography,Input, InputNumber} from 'antd';
 import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import './SupplierList.css';
 
 const EditableCell = ({
   editing,
@@ -12,23 +13,92 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'text' ? <Input /> :
-  <Input
-            style={{
-                backgroundColor: "#fff6ed"
-            }}
-            maxLength={30}
-            autoComplete='Off'
-            onCopy={(Event)=>{
-                Event.preventDefault();
-            }}
-            onPaste={(Event)=>{
-                Event.preventDefault();
-            }}
-            onDrop={(Event)=>{
-                Event.preventDefault();
-            }}
-            />;
+  const inputNode = inputType === 'text' ? 
+  (
+    <Form.Item
+        className="SupplierInput"
+        style={{ margin: 0, backgroundColor: '#fff6ed' }}
+        name={dataIndex}
+        rules={[
+            {
+                required: true,
+                message: `Ingrese el nombre del proveedor!`,
+            },
+        ]}
+    >
+      <Input
+        style={{ width: '100%'}}
+        className="SupplierInput"
+        id="descripcion"
+        maxLength={20}
+        onKeyDown={validationText} 
+        />
+    </Form.Item>
+  ) : inputType=== "number" ?(
+    <Form.Item
+        className="SupplierInput"
+      style={{ margin: 0, backgroundColor: "#ffffff" }}
+      name={dataIndex}
+      rules={[
+        {
+          required: true,
+          message: `Ingrese el ${title}!`,
+        },
+      ]}
+    >
+      <InputNumber
+        min={4000000}
+        id='telf'
+        className="SupplierInput"
+        style={{
+          backgroundColor: "#ffffff",
+          width: '100%', margin: '0 auto', textAlign: 'center'
+        }}
+        onKeyDown={validationNumber}
+        minLength={7}
+        maxLength={8}
+      />
+
+    </Form.Item>
+  ): inputType=== "text2" ?(
+    <Form.Item
+        className="SupplierInput"
+      style={{ margin: 0, backgroundColor: '#fff6ed' }}
+      name={dataIndex}
+      rules={[
+        {
+            required: false,
+        },
+      ]}
+    >
+      <Input
+        style={{ width: '100%', backgroundColor:'#fff6ed'}}
+        className="SupplierInput"
+        id="descripcion"
+        maxLength={40}
+        />
+    </Form.Item>
+  ):(
+    <Form.Item
+        className="SupplierInput"
+      style={{ margin: 0, backgroundColor: '#fff6ed' }}
+      name={dataIndex}
+      rules={[
+        {
+            required: false,
+        },
+      ]}
+
+    >
+      <Input
+        style={{ width: '100%', backgroundColor:'#fff6ed'}}
+        className="SupplierInput"
+        id="descripcion"
+        maxLength={40}
+        />
+    </Form.Item>
+  );
+
   return (
     <td {...restProps}>
       {editing ? (
@@ -37,12 +107,7 @@ const EditableCell = ({
           style={{
             margin: 0,
           }}
-          rules={[
-            {
-              required: true,
-              message: `Por favor ingrese los datos requeridos!`,
-            },
-          ]}
+          rules={[]}
         >
           {inputNode}
         </Form.Item>
@@ -53,109 +118,135 @@ const EditableCell = ({
   );
 };
 
-const SupplierList = ({setRefresh}) => {
+const validationNumber = (e) => {
+    const key = e.key;
+    if (!(/^[0-9]+$/.test(key)
+        || key === 'Backspace'
+        || key === 'Delete'
+        || key === 'Tab'
+        || key === 'ArrowLeft'
+        || key === 'ArrowRight')) {
+        e.preventDefault();
+    }
+};
+const validationText = (e) => {
+    const key = e.key;
+    if (!(/^[A-Z a-z À-ÿ - # % $ ' -]+$/.test(key)
+        || key === 'Backspace'
+        || key === 'Delete'
+        || key === 'Tab'
+        || key === 'ArrowLeft'
+        || key === 'ArrowRight')) {
+        e.preventDefault();
+    }
+};
+
+const SupplierList = ({setRefresh, isRefresh}) => {
     const [form] = Form.useForm();
 
-    const [editingKey, setEditingKey] = useState('');
-    const isEditing = (record) => record.key === editingKey;
+    const [editingId_Proveedor, setEditingId_Proveedor] = useState('');
+    const isEditing = (record) => record.id_proveedor === editingId_Proveedor;
     const edit = (record) => {
         form.setFieldsValue({
         name: '',
+        referenceNumber:'',
+        description:'',
         ...record,
         });
-        setEditingKey(record.key);
+        setEditingId_Proveedor(record.id_proveedor);
     };
 
     const cancel = () => {
-        setEditingKey('');
+        setEditingId_Proveedor('');
     };
 
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '1',
-            name: 'CBN',
-            referenceNumber: '78653456',
-            description: 'Proveedor de bebidas',
-        },
-        {
-            key: '2',
-            name: 'EMBOL',
-            referenceNumber: '78654287',
-            description: 'Proveedor de bebidas',
-        },
-        {
-            key: '3',
-            name: 'Lays',
-            referenceNumber: '67875432',
-            description: 'Proveedor de frituras',
-        },
-        {
-            key: '4',
-            name: 'Lucana',
-            referenceNumber: '69785432',
-            description: 'Proveedor de frituras',
-        },
-        {
-            key: '5',
-            name: 'Pil Andina',
-            referenceNumber: '77654321',
-            description: 'Proveedor de lacteos',
-        },
-        {
-            key: '6',
-            name: 'Sofía',
-            referenceNumber: '68754321',
-            description: 'Proveedor de embutidos',
-        },
-    ]);
+    const [dataSource, setDataSource] = useState([]);
 
-    const handleDelete = (key) => {
-        // Borrar de la lista
-        const newData = dataSource.filter((item) => item.key !== key);
-        setDataSource(newData);
-        message.success("El proveedor se eliminó correctamente");
-    };
+    useEffect(() => {
+        async function fetchData() {
+          const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
+          const jsonData = await response.json();
+          setDataSource(jsonData);
+        }
+        fetchData();
+      },[]);
 
-    const save = async (key) => {
-        try {
-        const row = await form.validateFields();
-        const newData = [...dataSource];
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-            const item = newData[index];
-            newData.splice(index, 1, {
-            ...item,
-            ...row,
-            });
-            setDataSource(newData);
-            setEditingKey('');
+
+      const handleDelete = async (idProvider) => {
+        const res = await deleteProvider(idProvider);
+        if (res.status === 200) {
+          const newData = dataSource.filter((item) => item.id_proveedor !== idProvider);
+          setDataSource(newData);
+          message.success("El contacto del proveedor se eliminó correctamente");
         } else {
-            newData.push(row);
-            setDataSource(newData);
-            setEditingKey('');
+          message.warning('Problemas de comunicación con el server');
         }
-        } catch (errInfo) {
-        console.log('Error en la validación:', errInfo);
-        }
-        message.success("Los datos del proveedor se modificaron correctamente");
-    };
+    
+      };
+      
+      const deleteProvider = async (idProvider) => {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/` + idProvider, {
+          method: "DELETE"
+        });
+        return res;
+      }
+    
 
+      const save = async (idProvider) => {
+        var res;
+        const row = await form.validateFields();
+        console.log(row);
+        res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/` + idProvider, {
+          method: "PUT",
+          body: JSON.stringify(row),
+          headers: { "Content-Type": "application/json" }
+        });
+    
+        console.log(res);
+        if (res.status === 200) {
+          try {
+    
+            const newData = [...dataSource];
+            const index = newData.findIndex((item) => idProvider === item.id_proveedor);
+    
+            if (index > -1) {
+              const item = newData[index];
+              newData.splice(index, 1, {
+                ...item,
+                ...row,
+              });
+              setDataSource(newData);
+              setEditingId_Proveedor('');
+            } else {
+              newData.push(row);
+              setDataSource(newData);
+              setEditingId_Proveedor('');
+            }
+            message.success("Los datos del proveedor se modificaron correctamente");
+          } catch (errInfo) {
+            console.log('Error en la validación:', errInfo);
+          }
+        } else {
+          message.warning('Problemas de comunicacion con el server');
+        }
+        };
+    
     const columns = [
         {
-            title: 'Nombre',
-            dataIndex: 'name',
+            title: 'Nombre del proveedor',
+            dataIndex: 'nombre_proveedor',
             width: '25%',
             editable: true,
         },
         {
-            title: 'Número de referencia',
-            dataIndex: 'referenceNumber',
-            width: '25%',
+            title: 'Número de Teléfono/Celular',
+            dataIndex: 'num_proveedor',
+            width: '15%',
             editable: true,
         },
         {
-            title: 'Descrpción',
-            dataIndex: 'description',
+            title: 'Descripción',
+            dataIndex: 'descripcion_proveedor',
             width: '32%',
             editable: true,
         },
@@ -166,19 +257,19 @@ const SupplierList = ({setRefresh}) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                    <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.key)}>
+                    <Popconfirm title="¿Está seguro de guardar los cambios?" onConfirm={() => save(record.id_proveedor)}>
                         <Button name="guardar" >Guardar</Button>
                     </Popconfirm>
                     <Button name="cancelar" onClick={cancel}>Cancelar</Button>
                 </span>
             ) : (
                 <span>
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                    <Typography.Link disabled={editingId_Proveedor !== ''} onClick={() => edit(record)}>
                         <Button name="editar" ><EditOutlined /></Button>
                     </Typography.Link>
 
                     <Typography.Link >
-                        <Popconfirm title={"¿Está seguro de querer eliminar al proveedor?"} onConfirm={() => handleDelete(record.key)}>
+                        <Popconfirm title={"¿Está seguro de querer eliminar al proveedor?"} onConfirm={() => handleDelete(record.id_proveedor)}>
                             <Button name="eliminar"><DeleteOutlined /></Button>
                         </Popconfirm>
                     </Typography.Link>
@@ -195,7 +286,10 @@ const SupplierList = ({setRefresh}) => {
             ...col,
             onCell: (record) => ({
                 record,
-                inputType: col.dataIndex === 'text',
+                inputType 
+                :col.dataIndex === 'num_proveedor' ? 'number'
+                :col.dataIndex === 'descripcion_proveedor' ? 'text2'
+                :col.dataIndex === 'nombre_proveedor' ? 'text':'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
@@ -227,4 +321,5 @@ const SupplierList = ({setRefresh}) => {
   );
 }
 export default SupplierList;
+
 
