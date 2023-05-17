@@ -1,9 +1,9 @@
 import { Form,Input,Select } from 'antd';
 import { useEffect, useState } from "react";
 
-const ClientForm = ({nombreCategoria}) => {
+const ClientForm = ({nombreCliente,telefono}) => {
 
-    const [categoria, setCategoria] = useState([]);
+    const [clientes, setClientes] = useState([]);
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -13,16 +13,16 @@ const ClientForm = ({nombreCategoria}) => {
     };
 
     useEffect(() => {
-        fetchCategoria();
+        fetchClientes();
     },[]);
 
 
-    async function fetchCategoria() {
+    async function fetchClientes() {
     //Ruta para server en localhost: "http://localhost:8080/store/categories"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories`
-        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories`);
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients`);
         const jsonData = await response.json();
-        setCategoria(jsonData);
+        setClientes(jsonData);
     }
 
     const validation = (e) => {
@@ -50,7 +50,7 @@ const ClientForm = ({nombreCategoria}) => {
     return (
         <>
             <Form
-                id="categoryForm"
+                id="clientForm"
                 initialValues={{
                     remember: true,
                 }}
@@ -64,7 +64,6 @@ const ClientForm = ({nombreCategoria}) => {
                     label="Nombre de contacto de Cliente"
                     labelCol={{ span: 24 }}
                     name="nombre"
-                    initialValue={nombreCategoria ? nombreCategoria : ""}
                     rules={[
                         {
                             required: true,
@@ -83,7 +82,7 @@ const ClientForm = ({nombreCategoria}) => {
                 >
                     <Input id="nombre"
                         className="inputs"
-                        placeholder='Ingrese nombre de la categoría'
+                        placeholder='Ingrese nombre del contacto a registrar'
                         maxLength='30'
                         type='text'
                         onKeyDown={validation}
@@ -99,42 +98,6 @@ const ClientForm = ({nombreCategoria}) => {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    label="Seleccione el tipo de Dispositivo"
-                    labelCol={{ span: 24 }}
-                    name="cat"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor seleccione el tipo de dispositivo!'
-                        },
-                    ]}
-                >
-                    <Select
-                        defaultValue={"Seleccione el Dispositivo"}
-                        id='dispositivo'
-                        onChange={(value) => {
-                            
-                        }}
-                        style={{ width: '100%' }}
-                        optionFilterProp="children"
-                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={[
-                            {
-                              value: '1',
-                              label: 'Teléfono',
-                            },
-                            {
-                              value: '2',
-                              label: 'Celular',
-                            },
-                            ]
-                        }
-                    />
-                </Form.Item>
 
                 <Form.Item
                     label="Número de Contacto"
@@ -162,7 +125,7 @@ const ClientForm = ({nombreCategoria}) => {
                         className="inputs"
                         placeholder='Ingrese el número del Contacto'
                         maxLength='8'
-                        type='number'
+                        type='text'
                         onKeyDown={DecimalInput}
                         onCopy={(Event)=>{
                             Event.preventDefault();

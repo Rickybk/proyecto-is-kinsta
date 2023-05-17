@@ -5,17 +5,16 @@ import ClientForm from './ClientForm'
 import CreateClientModal from './CreateClientModal';
 
 const values = {
-    cantidad: "",
-    fechaCaducidad: "",
-    costo_total: "",
+    nombre_cliente: "",
+    num_cliente: ""
+}
+
+const setIdCliente = (id_cliente) => {
+    values.id_cliente = id_cliente;
 }
 
 
-const setIdCategoria = (id_categoria) => {
-    values.id_categoria = id_categoria;
-}
-
-const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
+const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,10 +28,10 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
-                message.error("La categoría " + values.nombreCategoria + " ya existe ");
+                message.error("Ya tiene un contacto con el nombre " + values.nombre_cliente);
             } else {
-                message.success("Categoría creada exitosamente");
-                document.getElementById("categoryForm").reset();         
+                message.success("Contacto creado exitosamente");
+                document.getElementById("clientForm").reset();          
             }
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
@@ -42,6 +41,8 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
     function validData() {
         var valid = true;
         var nombre = document.getElementById("nombre").value;
+        var tel = document.getElementById("numero").value;
+        //recuerda validar el telefono
         if (!nombre || nombre.length < 3) {
             valid = false;
         }
@@ -49,18 +50,20 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
     }
 
     const saveData = () => {
-        values.nombreCategoria = document.getElementById("nombre").value;
+        values.nombre_cliente = document.getElementById("nombre").value;
+        values.num_cliente = document.getElementById("numero").value;
+        console.log(values)
     }
 
     const uploadDB = async () => {
-        //Ruta para server en localhost: "http://localhost:8080/store/categories/"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/categories/`
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/categories/`, {
+        console.log(JSON.stringify(values))
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`, {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
         const jsonData = await res.json();
+        console.log(jsonData)
         if (jsonData.data === 1) {
             return 1;
         }
@@ -72,11 +75,15 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
 
     return (
         <>
-            <Button type={idCategoria ? "default" : "primary"} onClick={showModal}>
-                {idCategoria ? <EditOutlined /> : "Añadir Contacto"}
+            <Button 
+                style={{display:'flex'}}
+                type={idCliente ? "default" : "primary"} 
+                onClick={showModal}
+            >
+                Añadir Contacto
             </Button>
             <Modal
-                title={idCategoria ? "Editar Contacto" : "Añadir Contacto"}
+                title={idCliente ? "Editar Contacto" : "Añadir Contacto"}
                 style={{
                     top: 0,
                     left: "37%",
@@ -90,7 +97,7 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
                         handleOk={handleOk}
                         isModalOpen={false}
                         setRefresh={setRefresh}
-                        isEdit={idCategoria ? true : false}
+                        isEdit={idCliente ? true : false}
                     />,
                     <Button key="cancel" onClick={handleCancel}>
                         Cancelar
@@ -99,8 +106,9 @@ const ClientModal = ({ setRefresh,idCategoria,nombreCategoria}) => {
                 destroyOnClose="true"
             >
                 <ClientForm
-                    nombreCategoria={nombreCategoria}
-                    setIdCategoria={setIdCategoria}
+                    nombreCliente={nombreCliente}
+                    telefono={telefono}
+                    setIdCliente={setIdCliente}
                 />
             </Modal>
         </>

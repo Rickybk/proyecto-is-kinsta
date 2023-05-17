@@ -2,6 +2,8 @@ import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 
+const { Search } = Input;
+
 const EditableCell = ({
   editing,
   dataIndex,
@@ -93,9 +95,12 @@ const validationf = (e) => {
   }
 };
 
+
 const ClientList = ({ setRefresh, isRefresh }) => {
 
+  const [search, setSearch] = useState('');
   const [form] = Form.useForm();
+  const aux = useState(isRefresh);
 
   const [editingId_Client, setEditingId_Client] = useState('');
   const isEditing = (record) => record.id_cliente === editingId_Client;
@@ -115,13 +120,18 @@ const ClientList = ({ setRefresh, isRefresh }) => {
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
+    if (isRefresh) {
+      fetchData();
+      setRefresh(false);
+  }
+  } ,[aux, dataSource, setDataSource]);
+
     async function fetchData() {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
       const jsonData = await response.json();
       setDataSource(jsonData);
     }
-    fetchData();
-  },[]);
+  
 
   const handleDelete = async (idCliente) => {
     const res = await deleteClient(idCliente);
@@ -180,6 +190,18 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       message.warning('Problemas de comunicacion con el server');
     }
 
+  };
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setSearch(value);
+  
+    if (value === '') {
+      fetchData();
+    }else{
+        const filteredData = dataSource.filter((item) => item.nombre_cliente.toLowerCase().includes(search.toLowerCase()));
+        setDataSource(filteredData);
+    }
   };
 
   const columns = [
@@ -268,24 +290,40 @@ const ClientList = ({ setRefresh, isRefresh }) => {
 
 
   return (
-    <Form form={form} component={false}
+    <div
+      style={{width: '90%'}}
     >
-      <Table className='tabla'
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={dataSource}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-        style={{width:'80%'}}
-      />
-    </Form>
+      <Search
+              placeholder="Buscar Cliente"
+              onChange={handleInputChange}
+              style={{
+                display:'flex',
+                  width: 200,
+                  
+              }}
+            />
+      
+        <Form form={form} component={false}
+        >
+          <Table className='tabla'
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={dataSource}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+            style={{width:'100%',
+                    left:'-20%'
+           }}
+          />
+        </Form>
+    </div>
   );
 
 };

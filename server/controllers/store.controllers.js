@@ -504,18 +504,18 @@ const getAClient = async (req, res) => {
 };
 
 const createAClient = async (req, res) => {
-  const { nombreCliente, numCliente } = req.body;
+  const { nombre_cliente, num_cliente } = req.body;
   try {
     const nameClient = await pool.query(
       "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1);",
-      [nombreCliente]
+      [nombre_cliente]
     );
     if (nameClient.rows.length > 0) {
       return res.status(200).json({ data: 1 });
     }
     const result = await pool.query(
       "INSERT INTO clientes (nombre_cliente, num_cliente) VALUES ($1, $2)",
-      [nombreCliente, numCliente]
+      [nombre_cliente, num_cliente]
     );
     return res.json({dato : result.rows[0]});
   } catch (error) {
@@ -523,6 +523,7 @@ const createAClient = async (req, res) => {
     return res.json({ error: error.message });
   }
 };
+
 
 const deleteClient = async (req, res) => {
   const idCliente = req.params.idCliente;
