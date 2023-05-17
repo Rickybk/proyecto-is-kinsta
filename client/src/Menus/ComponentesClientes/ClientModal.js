@@ -29,11 +29,17 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
             setRefresh(true);
             if (respuesta === 1) {
                 message.error("Ya tiene un contacto con el nombre " + values.nombre_cliente);
-            } else {
+            }else if(respuesta === 2){
+                message.error("Ya tiene un contacto con el número " + values.num_cliente);
+            }else {
                 message.success("Contacto creado exitosamente");
                 document.getElementById("clientForm").reset();          
             }
         } else {
+            var tel = document.getElementById("numero").value
+            if(!verificarPrimerDigito(tel)){
+                message.warning('El número a registrar debe comenzar con 6-7');
+            }
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
     };
@@ -46,8 +52,20 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
         if (!nombre || nombre.length < 3) {
             valid = false;
         }
+
+        if(!verificarPrimerDigito(tel)){
+            valid = false;
+        }
         return valid;
     }
+
+    function verificarPrimerDigito(string) {
+        if (/^[67]/.test(string)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
     const saveData = () => {
         values.nombre_cliente = document.getElementById("nombre").value;
@@ -66,6 +84,9 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
         console.log(jsonData)
         if (jsonData.data === 1) {
             return 1;
+        }
+        if (jsonData.data === 2) {
+            return 2;
         }
     }
 

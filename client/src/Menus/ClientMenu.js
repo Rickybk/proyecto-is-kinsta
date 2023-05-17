@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { Button, Input } from 'antd';
 import ClientList from './ComponentesClientes/ClientList';
-import ClientModal from './ComponentesClientes/ClientModal'
 const { Search } = Input;
 
 
@@ -17,7 +16,6 @@ function ClientMenu() {
   return (
     
       <div className="row" style={{display:'flex'}}>
-          <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
           <ClientList setRefresh={setRefresh} isRefresh={isRefresh}/>
       </div>
   );

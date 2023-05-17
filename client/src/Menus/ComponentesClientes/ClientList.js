@@ -1,8 +1,11 @@
+import './ListaBotones.css';
 import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
+import ClientModal from './ClientModal';
 
 const { Search } = Input;
+
 
 const EditableCell = ({
   editing,
@@ -293,16 +296,16 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     <div
       style={{width: '90%'}}
     >
-      <Search
-              placeholder="Buscar Cliente"
-              onChange={handleInputChange}
-              style={{
-                display:'flex',
-                  width: 200,
-                  
-              }}
-            />
-      
+      <div className="botones">
+        <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
+
+        <Search
+                placeholder="Buscar Cliente"
+                onChange={handleInputChange}
+                style={{width:200}}
+              />
+      </div>
+
         <Form form={form} component={false}
         >
           <Table className='tabla'

@@ -510,8 +510,17 @@ const createAClient = async (req, res) => {
       "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1);",
       [nombre_cliente]
     );
+    const numberClient = await pool.query(
+      "SELECT * FROM clientes WHERE LOWER(num_cliente) = LOWER($1);",
+      [num_cliente]
+    );
+
     if (nameClient.rows.length > 0) {
       return res.status(200).json({ data: 1 });
+    }
+
+    if(numberClient.rows.length > 0){
+      return res.status(200).json({ data: 2 });
     }
     const result = await pool.query(
       "INSERT INTO clientes (nombre_cliente, num_cliente) VALUES ($1, $2)",

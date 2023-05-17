@@ -103,7 +103,6 @@ const ClientForm = ({nombreCliente,telefono}) => {
                     label="Número de Contacto"
                     labelCol={{ span: 24 }}
                     name="numero"
-                    min={4000000}
                     maxLength={8}
                     rules={[
                         {
@@ -117,14 +116,14 @@ const ClientForm = ({nombreCliente,telefono}) => {
                         {
                             max: 8,
                             message: 'El número del contacto no puede tener más de 8 dígitos!',
-                        },
-
+                        }
                     ]}
                 >
                     <Input id="numero"
                         className="inputs"
                         placeholder='Ingrese el número del Contacto'
                         maxLength='8'
+                        minLength='7'
                         type='text'
                         onKeyDown={DecimalInput}
                         onCopy={(Event)=>{
