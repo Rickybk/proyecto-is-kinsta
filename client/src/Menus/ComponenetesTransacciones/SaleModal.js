@@ -5,7 +5,7 @@ import ConfirmSaleModal from './ConfirmSaleModal';
 const values = {
     id_producto: "",
     cantidad: "",
-    cliente: "",
+    id_cliente: 7,
     precio_unitario: "",
 }
 
@@ -15,14 +15,16 @@ function setFiado(esFiado) {
     fiado = esFiado;
 }
 
+function setCliente(cliente){
+    values.id_cliente = cliente;
+}
+
 const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, cantidad, visible, onClose, closeModal }) => {
 
     const handleOk = async () => {
         if (validData()) {
             saveData();
-            //Falta que el amigo Jose tenga listo el back.
-            //const respuesta = await uploadDB();
-            console.log(values);
+            const respuesta = await uploadDB();
             setRefresh(true);
             message.success("Venta realizada exitosamente");
             closeModal();
@@ -36,23 +38,18 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
         if (!document.getElementById("cantidad").value) {
             valid = false;
         }
-        if (fiado && !document.getElementById("cliente").value) {
-            valid = false;
-        }
         return valid;
     }
 
     const saveData = () => {
         values.id_producto = idProducto;
         values.cantidad = document.getElementById("cantidad").value;
+        values.cantidad = parseInt(values.cantidad);
         values.precio_unitario = precioUnitario;
-        if (fiado) {
-            values.cliente = document.getElementById("cliente").value;
-        }
     }
 
     const uploadDB = async () => {
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + idProducto, {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/`+ (fiado ? 2 : 1), {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
@@ -61,9 +58,12 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
         if (jsonData.data === 1) {
             return 1;
         }
+        return jsonData;
     }
 
     const handleCancel = () => {
+        setFiado(false);
+        setCliente(7);
         closeModal();
     };
 
@@ -92,7 +92,7 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
                 nombreProducto={nombreProducto}
                 precioUnitario={precioUnitario}
                 cantidadMax={cantidad}
-                fiado={fiado}
+                setCliente={setCliente}
                 setFiado={setFiado} />
         </Modal>
     );

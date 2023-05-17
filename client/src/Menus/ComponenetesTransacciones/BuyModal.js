@@ -6,6 +6,11 @@ const values = {
     cantidad: "",
     fechaCaducidad: "",
     costo_total: "",
+    id_proveedor: 7,
+}
+
+function setProveedor(proveedor) {
+    values.id_proveedor = proveedor;
 }
 
 const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose, closeModal }) => {
@@ -35,6 +40,7 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
 
     const saveData = () => {
         values.cantidad = document.getElementById("cantidad").value;
+        values.cantidad = parseInt(values.cantidad);
         values.costo_total = document.getElementById("costoTotal").value;
         values.fechaCaducidad = document.getElementById("fechaCad").value;
         if (!values.fechaCaducidad) {
@@ -43,8 +49,6 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
     }
 
     const uploadDB = async () => {
-        //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
-        //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
         const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + idProducto, {
             method: "POST",
             body: JSON.stringify(values),
@@ -54,9 +58,11 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
         if (jsonData.data === 1) {
             return 1;
         }
+        return jsonData;
     }
 
     const handleCancel = () => {
+        setProveedor(7);
         closeModal();
     };
 
@@ -81,7 +87,10 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
             ]}
             destroyOnClose="true"
         >
-            <BuyForm nombreProducto = {nombreProducto} />
+            <BuyForm
+                nombreProducto={nombreProducto}
+                setProveedor={setProveedor}
+            />
         </Modal>
     );
 };
