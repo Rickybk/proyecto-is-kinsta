@@ -41,10 +41,10 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
         }
     };
  
-    const DecimalInput = (e) => {
+    const NumberInput = (e) => {
 
         const key = e.key;
-        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' || key === 'Tab' || key === 'ArrowLeft' || key === 'ArrowRight')) {
+        if (!(/^\d+$/.test(key) || key === 'Backspace' || key === 'Delete' || key === 'Tab' || key === 'ArrowLeft' || key === 'ArrowRight')) {
             e.preventDefault();
         }
     };
@@ -120,7 +120,7 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
                         id="referencia"
                         min={1}
                         maxLength={8}
-                        onKeyDown={DecimalInput}
+                        onKeyDown={NumberInput}
                          />
                 </Form.Item>
                 
