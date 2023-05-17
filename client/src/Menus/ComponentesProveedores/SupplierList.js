@@ -17,8 +17,7 @@ const EditableCell = ({
   const inputNode = inputType === 'text' ? 
   (
     <Form.Item
-        className="SupplierInput"
-        style={{ margin: 0, backgroundColor: '#fff6ed' }}
+        style={{ margin: 0 }}
         name={dataIndex}
         rules={[
           {
@@ -26,7 +25,7 @@ const EditableCell = ({
             message: `Ingrese el nombre del proveedor!`,
           },
           {
-            max: 19,
+            max: 29,
             message: `Has alcanzado el límite de caracteres!`,
           },
         ]}
@@ -35,14 +34,13 @@ const EditableCell = ({
         style={{ width: '100%'}}
         className="SupplierInput"
         id="descripcion"
-        maxLength={20}
+        maxLength={30}
         onKeyDown={validationText} 
         />
     </Form.Item>
   ) : inputType=== "number" ?(
     <Form.Item
-        className="SupplierInput"
-      style={{ margin: 0, backgroundColor: "#ffffff" }}
+      style={{ margin: 0}}
       name={dataIndex}
       rules={[
         {
@@ -56,7 +54,6 @@ const EditableCell = ({
         id='telf'
         className="SupplierInput"
         style={{
-          backgroundColor: "#ffffff",
           width: '100%', margin: '0 auto', textAlign: 'center'
         }}
         onKeyDown={validationNumber}
@@ -67,8 +64,7 @@ const EditableCell = ({
     </Form.Item>
   ): inputType=== "text2" ?(
     <Form.Item
-        className="SupplierInput"
-      style={{ margin: 0, backgroundColor: '#fff6ed' }}
+      style={{ margin: 0 }}
       name={dataIndex}
       rules={[
         {
@@ -81,7 +77,7 @@ const EditableCell = ({
       ]}
     >
       <Input
-        style={{ width: '100%', backgroundColor:'#fff6ed'}}
+        style={{ width: '100%'}}
         className="SupplierInput"
         id="descripcion"
         maxLength={60}
@@ -89,8 +85,7 @@ const EditableCell = ({
     </Form.Item>
   ):(
     <Form.Item
-        className="SupplierInput"
-      style={{ margin: 0, backgroundColor: '#fff6ed' }}
+      style={{ margin: 0}}
       name={dataIndex}
       rules={[
         {
@@ -100,7 +95,7 @@ const EditableCell = ({
 
     >
       <Input
-        style={{ width: '100%', backgroundColor:'#fff6ed'}}
+        style={{ width: '100%'}}
         className="SupplierInput"
         id="default"
         maxLength={60}
@@ -330,12 +325,13 @@ const handleInputChange = (event) => {
             width: 200,
           }}
         />
-      </div>,
+      </div>
       <div>
         <Form form={form} component={false}>
         <Table
             style={{
-                marginRight: "10%",
+                marginRight: "8%",
+                marginTop:"2%"
             }}
             components={{
             body: {
