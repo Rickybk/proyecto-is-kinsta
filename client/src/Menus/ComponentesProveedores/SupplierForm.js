@@ -40,6 +40,14 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
             e.preventDefault();
         }
     };
+ 
+    const DecimalInput = (e) => {
+
+        const key = e.key;
+        if (!(/^[0-9.]+$/.test(key) || key === 'Backspace' || key === 'Delete' || key === 'Tab' || key === 'ArrowLeft' || key === 'ArrowRight')) {
+            e.preventDefault();
+        }
+    };
 
     return (
         <>
@@ -112,6 +120,7 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
                         id="referencia"
                         min={1}
                         maxLength={8}
+                        onKeyDown={DecimalInput}
                          />
                 </Form.Item>
                 
