@@ -131,15 +131,15 @@ const SupplierForm = ({nombreProveedor, descripcion}) => {
                     initialValue={descripcion ? descripcion : ""}
                     rules={[{ required: false, },
                     {
-                        max: 99,
-                        message: 'La descripción no puede tener más de 100 caracteres!',
+                        max: 59,
+                        message: 'La descripción no puede tener más de 60 caracteres!',
                     },
 
                     ]}
                 >
                     <TextArea id="descripcion" className="inputs" rows={3}
                         placeholder='Ingrese la descripción'
-                        maxLength={100}
+                        maxLength={60}
                         style={{ resize: 'none' }}
                     />
                 </Form.Item>
