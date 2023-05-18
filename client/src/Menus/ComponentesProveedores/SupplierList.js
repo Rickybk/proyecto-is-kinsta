@@ -188,7 +188,8 @@ const handleInputChange = (event) => {
       async function fetchData() {
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
         const jsonData = await response.json();
-        setDataSource(jsonData);
+        const updatedData = jsonData.filter(item => item.id_proveedor !== 7);
+        setDataSource(updatedData);
       }
 
       const handleDelete = async (idProvider) => {

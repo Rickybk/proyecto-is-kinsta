@@ -208,7 +208,8 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     async function fetchData() {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
       const jsonData = await response.json();
-      setDataSource(jsonData);
+      const updatedData = jsonData.filter(item => item.id_cliente !== 7);
+      setDataSource(updatedData);
     }
   
 
