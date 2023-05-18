@@ -9,3 +9,13 @@
         width: 80px;
       }
 }
+
+.div-logo{
+    width: 80;
+    height: 64px;
+    text-align: center; 
+}
+
+.logo-sider{
+    width: 150px;
+}

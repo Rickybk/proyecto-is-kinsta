@@ -138,19 +138,20 @@ const FormProducto = ({ getImgUrlForm, imagen, nombreProducto, idCategoria, prec
                 >
                     <Select
                         defaultValue={getIdCategory()}
+                        listHeight={150}
                         id='categoria'
+                        showSearch
                         onChange={(value) => {
                             setIdCategoria(value);
                         }}
                         style={{ width: '100%' }}
                         optionFilterProp="children"
-                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
                     >
                         {categoria.map(cat => (
-                            <Option key={cat.id_categoria} value={cat.id_categoria}>
+                            <Option key={cat.id_categoria} value={cat.id_categoria} label={cat.nombre_categoria}>
                                 {cat.nombre_categoria}
                             </Option>
                         ))}

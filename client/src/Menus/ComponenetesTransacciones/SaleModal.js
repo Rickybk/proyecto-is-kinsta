@@ -1,26 +1,32 @@
 import { Button, Modal, message } from 'antd';
-import BuyForm from './BuyForm'
-import ConfirmBuyModal from './ConfirmBuyModal';
+import SaleForm from './SaleForm'
+import ConfirmSaleModal from './ConfirmSaleModal';
 
 const values = {
+    id_producto: "",
     cantidad: "",
-    fechaCaducidad: "",
-    costo_total: "",
-    id_proveedor: 7,
+    id_cliente: 7,
+    precio_unitario: "",
 }
 
-function setProveedor(proveedor) {
-    values.id_proveedor = proveedor;
+var fiado = false;
+
+function setFiado(esFiado) {
+    fiado = esFiado;
 }
 
-const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose, closeModal }) => {
+function setCliente(cliente){
+    values.id_cliente = cliente;
+}
+
+const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, cantidad, visible, onClose, closeModal }) => {
 
     const handleOk = async () => {
         if (validData()) {
             saveData();
             const respuesta = await uploadDB();
             setRefresh(true);
-            message.success("Compra realizada exitosamente");
+            message.success("Venta realizada exitosamente");
             closeModal();
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
@@ -32,24 +38,18 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
         if (!document.getElementById("cantidad").value) {
             valid = false;
         }
-        if (!document.getElementById("costoTotal").value) {
-            valid = false;
-        }
         return valid;
     }
 
     const saveData = () => {
+        values.id_producto = idProducto;
         values.cantidad = document.getElementById("cantidad").value;
         values.cantidad = parseInt(values.cantidad);
-        values.costo_total = document.getElementById("costoTotal").value;
-        values.fechaCaducidad = document.getElementById("fechaCad").value;
-        if (!values.fechaCaducidad) {
-            values.fechaCaducidad = null;
-        }
+        values.precio_unitario = precioUnitario;
     }
 
     const uploadDB = async () => {
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/buy/` + idProducto, {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/`+ (fiado ? 2 : 1), {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
@@ -62,13 +62,14 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
     }
 
     const handleCancel = () => {
-        setProveedor(7);
+        setFiado(false);
+        setCliente(7);
         closeModal();
     };
 
     return (
         <Modal
-            title="Realizar compra"
+            title="Realizar venta"
             style={{
                 top: 0,
                 left: "37%",
@@ -77,7 +78,7 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
             onCancel={onClose}
             width="25%"
             footer={[
-                <ConfirmBuyModal
+                <ConfirmSaleModal
                     handleOk={handleOk}
                     isModalOpen={false}
                     setRefresh={setRefresh} />,
@@ -87,12 +88,14 @@ const ProductModal = ({ setRefresh, nombreProducto, idProducto, visible, onClose
             ]}
             destroyOnClose="true"
         >
-            <BuyForm
+            <SaleForm
                 nombreProducto={nombreProducto}
-                setProveedor={setProveedor}
-            />
+                precioUnitario={precioUnitario}
+                cantidadMax={cantidad}
+                setCliente={setCliente}
+                setFiado={setFiado} />
         </Modal>
     );
 };
 
-export default ProductModal;
+export default SaleModal;

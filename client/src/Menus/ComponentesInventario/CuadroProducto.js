@@ -1,8 +1,9 @@
-import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Card, Button } from 'antd';
 import EditarModal from './ProductModal'
 import DeleteModal from './DeleteModal';
 import BuyModal from '../ComponenetesTransacciones/BuyModal';
+import SaleModal from '../ComponenetesTransacciones/SaleModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
@@ -10,9 +11,14 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
 
   const [modalBorrar, setBorrar] = useState(false);
   const [buyModal, setBuy] = useState(false);
+  const [saleModal, setSale] = useState(false);
 
   const openBuyModal = () => {
     setBuy(true);
+  }
+
+  const openSaleModal = () => {
+    setSale(true);
   }
 
   const abrirModalBorrar = () => {
@@ -21,6 +27,10 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
 
   const closeBuyModal = () => {
     setBuy(false);
+  }
+
+  const closeSaleModal = () => {
+    setSale(false);
   }
 
   const cerrarModalBorrar = () => {
@@ -48,7 +58,21 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
       }
       actions={[
         <>
-          <Button name="modalBorrar" onClick={openBuyModal}><DollarOutlined/></Button>
+          <Button name="modalSale" onClick={openSaleModal}><ShoppingCartOutlined /></Button>
+          <SaleModal
+            visible={saleModal}
+            onClose={closeSaleModal}
+            idProducto={idProducto}
+            nombreProducto={title}
+            precioUnitario={precio}
+            cantidad={cantidad}
+            setRefresh={setRefresh}
+            closeModal={closeSaleModal}
+          />
+        </>,
+
+        <>
+          <Button name="modalBuy" onClick={openBuyModal}><DollarOutlined/></Button>
           <BuyModal
             visible={buyModal}
             onClose={closeBuyModal}
