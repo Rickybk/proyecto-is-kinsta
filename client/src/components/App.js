@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTruck, faUsers } from '@fortawesome/free-solid-svg-icons'
 import SupplierMenu from '../Menus/SupplierMenu';
 import ClientMenu from '../Menus/ClientMenu';
-import Logo from '../Imagenes/Logo Peq.png';
+import Logo from '../Imagenes/logo-sider2.png';
 import './App.css'
 
 
@@ -20,6 +20,7 @@ function App() {
     return (
         <ConfigProvider
             theme={{
+                
                 "token": {
                     "colorPrimary": "#83563f",
                     "colorPrimaryBorder": "#4da8cf",
@@ -99,9 +100,6 @@ function SideMenu() {
 function Content() {
 
     const { Header, Content, Footer } = Layout;
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
     const [top, setTop] = useState(0);
 
 
@@ -112,9 +110,10 @@ function Content() {
                 style={{
                     padding: 0,
                     textAlign: 'center',
-                    background: colorBgContainer
+                    background: '#E7D5C7'
                 }}
                 className='header'
+                theme
             >
                 <Routes>
                     <Route path="/" element={<div><h1 style={{ fontSize: 50 }}>Inventario</h1></div>}></Route>
@@ -127,7 +126,11 @@ function Content() {
             </Header>
         </Affix>
 
-        <Content>
+        <Content
+            style={{
+                //background: '#fff6f2'
+            }}
+        >
             <Routes>
                 <Route path="/" element={<div><MenuInventario /></div>}></Route>
                 <Route path="/categorias" element={<div><Categoria /></div>}></Route>
