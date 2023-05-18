@@ -60,7 +60,7 @@ const EditableCell = ({
 
   ) : inputType === "number" ? (
     <Form.Item
-      style={{ margin: 0, backgroundColor: 'white' }}
+      style={{ margin: 0}}
       name={dataIndex}
       rules={[
 
@@ -90,7 +90,7 @@ const EditableCell = ({
     </Form.Item>
   ) : inputType === "pago" ? (
     <Form.Item
-      style={{ margin: 0, backgroundColor: 'white' }}
+      style={{ margin: 0}}
       name={dataIndex}
       rules={[
         {
@@ -144,7 +144,7 @@ const EditableCell = ({
     </Form.Item>
   ) : inputType === "cliente2" ? (
     <Form.Item
-  style={{ margin: 0, backgroundColor: 'white' }}
+  style={{ margin: 0}}
   name={dataIndex}
   rules={[
     {
@@ -163,7 +163,7 @@ const EditableCell = ({
 </Form.Item>
   ) : inputType === "proveedor" ? (
     <Form.Item
-  style={{ margin: 0, backgroundColor: 'white' }}
+  style={{ margin: 0}}
   name={dataIndex}
   rules={[
     {
@@ -209,7 +209,7 @@ const EditableCell = ({
         <Form.Item
           name={dataIndex}
           style={{
-            margin: 0, backgroundColor: "#ffffff"
+            margin: 0
           }}
           rules={[
           ]}

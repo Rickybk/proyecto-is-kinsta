@@ -285,7 +285,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
                   width: 200,
                   border: '2px solid #d9d9d9',
                   borderRadius: 8,
-                  backgroundColor: 'white' 
+                  backgroundColor: '#E7D5C7' 
                   
               }}
               maxLength='20'
@@ -307,7 +307,8 @@ const BuyList = ({ setRefresh, isRefresh }) => {
               onChange: cancel,
             }}
             style={{width:'100%',
-                    left:'-20%'
+                    left:'-20%',
+                    marginTop:'2%'
            }}
           />
         </Form>
