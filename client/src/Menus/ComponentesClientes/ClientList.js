@@ -17,23 +17,86 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'text' ? <Input /> :
-  <Input
-            style={{
-                backgroundColor: "#fff6ed"
-            }}
-            maxLength={30}
-            autoComplete='Off'
-            onCopy={(Event)=>{
-                Event.preventDefault();
-            }}
-            onPaste={(Event)=>{
-                Event.preventDefault();
-            }}
-            onDrop={(Event)=>{
-                Event.preventDefault();
-            }}
-            />;
+  const inputNode = inputType === 'text' ? 
+  (
+    <Form.Item
+        style={{ margin: 0 }}
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `Ingrese el nombre del proveedor!`,
+          },
+          {
+            max: 29,
+            message: `Has alcanzado el límite de caracteres!`,
+          },
+          {
+            validator: (rule, value) => {
+              if (value == null) {
+                return Promise.resolve();
+              } else if (/\s{2,}/.test(value)) {
+                return Promise.reject("No se permiten más de un espacio consecutivo");
+              } else if (/^(?:[a-zA-Z][\w\s]*[a-zA-Z]|[a-zA-Z]?)$/.test(value)) {
+                return Promise.resolve();
+              } else {
+                return Promise.reject("El primer y último carácter deben ser una letra");
+              }
+            }
+          },
+        ]}
+    >
+      <Input
+        style={{ width: '100%'}}
+        className="SupplierInput"
+        id="descripcion"
+        maxLength={30}
+        onKeyDown={validationName} 
+        />
+    </Form.Item>
+  ) : inputType=== "text2" ?(
+    <Form.Item
+      style={{ margin: 0 }}
+      name={dataIndex}
+      rules={[
+        {
+            required: false,
+        },
+        {
+          max: 8,
+          message: `Has alcanzado el límite de caracteres!`,
+        },
+      ]}
+    >
+      <Input
+        style={{ width: '100%'}}
+        className="SupplierInput"
+        id="descripcion"
+        maxLength={8}
+        minLength={7}
+        />
+    </Form.Item>
+  ):(
+    <Form.Item
+      style={{ margin: 0}}
+      name={dataIndex}
+      rules={[
+        {
+            required: false,
+        },
+      ]}
+
+    >
+      <Input
+        style={{ width: '100%'}}
+        className="SupplierInput"
+        id="default"
+        maxLength={60}
+        />
+    </Form.Item>
+  );
+
+
   return (
     <td {...restProps}>
       {editing ? (
@@ -57,7 +120,6 @@ const EditableCell = ({
     </td>
   );
 };
-
 
 const DecimalInput = (e) => {
 
@@ -98,6 +160,19 @@ const validationf = (e) => {
   }
 };
 
+const validationName = (e) => {
+
+  const key = e.key;
+  if (!(/^[A-Za-z\s]+$/.test(key)
+    || key === 'Backspace'
+    || key === 'Delete'
+    || key === 'Tab'
+    || key === 'ArrowLeft'
+    || key === 'ArrowRight')) {
+    e.preventDefault();
+  }
+};
+
 
 const ClientList = ({ setRefresh, isRefresh }) => {
 
@@ -110,6 +185,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
   const edit = (record) => {
     form.setFieldsValue({
       name: '',
+      referenceNumber:'',
       ...record,
     });
     setEditingId_Client(record.id_cliente);
@@ -189,9 +265,18 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       } catch (errInfo) {
         console.log('Error en la validación:', errInfo);
       }
-    } else {
+    } else if(res.status ===202){
+      const jsonData = await res.json();
+        if (jsonData.data === 1) {
+            message.error("El cliente " + row['nombre_cliente'] + " ya existe ");
+        }
+        if (jsonData.data === 2) {
+          message.error("El número " + row['num_cliente'] + " ya ha sido seleccionado ");
+      }
+    }else{
       message.warning('Problemas de comunicacion con el server');
     }
+    
 
   };
 
@@ -275,13 +360,11 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "nombreCliente"
-            ? "nombreCliente"
-            : col.dataIndex === "numCliente"
-              ? "numero"
-              : col.dataIndex === "fecha_compra"
-                ? "date"
-                : "text",
+          col.dataIndex === 'nombre_cliente' 
+          ? 'text' :
+          col.dataIndex === 'num_cliente' 
+          ? 'text2' :
+          'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

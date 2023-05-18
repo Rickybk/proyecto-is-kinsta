@@ -60,7 +60,7 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
     }
 
     function verificarPrimerDigito(string) {
-        if (/^[67]/.test(string)) {
+        if (/^[467]/.test(string)) {
           return true;
         } else {
           return false;

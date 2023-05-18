@@ -567,8 +567,17 @@ const updateAClient = async (req, res) => {
     );
     const duplicateClient = duplicateClientResult.rows[0];
     if (duplicateClient) {
-      return res.status(200).json({ data: 1 });
+      return res.status(202).json({ data: 1 });
     }
+    const duplicateTelephoneResult = await pool.query(
+      "SELECT * FROM clientes WHERE LOWER(num_cliente) = LOWER($1) AND id_cliente != $2",
+      [num_cliente, idCliente]
+    );
+    const duplicateTelephone = duplicateTelephoneResult.rows[0];
+    if (duplicateTelephone) {
+      return res.status(202).json({ data: 2 });
+    }
+
     const updatedClient = await pool.query(
       "UPDATE clientes SET nombre_cliente = $1, num_cliente = $2 WHERE id_cliente = $3",
       [nombre_cliente, num_cliente, idCliente]
