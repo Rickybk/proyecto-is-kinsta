@@ -260,8 +260,9 @@ const deleteProduct = async (req, res) => {
   const id = req.params.idProduct;
   try {
     const result1 = await pool.query('DELETE FROM lotes WHERE id_producto = $1', [id]);
-    const result2 = await pool.query('DELETE FROM productos WHERE id_producto = $1', [id]);
-    return res.status(200).json({ message: `Eliminados ${result1.rowCount} registros de compras y ${result2.rowCount} registros de productos` });
+    const result2 = await pool.query('DELETE FROM ventas WHERE id_producto = $1', [id]);
+    const result3 = await pool.query('DELETE FROM productos WHERE id_producto = $1', [id]);
+    return res.status(200).json({ message: `Eliminados ${result1.rowCount} registros de compras, ${result2.rowCount} registros de ventas y ${result3.rowCount} registros de productos` });
   } catch (error) {
     return res.status(500).json({ message: 'Error eliminando producto: ' + error });
   }
