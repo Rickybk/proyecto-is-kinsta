@@ -46,14 +46,22 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   } ,[aux, dataSource, setDataSource]);
 
   async function fetchData() {
-    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
-    const jsonData = await response.json();
-    for (var clave in jsonData){
-      jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-      jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
-    }
-    setDataSource(jsonData);
+  const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+  const jsonData = await response.json();
+  for (var clave in jsonData){
+    jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
+    jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
   }
+  for (var clave in jsonData){
+    if (!moment(jsonData[clave]['fecha_caducidad']).isValid()) {
+      jsonData[clave]['fecha_caducidad'] = null;
+    }
+    if (!moment(jsonData[clave]['fecha_compra']).isValid()) {
+      jsonData[clave]['fecha_compra'] = null;
+    }
+  }
+  setDataSource(jsonData);
+}
 
   useEffect(() => {
     if (isRefresh) {
