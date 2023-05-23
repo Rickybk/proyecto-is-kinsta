@@ -104,7 +104,7 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
                 Añadir Contacto
             </Button>
             <Modal
-                title={idCliente ? "Editar Contacto" : "Añadir Contacto"}
+                title="Añadir Cliente"
                 style={{
                     top: 0,
                     left: "37%",
