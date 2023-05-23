@@ -72,7 +72,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_venta !== id_venta);
       setDataSource(newData);
-      message.success("La venta se elimino correctamente");
+      message.success("La venta se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicaion con el server');
     }

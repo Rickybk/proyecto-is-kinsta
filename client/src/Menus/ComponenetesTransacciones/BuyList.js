@@ -81,7 +81,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_lote !== id_lote);
       setDataSource(newData);
-      message.success("La compra se elimino correctamente");
+      message.success("La compra se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicaion con el server');
     }
