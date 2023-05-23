@@ -390,6 +390,12 @@ const createSales = async (req, res) => {
       precio_unitario
     } = req.body;
    
+    // Verificar si el cliente existe antes de realizar la venta
+    const clienteExistente = await pool.query("SELECT * FROM clientes WHERE id_cliente = $1", [id_cliente]);
+    if (clienteExistente.rows.length === 0) {
+      return res.status(404).json({ data: 2 });
+    }
+    
     const fechaActual = new Date();
     const year = fechaActual.getFullYear();
     const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
