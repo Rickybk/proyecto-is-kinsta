@@ -293,7 +293,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
                   width: 200,
                   border: '2px solid #d9d9d9',
                   borderRadius: 8,
-                  backgroundColor: '#E7D5C7' 
+                  backgroundColor: '#ecdde1' 
                   
               }}
               maxLength='20'

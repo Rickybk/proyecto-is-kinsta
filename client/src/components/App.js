@@ -22,16 +22,13 @@ function App() {
             theme={{
                 
                 "token": {
-                    "colorPrimary": "#83563f",
-                    "colorPrimaryBorder": "#4da8cf",
-                    "colorPrimaryBorderHover": "#abdefa",
-                    "colorSuccess": "#b86fd6",
+                    "colorPrimary": "#6b2c4b",
+                    "colorInfo": "#ed153d",
+                    "colorBgContainer": "#ecdde1",
+                    "colorBgElevated": "#edd5d5",
                     "colorWarning": "#ff9966",
                     "colorError": "#eb636b",
-                    "colorInfo": "#77ddec",
-                    "colorBgContainer": "#E7D5C7",
-                    "colorBgElevated": "#f5e5d0",
-                    "colorBgLayout": "#F8EDE3"
+                    "colorTextPlaceholder":"#666666",
                 }
                 //algorithm: theme.darkAlgorithm
             }}
@@ -110,7 +107,7 @@ function Content() {
                 style={{
                     padding: 0,
                     textAlign: 'center',
-                    background: '#E7D5C7'
+                    background: '#ecdde1'
                 }}
                 className='header'
                 theme
