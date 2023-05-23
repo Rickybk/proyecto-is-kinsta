@@ -317,7 +317,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
           <span>
 
             <Popconfirm
-              title="¿Estas seguro el contacto del cliente?"
+              title="¿Estas seguro de editar los datos del cliente?"
               onConfirm={async () => {
                 try {
                   await save(record.id_cliente);
