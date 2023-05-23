@@ -218,7 +218,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_cliente !== idCliente);
       setDataSource(newData);
-      message.success("El contacto del cliente se elimino correctamente");
+      message.success("El contacto del cliente se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicacion con el server');
     }
