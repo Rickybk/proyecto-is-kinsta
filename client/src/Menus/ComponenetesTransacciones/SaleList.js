@@ -239,7 +239,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
             </Typography.Link>
 
             <Typography.Link >
-              <Popconfirm title={"¿Estas seguro de eliminar esta venta?"} onConfirm={() => handleDelete(record.id_venta)}>
+              <Popconfirm title={"¿Estás seguro de eliminar esta venta?"} onConfirm={() => handleDelete(record.id_venta)}>
                 <Button name="eliminar"
                 ><DeleteOutlined /></Button>
               </Popconfirm>
