@@ -101,7 +101,7 @@ const ClientModal = ({ setRefresh,idCliente,nombreCliente,telefono}) => {
                 type={idCliente ? "default" : "primary"} 
                 onClick={showModal}
             >
-                Añadir Contacto
+                Añadir Cliente
             </Button>
             <Modal
                 title="Añadir Cliente"
