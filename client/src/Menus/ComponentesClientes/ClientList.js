@@ -243,7 +243,9 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     });
 
     console.log(res);
-    if (res.status === 200) {
+    if (res.status === 404) {
+      message.warning('El Cliente no existe, por favor actualice la sección');
+    }else if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
@@ -277,7 +279,6 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     }else{
       message.warning('Problemas de comunicacion con el server');
     }
-    
 
   };
 

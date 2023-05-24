@@ -59,10 +59,11 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
             headers: { "Content-Type": "application/json" }
         });
         const jsonData = await res.json();
+        console.log(jsonData.data)
         if (jsonData.data === 1) {
             return 1;
         }
-        if (jsonData.error === 'No se pudo realizar la venta.') {
+        if (jsonData.data === 2) {
             return 2;
         }
         return jsonData;
