@@ -72,7 +72,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_venta !== id_venta);
       setDataSource(newData);
-      message.success("La venta se elimino correctamente");
+      message.success("La venta se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicaion con el server');
     }
@@ -239,7 +239,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
             </Typography.Link>
 
             <Typography.Link >
-              <Popconfirm title={"¿Estas seguro de eliminar esta venta?"} onConfirm={() => handleDelete(record.id_venta)}>
+              <Popconfirm title={"¿Estás seguro de eliminar esta venta?"} onConfirm={() => handleDelete(record.id_venta)}>
                 <Button name="eliminar"
                 ><DeleteOutlined /></Button>
               </Popconfirm>
@@ -294,7 +294,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
                   width: 200,
                   border: '2px solid #d9d9d9',
                   borderRadius: 8,
-                  backgroundColor: '#E7D5C7' 
+                  backgroundColor: '#ecdde1' 
                   
               }}
               maxLength='20'

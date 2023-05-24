@@ -288,7 +288,7 @@ const handleInputChange = (event) => {
                     </Typography.Link>
 
                     <Typography.Link >
-                        <Popconfirm title={"¿Está seguro de querer eliminar al proveedor?"} onConfirm={() => handleDelete(record.id_proveedor)}>
+                        <Popconfirm title={"¿Estás seguro de eliminar al proveedor?"} onConfirm={() => handleDelete(record.id_proveedor)}>
                             <Button name="eliminar"><DeleteOutlined /></Button>
                         </Popconfirm>
                     </Typography.Link>

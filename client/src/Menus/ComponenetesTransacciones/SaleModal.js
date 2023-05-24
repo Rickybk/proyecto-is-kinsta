@@ -25,9 +25,13 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
         if (validData()) {
             saveData();
             const respuesta = await uploadDB();
-            setRefresh(true);
+            if (respuesta === 2){
+                message.warning('El cliente seleccionado no existe, por favor actualice la sección');
+            }else{
+                setRefresh(true);
             message.success("Venta realizada exitosamente");
             closeModal();
+            }           
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
@@ -55,8 +59,12 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
             headers: { "Content-Type": "application/json" }
         });
         const jsonData = await res.json();
+        console.log(jsonData.data)
         if (jsonData.data === 1) {
             return 1;
+        }
+        if (jsonData.data === 2) {
+            return 2;
         }
         return jsonData;
     }

@@ -46,14 +46,22 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   } ,[aux, dataSource, setDataSource]);
 
   async function fetchData() {
-    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
-    const jsonData = await response.json();
-    for (var clave in jsonData){
-      jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-      jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
-    }
-    setDataSource(jsonData);
+  const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+  const jsonData = await response.json();
+  for (var clave in jsonData){
+    jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
+    jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
   }
+  for (var clave in jsonData){
+    if (!moment(jsonData[clave]['fecha_caducidad']).isValid()) {
+      jsonData[clave]['fecha_caducidad'] = null;
+    }
+    if (!moment(jsonData[clave]['fecha_compra']).isValid()) {
+      jsonData[clave]['fecha_compra'] = null;
+    }
+  }
+  setDataSource(jsonData);
+}
 
   useEffect(() => {
     if (isRefresh) {
@@ -73,7 +81,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_lote !== id_lote);
       setDataSource(newData);
-      message.success("La compra se elimino correctamente");
+      message.success("La compra se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicaion con el server');
     }
@@ -285,7 +293,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
                   width: 200,
                   border: '2px solid #d9d9d9',
                   borderRadius: 8,
-                  backgroundColor: '#E7D5C7' 
+                  backgroundColor: '#ecdde1' 
                   
               }}
               maxLength='20'

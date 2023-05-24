@@ -218,7 +218,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     if (res.status === 200) {
       const newData = dataSource.filter((item) => item.id_cliente !== idCliente);
       setDataSource(newData);
-      message.success("El contacto del cliente se elimino correctamente");
+      message.success("El contacto del cliente se eliminó correctamente");
     } else {
       message.warning('Problemas de comunicacion con el server');
     }
@@ -243,7 +243,9 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     });
 
     console.log(res);
-    if (res.status === 200) {
+    if (res.status === 404) {
+      message.warning('El Cliente no existe, por favor actualice la sección');
+    }else if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
@@ -277,7 +279,6 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     }else{
       message.warning('Problemas de comunicacion con el server');
     }
-    
 
   };
 
@@ -317,7 +318,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
           <span>
 
             <Popconfirm
-              title="¿Estas seguro el contacto del cliente?"
+              title="¿Estás seguro de editar los datos del cliente?"
               onConfirm={async () => {
                 try {
                   await save(record.id_cliente);
