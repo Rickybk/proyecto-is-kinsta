@@ -391,8 +391,10 @@ const createSales = async (req, res) => {
     } = req.body;
    
     // Verificar si el cliente existe antes de realizar la venta
-    const clienteExistente = await pool.query("SELECT * FROM clientes WHERE id_cliente = $1", [id_cliente]);
-    if (clienteExistente) {
+    const clienteExistente = await pool.query("SELECT nombre_cliente, num_cliente FROM clientes WHERE id_cliente = $1", [id_cliente]);
+    if (clienteExistente.rows.length > 0) {
+      
+    }else{
       return res.status(404).json({ data: 2 });
     }
     
@@ -418,6 +420,7 @@ const createSales = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "No se pudo realizar la venta." });
   }
+
 };
 
 const updateSales = async (req, res) => {
