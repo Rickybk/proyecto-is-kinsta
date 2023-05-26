@@ -341,7 +341,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
             </Typography.Link>
 
             <Typography.Link >
-              <Popconfirm title={"¿Estas seguro de eliminar esta compra?"} onConfirm={() => handleDelete(record.id_cliente)}>
+              <Popconfirm title={"¿Estás seguro de eliminar al Cliente?"} onConfirm={() => handleDelete(record.id_cliente)}>
                 <Button name="eliminar"
                 ><DeleteOutlined /></Button>
               </Popconfirm>
