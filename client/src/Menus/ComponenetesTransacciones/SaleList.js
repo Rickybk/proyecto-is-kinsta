@@ -131,7 +131,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
       message.success("La venta se modificó correctamente");
     } else {
-      message.warning('Problemas de comunicaion con el server');
+      message.warning('Problemas de comunicación con el server');
     }
 
   };
@@ -216,7 +216,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
           <span>
 
             <Popconfirm
-              title="¿Estas seguro de editar la venta?"
+              title="¿Estás seguro de editar la venta?"
               onConfirm={async () => {
                 try {
                   await save(record.id_venta);

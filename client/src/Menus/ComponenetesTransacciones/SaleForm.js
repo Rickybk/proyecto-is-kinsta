@@ -57,11 +57,11 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                     label="Cantidad"
                     labelCol={{ span: 24 }}
                     name="cantidad"
-                    initialValue={0}
+                    initialValue={1}
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor la cantidad del producto!'
+                            message: 'Por favor ingrese la cantidad del producto!'
                         },
                     ]}
                 >
@@ -69,7 +69,7 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                         style={{ width: '100%' }}
                         prefix="U."
                         id="cantidad"
-                        min={0}
+                        min={1}
                         max={cantidadMax}
                         maxLength={6}
                         onKeyDown={numberInputKeyDown}
