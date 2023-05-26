@@ -564,9 +564,8 @@ const updateAClient = async (req, res) => {
     const { idCliente } = req.params;
     const { nombre_cliente, num_cliente } = req.body;
     const existingClientResult = await pool.query("SELECT * FROM clientes WHERE id_cliente = $1",[idCliente]);
-    if (existingClientResult) {
-      return res.status(404).json({ error: 'Cliente no encontrado' });
-    }
+    if (existingClientResult.rows.length>0) {
+    }else{return res.status(404).json({ error: 'Cliente no encontrado' });}
     const duplicateClientResult = await pool.query(
       "SELECT * FROM clientes WHERE LOWER(nombre_cliente) = LOWER($1) AND id_cliente != $2",
       [nombre_cliente, idCliente]
