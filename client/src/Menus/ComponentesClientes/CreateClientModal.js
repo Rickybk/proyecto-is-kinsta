@@ -24,11 +24,19 @@ const CreateClientModal = ({handleOk,setRefresh}) => {
                 {"Crear"}
             </Button>
             <Modal
-                title={"¿Está seguro de crear el contacto de Cliente?"}
+                title={"¿Estás seguro de registrar al cliente?"}
                 open={isModalOpen}
                 onCancel={handleCancel}
                 onOk={handleOkModal}
-                width="25%"
+                width="30%"
+                footer={[
+                    <Button id="boton" form="editForm" key="edit" type="primary" onClick={handleOkModal}>
+                        Ok
+                    </Button>,
+                    <Button key="cancel" onClick={handleCancel}>
+                        Cancelar
+                    </Button>
+                ]}
                 destroyOnClose="true"
             >
 
