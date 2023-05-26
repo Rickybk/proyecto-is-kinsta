@@ -58,7 +58,7 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
       }
       actions={[
         <>
-          <Button name="modalSale" onClick={openSaleModal}><ShoppingCartOutlined /></Button>
+          <Button name="modalSale" onClick={openSaleModal} disabled={cantidad === 0}><ShoppingCartOutlined /></Button>
           <SaleModal
             visible={saleModal}
             onClose={closeSaleModal}
