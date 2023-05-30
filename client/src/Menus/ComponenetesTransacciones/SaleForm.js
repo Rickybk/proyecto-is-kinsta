@@ -7,6 +7,7 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
     const [value, setValue] = useState(1);
     const [enable, setEnable] = useState(false);
     const [clientes, setClientes] = useState([]);
+    const filteredClientes = clientes.filter(cat => !(value === 2 && cat.id_cliente === 7));
 
     useEffect(() => {
         fetchClientes();
@@ -104,20 +105,20 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                     <Select
                         id="cliente"
                         listHeight={150}
-                        defaultValue={7}
+                        //defaultValue={value === 1 ? 7 : undefined}
                         showSearch 
                         style={{ width: '100%' }}
                         placeholder="Buscar cliente"
                         optionFilterProp="children"
-                        onChange={setCliente}
+                        onChange={value === 2 ? () => setCliente('') : setCliente}
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
                     >
-                        {clientes.map(cat => (
-                            <Select.Option key={cat.id_cliente} value={cat.id_cliente} label={cat.nombre_cliente}>
-                                {cat.nombre_cliente}
-                            </Select.Option>
+                        {filteredClientes.map(cat => (
+                                <Select.Option key={cat.id_cliente} value={cat.id_cliente} label={cat.nombre_cliente}>
+                                    {cat.nombre_cliente}
+                                </Select.Option>
                         ))}
                     </Select>
                 </Form.Item>
