@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react';
 
 const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, setFiado }) => {
 
-    const [cantidad, setCantidad] = useState(0);
+    const [cantidad, setCantidad] = useState(1);
     const [value, setValue] = useState(1);
     const [enable, setEnable] = useState(false);
     const [clientes, setClientes] = useState([]);
 
     useEffect(() => {
         fetchClientes();
-    },);
+    },[]);
 
     async function fetchClientes() {
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients`);
         const jsonData = await response.json();
-        setClientes(jsonData);
+        const updatedData = jsonData.filter(item => item.id_cliente !== 7);
+        setClientes(updatedData);
     }
 
     const numberInputKeyDown = (e) => {
@@ -104,7 +105,7 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                     <Select
                         id="cliente"
                         listHeight={150}
-                        defaultValue={7}
+                        //defaultValue={value === 1 ? 7 : undefined}
                         showSearch 
                         style={{ width: '100%' }}
                         placeholder="Buscar cliente"
@@ -115,9 +116,9 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                         }
                     >
                         {clientes.map(cat => (
-                            <Select.Option key={cat.id_cliente} value={cat.id_cliente} label={cat.nombre_cliente}>
-                                {cat.nombre_cliente}
-                            </Select.Option>
+                                <Select.Option key={cat.id_cliente} value={cat.id_cliente} label={cat.nombre_cliente}>
+                                    {cat.nombre_cliente}
+                                </Select.Option>
                         ))}
                     </Select>
                 </Form.Item>

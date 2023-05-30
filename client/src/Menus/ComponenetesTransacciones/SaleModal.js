@@ -15,7 +15,7 @@ function setFiado(esFiado) {
     fiado = esFiado;
 }
 
-function setCliente(cliente){
+function setCliente(cliente) {
     values.id_cliente = cliente;
 }
 
@@ -25,13 +25,15 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
         if (validData()) {
             saveData();
             const respuesta = await uploadDB();
-            if (respuesta === 2){
+            if (respuesta === 2) {
                 message.warning('El cliente seleccionado no existe, por favor actualice la sección');
-            }else{
+            } else {
                 setRefresh(true);
-            message.success("Venta realizada exitosamente");
-            closeModal();
-            }           
+                message.success("Venta realizada exitosamente");
+                setFiado(false);
+                setCliente(7);
+                closeModal();
+            }
         } else {
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
@@ -40,6 +42,9 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
     function validData() {
         var valid = true;
         if (!document.getElementById("cantidad").value) {
+            valid = false;
+        }
+        if (values.id_cliente === 7 && fiado) {
             valid = false;
         }
         return valid;
@@ -53,13 +58,12 @@ const SaleModal = ({ setRefresh, nombreProducto, idProducto, precioUnitario, can
     }
 
     const uploadDB = async () => {
-        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/`+ (fiado ? 2 : 1), {
+        const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + (fiado ? 2 : 1), {
             method: "POST",
             body: JSON.stringify(values),
             headers: { "Content-Type": "application/json" }
         });
         const jsonData = await res.json();
-        console.log(jsonData.data)
         if (jsonData.data === 1) {
             return 1;
         }

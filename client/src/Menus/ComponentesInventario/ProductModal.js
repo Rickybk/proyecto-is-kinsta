@@ -1,4 +1,4 @@
-import { Button, Modal, message } from 'antd';
+import { Button, Modal, Tooltip, message } from 'antd';
 import { useState } from 'react';
 import ProductForm from './ProductForm'
 import CreateModal from './CreateModal';
@@ -120,9 +120,12 @@ const ProductModal = ({ setRefresh, elegido, setElegido, imagen, idProducto, idC
 
     return (
         <>
+            <Tooltip title={idProducto ? "Editar" : ""} >
             <Button  type={idProducto ? "default" : "primary"} onClick={showModal}>
                 {idProducto ? <EditOutlined /> : "Añadir Producto"}
             </Button>
+            </Tooltip>
+            
             <Modal
                 className="modal"
                 title={idProducto ? "Editar Producto" : "Añadir Producto"}
