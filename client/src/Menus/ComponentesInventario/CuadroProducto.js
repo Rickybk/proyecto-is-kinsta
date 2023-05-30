@@ -1,5 +1,5 @@
 import { DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Card, Button } from 'antd';
+import { Card, Button, Tooltip } from 'antd';
 import EditarModal from './ProductModal'
 import DeleteModal from './DeleteModal';
 import BuyModal from '../ComponenetesTransacciones/BuyModal';
@@ -7,7 +7,7 @@ import SaleModal from '../ComponenetesTransacciones/SaleModal';
 import React, { useState } from 'react';
 import defaultLogo from '../../Imagenes/Logo Peq.png'
 
-function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, descripcion, setRefresh ,setElegido}) {
+function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, descripcion, setRefresh, setElegido }) {
 
   const [modalBorrar, setBorrar] = useState(false);
   const [buyModal, setBuy] = useState(false);
@@ -58,7 +58,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
       }
       actions={[
         <>
-          <Button name="modalSale" onClick={openSaleModal} disabled={cantidad === 0}><ShoppingCartOutlined /></Button>
+          <Tooltip title="Venta">
+            <Button name="modalSale" onClick={openSaleModal} disabled={cantidad === 0}><ShoppingCartOutlined /></Button>
+          </Tooltip>
           <SaleModal
             visible={saleModal}
             onClose={closeSaleModal}
@@ -72,7 +74,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
         </>,
 
         <>
-          <Button name="modalBuy" onClick={openBuyModal}><DollarOutlined/></Button>
+          <Tooltip title="Compra">
+            <Button name="modalBuy" onClick={openBuyModal}><DollarOutlined /></Button>
+          </Tooltip>
           <BuyModal
             visible={buyModal}
             onClose={closeBuyModal}
@@ -95,7 +99,9 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
           />
         </>,
         <>
-          <Button name="modalBorrar" onClick={abrirModalBorrar}><DeleteOutlined /></Button>
+          <Tooltip title="Eliminar">
+            <Button name="modalBorrar" onClick={abrirModalBorrar}><DeleteOutlined /></Button>
+          </Tooltip>
           <DeleteModal
             visible={modalBorrar}
             onClose={cerrarModalBorrar}
