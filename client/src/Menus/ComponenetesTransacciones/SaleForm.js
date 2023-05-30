@@ -3,20 +3,20 @@ import { useEffect, useState } from 'react';
 
 const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, setFiado }) => {
 
-    const [cantidad, setCantidad] = useState(0);
+    const [cantidad, setCantidad] = useState(1);
     const [value, setValue] = useState(1);
     const [enable, setEnable] = useState(false);
     const [clientes, setClientes] = useState([]);
-    const filteredClientes = clientes.filter(cat => !(value === 2 && cat.id_cliente === 7));
 
     useEffect(() => {
         fetchClientes();
-    },);
+    },[]);
 
     async function fetchClientes() {
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients`);
         const jsonData = await response.json();
-        setClientes(jsonData);
+        const updatedData = jsonData.filter(item => item.id_cliente !== 7);
+        setClientes(updatedData);
     }
 
     const numberInputKeyDown = (e) => {
@@ -110,12 +110,12 @@ const SaleForm = ({ nombreProducto, precioUnitario, cantidadMax, setCliente, set
                         style={{ width: '100%' }}
                         placeholder="Buscar cliente"
                         optionFilterProp="children"
-                        onChange={value === 2 ? () => setCliente('') : setCliente}
+                        onChange={setCliente}
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
                     >
-                        {filteredClientes.map(cat => (
+                        {clientes.map(cat => (
                                 <Select.Option key={cat.id_cliente} value={cat.id_cliente} label={cat.nombre_cliente}>
                                     {cat.nombre_cliente}
                                 </Select.Option>

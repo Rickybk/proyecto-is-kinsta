@@ -22,7 +22,7 @@ function App() {
             theme={{
                 
                 "token": {
-                    "fontSize": 16.5,
+                    "fontSize": 15.5,
                     "colorPrimary": "#6b2c4b",
                     "colorInfo": "#ed153d",
                     "colorBgContainer": "#ecdde1",
