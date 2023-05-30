@@ -44,17 +44,20 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
         textAlign: 'center'
       }}
       cover={
-        <img
-          style={{
-            width: 110,
-            height: 150,
-            objectFit: 'cover',
-            margin: 'auto',
-            marginTop: '20px'
-          }}
-          alt="Algo salio mal..."
-          src={imagen === "Sin imagen" ? defaultLogo : imagen}
-        />
+        <Tooltip title={descripcion} placement="right">
+          <img
+            style={{
+              width: 110,
+              height: 150,
+              objectFit: 'cover',
+              margin: 'auto',
+              marginTop: '20px'
+            }}
+            alt="Algo salio mal..."
+            src={imagen === "Sin imagen" ? defaultLogo : imagen}
+          />
+        </Tooltip>
+
       }
       actions={[
         <>
@@ -112,7 +115,7 @@ function Productos({ title, imagen, precio, cantidad, idProducto, idCategoria, d
           />
         </>
       ]}
-      title={<b>{title}</b>}
+      title={title}
     >
       <p><b>Precio U: </b>{precio} Bs.</p>
       <p><b>Cantidad: </b>{cantidad} U.</p>

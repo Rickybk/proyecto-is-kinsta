@@ -22,6 +22,7 @@ function App() {
             theme={{
                 
                 "token": {
+                    "fontSize": 16.5,
                     "colorPrimary": "#6b2c4b",
                     "colorInfo": "#ed153d",
                     "colorBgContainer": "#ecdde1",
@@ -68,7 +69,7 @@ function SideMenu() {
                 <Menu
                     mode="inline"
                     style={{
-                        fontSize: 16,
+                        //fontSize: 16,
                         height: '100vh'
                     }}
                     onClick={({ key }) => { navigate(key) }}
