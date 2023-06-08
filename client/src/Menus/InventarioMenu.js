@@ -12,11 +12,9 @@ function MenuInventario() {
   }
 
   return (
-    <div>
-      <div className="row">
-        <ProductList setRefresh={setRefresh} isRefresh={isRefresh}/>
+      <div>
+        <ProductList setRefresh={setRefresh} isRefresh={isRefresh} />
       </div>
-    </div>
   );
 }
 
