@@ -1,9 +1,9 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input } from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
-
+import "./BuyList.css";
 import EditableCell from "./EditableCell";
 
 const { Search } = Input;
@@ -12,6 +12,10 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
   const aux = useState(isRefresh);
   const [search, setSearch] = useState('');
+
+  //Para la seleccion de fechas
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
 
   const [form] = Form.useForm();
 
@@ -33,6 +37,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [copia,setCopia] = useState([]);
   const [dataSourceCliente, setDataSourceCliente] = useState([]);
 
 
@@ -60,6 +65,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
       jsonData[clave]['tipo_venta'] = jsonData[clave]['tipo_venta'] === 1 ? 'Contado' : 'Credito';
     }
     setDataSource(jsonData);
+    setCopia(jsonData);
   }
   async function fetchData2() {
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
@@ -160,6 +166,36 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     }
   };
 
+  const handleDateChange = (date,dateString) => {
+    if(dateString !== null){
+        setDesde(dateString);
+        filterData(dateString,hasta)
+    }
+  };
+
+  const handleDateChange2 = (date,dateString) => {
+    if(dateString !== null){
+      setHasta(dateString);
+      filterData(desde,dateString)
+    }
+  };
+
+  const filterData = (start, end) => {
+    console.log(start);
+    console.log(end);
+    const filtered = copia.filter((item) => {
+      const itemDate = new Date(item.fecha_venta); // Asume que hay una propiedad "date" en cada objeto del JSON
+      // Filtrar si la fecha está dentro del rango seleccionado
+      if(start !== "" && end === ""){
+        return itemDate >= new Date(start);
+      }else if(end !== "" && start === ""){
+        return itemDate <= new Date(end);  
+      }else if(start !== "" && end !== ""){
+        return itemDate >= new Date(start) && itemDate <= new Date(end);
+      }
+    });
+    setDataSource(filtered);
+  };
 
   const columns = [
     {
@@ -284,22 +320,27 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     <div
       style={{width: '90%'}}
     >
-      <Search
-              className='search'
-              placeholder="Buscar producto"
-              bordered={false}
-              onChange={handleInputChange}
-              style={{
-                display:'flex',
-                  width: 200,
-                  border: '2px solid #d9d9d9',
-                  borderRadius: 8,
-                  backgroundColor: '#ecdde1' 
-                  
-              }}
-              maxLength='20'
-            />
-      
+      <div className='botones'>
+        <Search
+                className='search'
+                placeholder="Buscar producto"
+                bordered={false}
+                onChange={handleInputChange}
+                style={{
+                  display:'flex',
+                    width: 200,
+                    border: '2px solid #d9d9d9',
+                    borderRadius: 8,
+                    backgroundColor: '#ecdde1' 
+                    
+                }}
+                maxLength='20'
+              />
+        
+        <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
+        <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
+      </div>          
+
         <Form form={form} component={false}
         >
           <Table className='tabla'

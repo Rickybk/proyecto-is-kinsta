@@ -1,9 +1,10 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
 import EditableCell from "./EditableCell";
+import "./BuyList.css";
 
 const { Search } = Input;
 
@@ -14,6 +15,9 @@ const BuyList = ({ setRefresh, isRefresh }) => {
 
   const [form] = Form.useForm();
 
+  //Para la seleccion de fechas
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
 
   const [editingid_lote, setEditingid_lote] = useState('');
   const isEditing = (record) => record.id_lote === editingid_lote;
@@ -25,7 +29,6 @@ const BuyList = ({ setRefresh, isRefresh }) => {
       ...record,
     });
     setEditingid_lote(record.id_lote);
-
   };
 
   const cancel = () => {
@@ -33,9 +36,8 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [copia,setCopia] = useState([]);
   const [dataSoureceProveedor, setDataSourceProveedor] = useState([]);
-
-
 
 
   useEffect(() => {
@@ -61,6 +63,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     }
   }
   setDataSource(jsonData);
+  setCopia(jsonData);
 }
 
   useEffect(() => {
@@ -75,6 +78,36 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     setDataSourceProveedor(jsonData);
   }
 
+  const handleDateChange = (date,dateString) => {
+    if(dateString !== null){
+        setDesde(dateString);
+        filterData(dateString,hasta)
+    }
+  };
+
+  const handleDateChange2 = (date,dateString) => {
+    if(dateString !== null){
+      setHasta(dateString);
+      filterData(desde,dateString)
+    }
+  };
+
+  const filterData = (start, end) => {
+    console.log(start);
+    console.log(end);
+    const filtered = copia.filter((item) => {
+      const itemDate = new Date(item.fecha_compra); // Asume que hay una propiedad "date" en cada objeto del JSON
+      // Filtrar si la fecha está dentro del rango seleccionado
+      if(start !== "" && end === ""){
+        return itemDate >= new Date(start);
+      }else if(end !== "" && start === ""){
+        return itemDate <= new Date(end);  
+      }else if(start !== "" && end !== ""){
+        return itemDate >= new Date(start) && itemDate <= new Date(end);
+      }
+    });
+    setDataSource(filtered);
+  };
 
   const handleDelete = async (id_lote) => {
     const res = await deleteProductDB(id_lote);
@@ -145,7 +178,6 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     }
 
   };
-
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -283,22 +315,26 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     <div
       style={{width: '90%'}}
     >
-      <Search
-              className='search'
-              placeholder="Buscar producto"
-              bordered={false}
-              onChange={handleInputChange}
-              style={{
-                display:'flex',
-                  width: 200,
-                  border: '2px solid #d9d9d9',
-                  borderRadius: 8,
-                  backgroundColor: '#ecdde1' 
-                  
-              }}
-              maxLength='20'
-            />
-      
+      <div className='botones'>
+        <Search
+                className='search'
+                placeholder="Buscar producto"
+                bordered={false}
+                onChange={handleInputChange}
+                style={{
+                  display:'flex',
+                    width: 200,
+                    border: '2px solid #d9d9d9',
+                    borderRadius: 8,
+                    backgroundColor: '#ecdde1' 
+                    
+                }}
+                maxLength='20'
+              />
+        
+        <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
+        <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
+    </div>
         <Form form={form} component={false}
         >
           <Table className='tabla'
