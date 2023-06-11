@@ -1,13 +1,12 @@
 import { Layout, Menu, ConfigProvider, Affix } from 'antd';
 import { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { ShopOutlined, DollarCircleOutlined, TagsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import MenuInventario from '../Menus/InventarioMenu';
 import Categoria from '../Menus/Categoria';
 import MenuTransaccionesCompras from '../Menus/TransaccionesMenu';
 import MenuTransaccionesVentas from '../Menus/TransaccionesVenta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTruck, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faTruck, faUsers, faStore, faTags, faDollarSign, faCartShopping, faCircleDollarToSlot } from '@fortawesome/free-solid-svg-icons'
 import SupplierMenu from '../Menus/SupplierMenu';
 import ClientMenu from '../Menus/ClientMenu';
 import Logo from '../Imagenes/logo-sider2.png';
@@ -69,15 +68,13 @@ function SideMenu() {
                     }}
                     onClick={({ key }) => { navigate(key) }}
                     items={[
-                        { label: "Inventario", key: "/", icon: <ShopOutlined /> },
-                        { label: "Categoría", key: "/categorias", icon: <TagsOutlined /> },
+                        { label: "Inventario", key: "/", icon: <FontAwesomeIcon icon={faStore} /> },
+                        { label: "Categoría", key: "/categorias", icon: <FontAwesomeIcon icon={faTags} /> },
                         {
-                            label: "Transacciones",
-                            key: "/transacciones",
-                            icon: <DollarCircleOutlined />,
+                            label: "Transacciones", key: "/transacciones", icon: <FontAwesomeIcon icon={faCircleDollarToSlot} />,
                             children: [
-                                { label: "Venta", key: "/venta", icon: <ShoppingCartOutlined /> },
-                                { label: "Compra", key: "/compra", icon: <DollarCircleOutlined /> }
+                                { label: "Venta", key: "/venta", icon: <FontAwesomeIcon icon={faCartShopping} /> },
+                                { label: "Compra", key: "/compra", icon: <FontAwesomeIcon icon={faDollarSign} /> }
                             ]
                         },
                         { label: "Clientes", key: "/clientes", icon: <FontAwesomeIcon icon={faUsers} /> },

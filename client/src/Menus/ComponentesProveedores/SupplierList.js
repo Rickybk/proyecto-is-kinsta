@@ -331,7 +331,7 @@ const SupplierList = ({ setRefresh, isRefresh }) => {
         className='header'
         theme
       >
-        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1' }}>Proveedores</h1></div>
+        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white" }}>Proveedores</h1></div>
         <div style={{
           background: '#f5f5f5',
           display: 'flex',
