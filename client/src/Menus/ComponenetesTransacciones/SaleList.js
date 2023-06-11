@@ -1,9 +1,9 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input } from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker, Layout } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
-
+import "./BuyList.css";
 import EditableCell from "./EditableCell";
 
 const { Search } = Input;
@@ -12,6 +12,10 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
   const aux = useState(isRefresh);
   const [search, setSearch] = useState('');
+
+  //Para la seleccion de fechas
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
 
   const [form] = Form.useForm();
 
@@ -33,6 +37,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [copia, setCopia] = useState([]);
   const [dataSourceCliente, setDataSourceCliente] = useState([]);
 
 
@@ -40,26 +45,27 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     if (isRefresh) {
       fetchData();
       setRefresh(false);
-  }
-  } ,[aux, dataSource, setDataSource]);
+    }
+  }, [aux, dataSource, setDataSource]);
 
 
   useEffect(() => {
     if (isRefresh) {
       fetchData2();
       setRefresh(false);
-  }
-  } ,[]);
+    }
+  }, []);
 
   async function fetchData() {
     //http://localhost:8080/store/products/allsales/1
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allsales/1`);
     const jsonData = await response.json();
-    for (var clave in jsonData){
-      jsonData[clave]['fecha_venta'] = moment(jsonData[clave]['fecha_venta']).add(1,'day');
+    for (var clave in jsonData) {
+      jsonData[clave]['fecha_venta'] = moment(jsonData[clave]['fecha_venta']).add(1, 'day');
       jsonData[clave]['tipo_venta'] = jsonData[clave]['tipo_venta'] === 1 ? 'Contado' : 'Credito';
     }
     setDataSource(jsonData);
+    setCopia(jsonData);
   }
   async function fetchData2() {
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
@@ -78,7 +84,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     }
 
   };
-  
+
   const deleteProductDB = async (id_venta) => {
     const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + id_venta, {
       method: "DELETE"
@@ -90,16 +96,16 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     var res;
     const row = await form.validateFields();
     let tipoVenta = 2;
-    if(row.tipo_venta === 'Contado'){
+    if (row.tipo_venta === 'Contado') {
       tipoVenta = 1;
     }
     const elementoEncontrado = dataSource.find(item => item.id_venta === id_venta);
     let precioUnitario;
     if (elementoEncontrado) {
       precioUnitario = elementoEncontrado.precio_unitario;
-      row.precio_total=precioUnitario*row.cantidad_venta;
+      row.precio_total = precioUnitario * row.cantidad_venta;
     }
-    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + id_venta+`/`+tipoVenta, {
+    res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/sales/` + id_venta + `/` + tipoVenta, {
       method: "PUT",
       body: JSON.stringify(row),
       headers: { "Content-Type": "application/json" }
@@ -120,7 +126,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
           setDataSource(newData);
           setEditingid_venta('');
 
-        } else {            
+        } else {
           newData.push(row);
           setDataSource(newData);
           setEditingid_venta('');
@@ -149,7 +155,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
   const handleInputChange = (event) => {
     const value = event.target.value;
     setSearch(value);
-  
+
     if (value === '') {
       fetchData();
     } else {
@@ -160,6 +166,36 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     }
   };
 
+  const handleDateChange = (date, dateString) => {
+    if (dateString !== null) {
+      setDesde(dateString);
+      filterData(dateString, hasta)
+    }
+  };
+
+  const handleDateChange2 = (date, dateString) => {
+    if (dateString !== null) {
+      setHasta(dateString);
+      filterData(desde, dateString)
+    }
+  };
+
+  const filterData = (start, end) => {
+    console.log(start);
+    console.log(end);
+    const filtered = copia.filter((item) => {
+      const itemDate = new Date(item.fecha_venta); // Asume que hay una propiedad "date" en cada objeto del JSON
+      // Filtrar si la fecha está dentro del rango seleccionado
+      if (start !== "" && end === "") {
+        return itemDate >= new Date(start);
+      } else if (end !== "" && start === "") {
+        return itemDate <= new Date(end);
+      } else if (start !== "" && end !== "") {
+        return itemDate >= new Date(start) && itemDate <= new Date(end);
+      }
+    });
+    setDataSource(filtered);
+  };
 
   const columns = [
     {
@@ -194,10 +230,10 @@ const SaleList = ({ setRefresh, isRefresh }) => {
       editable: false,
     },
     {
-        title: 'Cliente',
-        dataIndex: 'nombre_cliente',
-        width: '15%',
-        editable: true,
+      title: 'Cliente',
+      dataIndex: 'nombre_cliente',
+      width: '15%',
+      editable: true,
     },
     {
       title: 'Tipo venta',
@@ -263,12 +299,12 @@ const SaleList = ({ setRefresh, isRefresh }) => {
           col.dataIndex === "precio_total"
             ? "number"
             : col.dataIndex === "fecha_venta"
-            ? "date"
-            : col.dataIndex === "tipo_venta"
-            ? "pago"
-            : col.dataIndex === "nombre_cliente"
-            ? "cliente2"
-            : "text",
+              ? "date"
+              : col.dataIndex === "tipo_venta"
+                ? "pago"
+                : col.dataIndex === "nombre_cliente"
+                  ? "cliente2"
+                  : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         dataSourceCliente,
@@ -277,29 +313,52 @@ const SaleList = ({ setRefresh, isRefresh }) => {
     };
   });
 
-
-
+  const { Header, Content } = Layout;
 
   return (
-    <div
-      style={{width: '90%'}}
-    >
-      <Search
-              className='search'
-              placeholder="Buscar producto"
-              bordered={false}
-              onChange={handleInputChange}
-              style={{
-                display:'flex',
-                  width: 200,
-                  border: '2px solid #d9d9d9',
-                  borderRadius: 8,
-                  backgroundColor: '#ecdde1' 
-                  
-              }}
-              maxLength='20'
-            />
-      
+    <div>
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          background: '#ecdde1'
+        }}
+        className='header'
+        theme
+      >
+        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1' }}>Ventas</h1></div>
+        <div style={{
+          background: '#f5f5f5',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '8%',
+          alignItems: 'center',
+          height: '100%',
+          marginLeft: '0%'
+        }}>
+          <Search
+            className='search'
+            placeholder="Buscar producto"
+            bordered={false}
+            onChange={handleInputChange}
+            style={{
+              display: 'flex',
+              width: 200,
+              border: '2px solid #d9d9d9',
+              borderRadius: 8,
+              backgroundColor: '#ecdde1'
+
+            }}
+            maxLength='20'
+          />
+
+          <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
+          <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
+        </div>
+      </Header>
+
+      <Content style={{ marginTop: '4%', marginLeft: '3%', width: '90%' }}>
         <Form form={form} component={false}
         >
           <Table className='tabla'
@@ -315,12 +374,14 @@ const SaleList = ({ setRefresh, isRefresh }) => {
             pagination={{
               onChange: cancel,
             }}
-            style={{width:'100%',
-                    left:'-20%',
-                    marginTop:'2%'
-           }}
+            style={{
+              width: '100%',
+              left: '-20%',
+              marginTop: '2%'
+            }}
           />
         </Form>
+      </Content>
     </div>
   );
 
