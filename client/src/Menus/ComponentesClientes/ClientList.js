@@ -3,6 +3,7 @@ import { Table, Popconfirm, Button, message, Form, Typography, Input, Layout } f
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import ClientModal from './ClientModal';
+import defaultLogo from '../../Imagenes/imgW.png'
 
 const { Search } = Input;
 
@@ -306,6 +307,20 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       dataIndex: 'num_cliente',
       width: '15%',
       editable: true,
+    },
+    {
+      title: '',
+      dataIndex: 'num_cliente',
+      width: '0.05%',
+      render: (_, record) => {
+        return (
+          <span>
+            <a href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} target="_blank" rel="noopener noreferrer">
+            <img src="https://png.pngtree.com/png-clipart/20221019/original/pngtree-whatsapp-mobile-software-icon-png-image_8704828.png" alt="Contactar" className="img" />
+            </a>
+          </span>
+        );
+      },      
     },
 
     {

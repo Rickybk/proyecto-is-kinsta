@@ -12,3 +12,11 @@
 .column{
     flex-basis: 100%;
 }
+
+.img {
+    width: 40px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
