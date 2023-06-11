@@ -95,5 +95,4 @@ router.get("/store/providers/:idProvider", getAProvider);
 router.post("/store/providers", createAProvider);
 router.delete("/store/providers/:idProvider", deleteProvider);
 router.put("/store/providers/:idProvider", updateAProvider);
-
 module.exports = router;
