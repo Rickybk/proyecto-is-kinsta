@@ -1,4 +1,4 @@
-import { Button, Table, message, Form, Popconfirm, Typography, Input, InputNumber, Layout } from 'antd';
+import { Affix, Button, Table, message, Form, Popconfirm, Typography, Input, InputNumber, Layout } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import SupplierModal from './SupplierModal';
@@ -332,33 +332,35 @@ const SupplierList = ({ setRefresh, isRefresh }) => {
         theme
       >
         <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white" }}>Proveedores</h1></div>
-        <div style={{
-          background: '#f5f5f5',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '8%',
-          alignItems: 'center',
-          height: '100%',
-          marginLeft: '0%'
-        }}>
-          <SupplierModal setRefresh={setRefresh}></SupplierModal>
-          <Search
-            placeholder="Buscar Proveedor"
-            onChange={handleInputChange}
-            style={{
-              display: 'inline-block',
-              width: 200,
-            }}
-          />
-        </div>
       </Header>
 
-      <Content style={{ marginTop: '4%', marginLeft: '3%' }}>
+      <Content style={{ marginTop: '0%', marginLeft: '3%' }}>
+        <Affix offsetTop={64}>
+          <div style={{
+            background: '#f5f5f5',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '8%',
+            alignItems: 'center',
+            height: '75px',
+            marginLeft: '0%'
+          }}>
+            <SupplierModal setRefresh={setRefresh}></SupplierModal>
+            <Search
+              placeholder="Buscar Proveedor"
+              onChange={handleInputChange}
+              style={{
+                display: 'inline-block',
+                width: 200,
+              }}
+            />
+          </div>
+        </Affix>
         <Form form={form} component={false}>
           <Table
             style={{
               marginRight: "8%",
-              marginTop: "2%"
+              marginTop: "0%"
             }}
             components={{
               body: {
