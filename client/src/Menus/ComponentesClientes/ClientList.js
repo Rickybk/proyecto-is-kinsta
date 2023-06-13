@@ -1,9 +1,10 @@
 import './ListaBotones.css';
 import { Affix, Table, Popconfirm, Button, message, Form, Typography, Input, Layout } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined,WhatsAppOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import ClientModal from './ClientModal';
 import defaultLogo from '../../Imagenes/imgW.png'
+import './ClientList.css';
 
 const { Search } = Input;
 
@@ -304,7 +305,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       editable: true,
     },
     {
-      title: 'Número Teléfono/Celular',
+      title: 'Número de Celular',
       dataIndex: 'num_cliente',
       width: '15%',
       editable: true,
@@ -315,11 +316,10 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       width: '0.05%',
       render: (_, record) => {
         return (
-          <span>
-            <a href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} target="_blank" rel="noopener noreferrer">
-              <img src="https://png.pngtree.com/png-clipart/20221019/original/pngtree-whatsapp-mobile-software-icon-png-image_8704828.png" alt="Contactar" className="img" />
-            </a>
-          </span>
+          <Button href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} 
+          className='whatsapp' target='_blank' 
+          style={{backgroundColor:'#ecdde1'}}><WhatsAppOutlined 
+          style={{color:'#0df053', fontSize:'18px'}}/></Button>
         );
       },
     },

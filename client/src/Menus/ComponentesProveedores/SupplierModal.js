@@ -32,12 +32,18 @@ const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numProveedor,
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
-                message.error("El proveedor " + values.nombreProveedor + " ya existe ");
-            } else {
+                message.error("El proveedor " + values.nombreProveedor + " ya existe");
+            }else if(respuesta === 2){
+                message.error("Ya tiene un contacto con el número " + values.numProveedor );
+            }else {
                 message.success("Proveedor creado exitosamente");
-                document.getElementById("supplierForm").reset();         
+                document.getElementById("supplierForm").reset();          
             }
         } else {
+            var tel = document.getElementById("referencia").value
+            if(!verificarPrimerDigito(tel)){
+                message.warning('El número a registrar debe comenzar con 6-7');
+            }
             message.warning('Todos los campos obligatorios deben llenarse correctamente');
         }
     };
@@ -45,14 +51,25 @@ const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numProveedor,
     function validData() {
         var valid = true;
         var nombre = document.getElementById("nombre").value;
+        var tel = document.getElementById("referencia").value;
+        //recuerda validar el telefono
         if (!nombre || nombre.length < 3) {
             valid = false;
         }
-        if (!document.getElementById("referencia").value) {
+
+        if(!verificarPrimerDigito(tel)){
             valid = false;
         }
         return valid;
     }
+
+    function verificarPrimerDigito(string) {
+        if (/^[67]/.test(string)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
     const saveData = () => {
         values.nombreProveedor = document.getElementById("nombre").value;

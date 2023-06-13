@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import moment from "moment";
 import "./BuyList.css";
 import EditableCell from "./EditableCell";
+import defaultLogo from '../../Imagenes/Logo Peq.png';
 
 const { Search } = Input;
 
@@ -201,6 +202,20 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
   const columns = [
     {
+      title: '',
+      dataIndex: 'imagen',
+      width: '10%',
+      editable: false,
+      render: (_, record) => {
+        return (
+          <span>
+            <img src= {record.imagen === "Sin imagen" ? defaultLogo : record.imagen} alt="Imagen_Producto" className="img" />
+          </span>
+        );
+      },      
+    },
+	
+    {
       title: 'Producto',
       dataIndex: 'nombre_producto',
       width: '15%',
@@ -298,7 +313,9 @@ const SaleList = ({ setRefresh, isRefresh }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "precio_total"
+        col.dataIndex === "imagen"
+            ? "image"
+          : col.dataIndex === "precio_total"
             ? "number"
             : col.dataIndex === "fecha_venta"
               ? "date"
