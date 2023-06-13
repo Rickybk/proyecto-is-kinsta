@@ -32,7 +32,7 @@ const SupplierModal = ({ setRefresh, idProveedor, nombreProveedor, numProveedor,
             const respuesta = await uploadDB();
             setRefresh(true);
             if (respuesta === 1) {
-                message.error("El proveedor" + values.nombreProveedor + " ya existe ");
+                message.error("El proveedor " + values.nombreProveedor + " ya existe ");
             } else {
                 message.success("Proveedor creado exitosamente");
                 document.getElementById("supplierForm").reset();         

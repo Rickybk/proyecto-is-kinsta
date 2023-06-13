@@ -1,9 +1,10 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker, Layout } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
 import EditableCell from "./EditableCell";
+import "./BuyList.css";
 
 const { Search } = Input;
 
@@ -14,6 +15,9 @@ const BuyList = ({ setRefresh, isRefresh }) => {
 
   const [form] = Form.useForm();
 
+  //Para la seleccion de fechas
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
 
   const [editingid_lote, setEditingid_lote] = useState('');
   const isEditing = (record) => record.id_lote === editingid_lote;
@@ -25,7 +29,6 @@ const BuyList = ({ setRefresh, isRefresh }) => {
       ...record,
     });
     setEditingid_lote(record.id_lote);
-
   };
 
   const cancel = () => {
@@ -33,48 +36,78 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   };
 
   const [dataSource, setDataSource] = useState([]);
+  const [copia, setCopia] = useState([]);
   const [dataSoureceProveedor, setDataSourceProveedor] = useState([]);
-
-
 
 
   useEffect(() => {
     if (isRefresh) {
       fetchData();
       setRefresh(false);
-  }
-  } ,[aux, dataSource, setDataSource]);
+    }
+  }, [aux, dataSource, setDataSource]);
 
   async function fetchData() {
-  const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
-  const jsonData = await response.json();
-  for (var clave in jsonData){
-    jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1,'day');
-    jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1,'day');
-  }
-  for (var clave in jsonData){
-    if (!moment(jsonData[clave]['fecha_caducidad']).isValid()) {
-      jsonData[clave]['fecha_caducidad'] = null;
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/allbuy/1`);
+    const jsonData = await response.json();
+    for (var clave in jsonData) {
+      jsonData[clave]['fecha_caducidad'] = moment(jsonData[clave]['fecha_caducidad']).add(1, 'day');
+      jsonData[clave]['fecha_compra'] = moment(jsonData[clave]['fecha_compra']).add(1, 'day');
     }
-    if (!moment(jsonData[clave]['fecha_compra']).isValid()) {
-      jsonData[clave]['fecha_compra'] = null;
+    for (var clave in jsonData) {
+      if (!moment(jsonData[clave]['fecha_caducidad']).isValid()) {
+        jsonData[clave]['fecha_caducidad'] = null;
+      }
+      if (!moment(jsonData[clave]['fecha_compra']).isValid()) {
+        jsonData[clave]['fecha_compra'] = null;
+      }
     }
+    setDataSource(jsonData);
+    setCopia(jsonData);
   }
-  setDataSource(jsonData);
-}
 
   useEffect(() => {
     if (isRefresh) {
       fetchData2();
       setRefresh(false);
-  }
-  } ,[]);
+    }
+  }, []);
   async function fetchData2() {
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/providers/`);
     const jsonData = await response.json();
     setDataSourceProveedor(jsonData);
   }
 
+  const handleDateChange = (date, dateString) => {
+    if (dateString !== null) {
+      setDesde(dateString);
+      filterData(dateString, hasta)
+    }
+  };
+
+  const handleDateChange2 = (date, dateString) => {
+    if (dateString !== null) {
+      setHasta(dateString);
+      filterData(desde, dateString)
+    }
+  };
+
+  const filterData = (start, end) => {
+    console.log(start);
+    console.log(end);
+    const filtered = copia.filter((item) => {
+      const itemDate = new Date(item.fecha_compra); // Asume que hay una propiedad "date" en cada objeto del JSON
+      // Filtrar si la fecha está dentro del rango seleccionado
+      if (start !== "" && end === "") {
+        return itemDate >= new Date(start);
+      } else if (end !== "" && start === "") {
+        return itemDate <= new Date(end);
+      } else if (start !== "" && end !== "") {
+        return itemDate >= new Date(start) && itemDate <= new Date(end);
+      }
+    });
+    setDataSource(filtered);
+  };
 
   const handleDelete = async (id_lote) => {
     const res = await deleteProductDB(id_lote);
@@ -87,7 +120,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
     }
 
   };
-  
+
   const deleteProductDB = async (id_lote) => {
     //Ruta para server en localhost: "http://localhost:8080/store/products/buy/"
     //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/buy/`
@@ -100,7 +133,7 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   const save = async (id_lote) => {
     var res;
     const row = await form.validateFields();
-    let numero = (row.costo_total/row.cantidad).toFixed(2);
+    let numero = (row.costo_total / row.cantidad).toFixed(2);
     row.costo_unitario = numero;
     if (row.fecha_caducidad === '') {
       row.fecha_caducidad = null;
@@ -146,11 +179,10 @@ const BuyList = ({ setRefresh, isRefresh }) => {
 
   };
 
-
   const handleInputChange = (event) => {
     const value = event.target.value;
     setSearch(value);
-  
+
     if (value === '') {
       fetchData();
     } else {
@@ -277,28 +309,51 @@ const BuyList = ({ setRefresh, isRefresh }) => {
   });
 
 
-
+  const { Header, Content } = Layout;
 
   return (
-    <div
-      style={{width: '90%'}}
-    >
-      <Search
-              className='search'
-              placeholder="Buscar producto"
-              bordered={false}
-              onChange={handleInputChange}
-              style={{
-                display:'flex',
-                  width: 200,
-                  border: '2px solid #d9d9d9',
-                  borderRadius: 8,
-                  backgroundColor: '#ecdde1' 
-                  
-              }}
-              maxLength='20'
-            />
-      
+    <div>
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          background: '#ecdde1'
+        }}
+        className='header'
+        theme
+      >
+        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white"  }}>Compras</h1></div>
+        <div style={{
+          background: '#f5f5f5',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '8%',
+          alignItems: 'center',
+          height: '100%',
+          marginLeft: '0%'
+        }}>
+          <Search
+            className='search'
+            placeholder="Buscar producto"
+            bordered={false}
+            onChange={handleInputChange}
+            style={{
+              display: 'flex',
+              width: 200,
+              border: '2px solid #d9d9d9',
+              borderRadius: 8,
+              backgroundColor: '#ecdde1'
+
+            }}
+            maxLength='20'
+          />
+
+          <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
+          <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
+        </div>
+      </Header>
+      <Content style={{ marginTop: '4%', marginLeft: '3%', width:'90%'}}>
         <Form form={form} component={false}
         >
           <Table className='tabla'
@@ -314,12 +369,14 @@ const BuyList = ({ setRefresh, isRefresh }) => {
             pagination={{
               onChange: cancel,
             }}
-            style={{width:'100%',
-                    left:'-20%',
-                    marginTop:'2%'
-           }}
+            style={{
+              width: '100%',
+              left: '-20%',
+              marginTop: '2%'
+            }}
           />
         </Form>
+      </Content>
     </div>
   );
 

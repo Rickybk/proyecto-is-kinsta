@@ -12,7 +12,7 @@ function MenuVentas() {
     }
 
     return (
-        <div className="transacciones" >
+        <div>
             <BuyList setRefresh={setRefresh} isRefresh={isRefresh} />
         </div>
     );

@@ -1,10 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Button, Input } from 'antd';
 import ClientList from './ComponentesClientes/ClientList';
-const { Search } = Input;
-
-
 
 function ClientMenu() {
 
@@ -14,8 +10,7 @@ function ClientMenu() {
   }
 
   return (
-    
-      <div className="row" style={{display:'flex'}}>
+      <div>
           <ClientList setRefresh={setRefresh} isRefresh={isRefresh}/>
       </div>
   );

@@ -1,8 +1,9 @@
 import './ListaBotones.css';
-import { Table, Popconfirm, Button, message, Form, Typography, Input} from 'antd';
+import { Table, Popconfirm, Button, message, Form, Typography, Input, Layout } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import ClientModal from './ClientModal';
+import defaultLogo from '../../Imagenes/imgW.png'
 
 const { Search } = Input;
 
@@ -17,9 +18,9 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'text' ? 
-  (
-    <Form.Item
+  const inputNode = inputType === 'text' ?
+    (
+      <Form.Item
         style={{ margin: 0 }}
         name={dataIndex}
         rules={[
@@ -45,56 +46,57 @@ const EditableCell = ({
             }
           },
         ]}
-    >
-      <Input
-        style={{ width: '100%'}}
-        className="SupplierInput"
-        id="descripcion"
-        maxLength={30}
-        onKeyDown={validationName} 
+      >
+        <Input
+          style={{ width: '100%' }}
+          className="SupplierInput"
+          id="descripcion"
+          maxLength={30}
+          onKeyDown={validationName}
         />
-    </Form.Item>
-  ) : inputType=== "text2" ?(
-    <Form.Item
-      style={{ margin: 0 }}
-      name={dataIndex}
-      rules={[
-        {
+      </Form.Item>
+    ) : inputType === "text2" ? (
+      <Form.Item
+        style={{ margin: 0 }}
+        name={dataIndex}
+        rules={[
+          {
             required: false,
-        },
-        {
-          max: 8,
-          message: `Has alcanzado el límite de caracteres!`,
-        },
-      ]}
-    >
-      <Input
-        style={{ width: '100%'}}
-        className="SupplierInput"
-        id="descripcion"
-        maxLength={8}
-        minLength={7}
+          },
+          {
+            max: 8,
+            message: `Has alcanzado el límite de caracteres!`,
+          },
+        ]}
+      >
+        <Input
+          style={{ width: '100%' }}
+          className="SupplierInput"
+          id="descripcion"
+          maxLength={8}
+          minLength={7}
+          onKeyDown={validation}
         />
-    </Form.Item>
-  ):(
-    <Form.Item
-      style={{ margin: 0}}
-      name={dataIndex}
-      rules={[
-        {
+      </Form.Item>
+    ) : (
+      <Form.Item
+        style={{ margin: 0 }}
+        name={dataIndex}
+        rules={[
+          {
             required: false,
-        },
-      ]}
+          },
+        ]}
 
-    >
-      <Input
-        style={{ width: '100%'}}
-        className="SupplierInput"
-        id="default"
-        maxLength={60}
+      >
+        <Input
+          style={{ width: '100%' }}
+          className="SupplierInput"
+          id="default"
+          maxLength={60}
         />
-    </Form.Item>
-  );
+      </Form.Item>
+    );
 
 
   return (
@@ -185,7 +187,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
   const edit = (record) => {
     form.setFieldsValue({
       name: '',
-      referenceNumber:'',
+      referenceNumber: '',
       ...record,
     });
     setEditingId_Client(record.id_cliente);
@@ -202,16 +204,16 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     if (isRefresh) {
       fetchData();
       setRefresh(false);
-  }
-  } ,[aux, dataSource, setDataSource]);
-
-    async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
-      const jsonData = await response.json();
-      const updatedData = jsonData.filter(item => item.id_cliente !== 7);
-      setDataSource(updatedData);
     }
-  
+  }, [aux, dataSource, setDataSource]);
+
+  async function fetchData() {
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/`);
+    const jsonData = await response.json();
+    const updatedData = jsonData.filter(item => item.id_cliente !== 7);
+    setDataSource(updatedData);
+  }
+
 
   const handleDelete = async (idCliente) => {
     const res = await deleteClient(idCliente);
@@ -224,7 +226,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     }
 
   };
-  
+
   const deleteClient = async (idCliente) => {
     const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/clients/` + idCliente, {
       method: "DELETE"
@@ -245,7 +247,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     console.log(res);
     if (res.status === 404) {
       message.warning('El Cliente no existe, por favor actualice la sección');
-    }else if (res.status === 200) {
+    } else if (res.status === 200) {
       try {
 
         const newData = [...dataSource];
@@ -268,15 +270,15 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       } catch (errInfo) {
         console.log('Error en la validación:', errInfo);
       }
-    } else if(res.status ===202){
+    } else if (res.status === 202) {
       const jsonData = await res.json();
-        if (jsonData.data === 1) {
-            message.error("El cliente " + row['nombre_cliente'] + " ya existe ");
-        }
-        if (jsonData.data === 2) {
-          message.error("El número " + row['num_cliente'] + " ya ha sido seleccionado ");
+      if (jsonData.data === 1) {
+        message.error("El cliente " + row['nombre_cliente'] + " ya existe ");
       }
-    }else{
+      if (jsonData.data === 2) {
+        message.error("El número " + row['num_cliente'] + " ya ha sido seleccionado ");
+      }
+    } else {
       message.warning('Problemas de comunicacion con el server');
     }
 
@@ -285,12 +287,12 @@ const ClientList = ({ setRefresh, isRefresh }) => {
   const handleInputChange = (event) => {
     const value = event.target.value;
     setSearch(value);
-  
+
     if (value === '') {
       fetchData();
-    }else{
-        const filteredData = dataSource.filter((item) => item.nombre_cliente.toLowerCase().includes(search.toLowerCase()));
-        setDataSource(filteredData);
+    } else {
+      const filteredData = dataSource.filter((item) => item.nombre_cliente.toLowerCase().includes(search.toLowerCase()));
+      setDataSource(filteredData);
     }
   };
 
@@ -307,7 +309,21 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       width: '15%',
       editable: true,
     },
-    
+    {
+      title: '',
+      dataIndex: 'num_cliente',
+      width: '0.05%',
+      render: (_, record) => {
+        return (
+          <span>
+            <a href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} target="_blank" rel="noopener noreferrer">
+            <img src="https://png.pngtree.com/png-clipart/20221019/original/pngtree-whatsapp-mobile-software-icon-png-image_8704828.png" alt="Contactar" className="img" />
+            </a>
+          </span>
+        );
+      },      
+    },
+
     {
       title: '',
       dataIndex: 'operation',
@@ -362,11 +378,11 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === 'nombre_cliente' 
-          ? 'text' :
-          col.dataIndex === 'num_cliente' 
-          ? 'text2' :
-          'text',
+          col.dataIndex === 'nombre_cliente'
+            ? 'text' :
+            col.dataIndex === 'num_cliente'
+              ? 'text2' :
+              'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -374,23 +390,41 @@ const ClientList = ({ setRefresh, isRefresh }) => {
     };
   });
 
-
-
+  const { Header, Content } = Layout;
 
   return (
-    <div
-      style={{width: '90%'}}
-    >
-      <div className="botones">
-        <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
+    <div>
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          background: '#ecdde1'
+        }}
+        className='header'
+        theme
+      >
+        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white" }}>Clientes</h1></div>
+        <div style={{
+          background: '#f5f5f5',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '8%',
+          alignItems: 'center',
+          height: '100%',
+          marginLeft: '0%'
+        }}>
+          <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
 
-        <Search
-                placeholder="Buscar Cliente"
-                onChange={handleInputChange}
-                style={{width:200}}
-              />
-      </div>
+          <Search
+            placeholder="Buscar Cliente"
+            onChange={handleInputChange}
+            style={{ width: 200 }}
+          />
+        </div>
+      </Header>
 
+      <Content style={{ marginTop: '4%', marginLeft: '3%', width: '90%' }}>
         <Form form={form} component={false}
         >
           <Table className='tabla'
@@ -406,11 +440,14 @@ const ClientList = ({ setRefresh, isRefresh }) => {
             pagination={{
               onChange: cancel,
             }}
-            style={{width:'100%',
-                    left:'-20%'
-           }}
+            style={{
+              width: '100%',
+              left: '-20%'
+            }}
           />
         </Form>
+      </Content>
+
     </div>
   );
 
