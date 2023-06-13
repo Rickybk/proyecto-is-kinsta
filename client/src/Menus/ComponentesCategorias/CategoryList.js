@@ -225,7 +225,7 @@ const CategoryList = ({ setRefresh, isRefresh }) => {
             <Table className='tabla'
                 style={{
                     marginRight: "50%",
-                    marginTop: "2%"
+                    marginTop: "0%"
                 }}
                 components={{
                     body: {

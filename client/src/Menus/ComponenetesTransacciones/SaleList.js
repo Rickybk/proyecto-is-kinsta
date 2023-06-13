@@ -1,10 +1,11 @@
-import { Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker, Layout } from 'antd';
+import { Affix, Table, Popconfirm, Button, message, Form, Typography, Input, DatePicker, Layout } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import moment from "moment";
 import "./BuyList.css";
 import EditableCell from "./EditableCell";
+import defaultLogo from '../../Imagenes/Logo Peq.png';
 
 const { Search } = Input;
 
@@ -199,6 +200,20 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
   const columns = [
     {
+      title: '',
+      dataIndex: 'imagen',
+      width: '10%',
+      editable: false,
+      render: (_, record) => {
+        return (
+          <span>
+            <img src= {record.imagen === "Sin imagen" ? defaultLogo : record.imagen} alt="Imagen_Producto" className="img" />
+          </span>
+        );
+      },      
+    },
+	
+    {
       title: 'Producto',
       dataIndex: 'nombre_producto',
       width: '15%',
@@ -296,7 +311,9 @@ const SaleList = ({ setRefresh, isRefresh }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "precio_total"
+        col.dataIndex === "imagen"
+            ? "image"
+          : col.dataIndex === "precio_total"
             ? "number"
             : col.dataIndex === "fecha_venta"
               ? "date"
@@ -327,38 +344,41 @@ const SaleList = ({ setRefresh, isRefresh }) => {
         className='header'
         theme
       >
-        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white"  }}>Ventas</h1></div>
-        <div style={{
-          background: '#f5f5f5',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '8%',
-          alignItems: 'center',
-          height: '100%',
-          marginLeft: '0%'
-        }}>
-          <Search
-            className='search'
-            placeholder="Buscar producto"
-            bordered={false}
-            onChange={handleInputChange}
-            style={{
-              display: 'flex',
-              width: 200,
-              border: '2px solid #d9d9d9',
-              borderRadius: 8,
-              backgroundColor: '#ecdde1'
+        <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white" }}>Ventas</h1></div>
 
-            }}
-            maxLength='20'
-          />
-
-          <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
-          <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
-        </div>
       </Header>
 
-      <Content style={{ marginTop: '4%', marginLeft: '3%', width: '90%' }}>
+      <Content style={{ marginTop: '0%', marginLeft: '3%', width: '90%' }}>
+        <Affix offsetTop={64}>
+          <div style={{
+            background: '#f5f5f5',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '8%',
+            alignItems: 'center',
+            height: '75px',
+            marginLeft: '0%'
+          }}>
+            <Search
+              className='search'
+              placeholder="Buscar producto"
+              bordered={false}
+              onChange={handleInputChange}
+              style={{
+                display: 'flex',
+                width: 200,
+                border: '2px solid #d9d9d9',
+                borderRadius: 8,
+                backgroundColor: '#ecdde1'
+
+              }}
+              maxLength='20'
+            />
+
+            <DatePicker placeholder="Fecha Desde:" onChange={handleDateChange} />
+            <DatePicker placeholder="Hasta:" onChange={handleDateChange2} />
+          </div>
+        </Affix>
         <Form form={form} component={false}
         >
           <Table className='tabla'
@@ -377,7 +397,7 @@ const SaleList = ({ setRefresh, isRefresh }) => {
             style={{
               width: '100%',
               left: '-20%',
-              marginTop: '2%'
+              marginTop: '0%'
             }}
           />
         </Form>

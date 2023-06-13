@@ -1,9 +1,10 @@
 import './ListaBotones.css';
-import { Table, Popconfirm, Button, message, Form, Typography, Input, Layout } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Affix, Table, Popconfirm, Button, message, Form, Typography, Input, Layout } from 'antd';
+import { EditOutlined, DeleteOutlined,WhatsAppOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import ClientModal from './ClientModal';
 import defaultLogo from '../../Imagenes/imgW.png'
+import './ClientList.css';
 
 const { Search } = Input;
 
@@ -304,7 +305,7 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       editable: true,
     },
     {
-      title: 'Número Teléfono/Celular',
+      title: 'Número de Celular',
       dataIndex: 'num_cliente',
       width: '15%',
       editable: true,
@@ -315,13 +316,12 @@ const ClientList = ({ setRefresh, isRefresh }) => {
       width: '0.05%',
       render: (_, record) => {
         return (
-          <span>
-            <a href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} target="_blank" rel="noopener noreferrer">
-            <img src="https://png.pngtree.com/png-clipart/20221019/original/pngtree-whatsapp-mobile-software-icon-png-image_8704828.png" alt="Contactar" className="img" />
-            </a>
-          </span>
+          <Button href={`https://api.whatsapp.com/send?phone=${record.num_cliente}`} 
+          className='whatsapp' target='_blank' 
+          style={{backgroundColor:'#ecdde1'}}><WhatsAppOutlined 
+          style={{color:'#0df053', fontSize:'18px'}}/></Button>
         );
-      },      
+      },
     },
 
     {
@@ -405,26 +405,28 @@ const ClientList = ({ setRefresh, isRefresh }) => {
         theme
       >
         <div><h1 style={{ fontSize: 50, textAlign: 'center', background: '#ecdde1', textShadow: "2px 2px white" }}>Clientes</h1></div>
-        <div style={{
-          background: '#f5f5f5',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '8%',
-          alignItems: 'center',
-          height: '100%',
-          marginLeft: '0%'
-        }}>
-          <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
-
-          <Search
-            placeholder="Buscar Cliente"
-            onChange={handleInputChange}
-            style={{ width: 200 }}
-          />
-        </div>
       </Header>
 
-      <Content style={{ marginTop: '4%', marginLeft: '3%', width: '90%' }}>
+      <Content style={{ marginTop: '0%', marginLeft: '3%', width: '90%' }}>
+        <Affix offsetTop={64}>
+          <div style={{
+            background: '#f5f5f5',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '8%',
+            alignItems: 'center',
+            height: '75px',
+            marginLeft: '0%'
+          }}>
+            <ClientModal setRefresh={setRefresh}>Añadir Cliente</ClientModal>
+
+            <Search
+              placeholder="Buscar Cliente"
+              onChange={handleInputChange}
+              style={{ width: 200 }}
+            />
+          </div>
+        </Affix>
         <Form form={form} component={false}
         >
           <Table className='tabla'

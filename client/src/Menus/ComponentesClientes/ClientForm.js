@@ -110,13 +110,9 @@ const ClientForm = ({nombreCliente,telefono}) => {
                             message: 'Por favor ingrese un número para el contacto!',
                         },
                         {
-                            min: 7,
-                            message: 'El número del contacto debe ser mínimo de 7 dígitos ',
+                            min: 8,
+                            message: 'El número del contacto debe tener 8 dígitos ',
                         },
-                        {
-                            max: 8,
-                            message: 'El número del contacto no puede tener más de 8 dígitos!',
-                        }
                     ]}
                 >
                     <Input id="numero"

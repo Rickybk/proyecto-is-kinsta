@@ -370,7 +370,7 @@ const updateBuy = async (req, res) => {
 const getAllBuy = async (req, res) => {
 
   try {
-    const getBuy = await pool.query("SELECT DISTINCT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total, l.fecha_compra, pr.nombre_proveedor FROM productos p, lotes l, proveedores pr WHERE p.id_producto = l.id_producto and l.id_proveedor = pr.id_proveedor ORDER BY fecha_compra DESC;");
+    const getBuy = await pool.query("SELECT DISTINCT l.id_lote, p.nombre_producto, l.cantidad, l.fecha_caducidad, l.costo_unitario, l.costo_total, l.fecha_compra, pr.nombre_proveedor, p.imagen FROM productos p, lotes l, proveedores pr WHERE p.id_producto = l.id_producto and l.id_proveedor = pr.id_proveedor ORDER BY fecha_compra DESC;");
     console.log(getBuy.rows);
     res.json(getBuy.rows);
   } catch (err) {
@@ -485,7 +485,7 @@ const getSales = async (req, res) => {
 };
 const getAllSales = async (req, res) => {
   try {
-    const getAllSales = await pool.query("SELECT DISTINCT v.id_venta, p.nombre_producto, c.id_cliente, c.nombre_cliente, v.cantidad_venta, v.tipo_venta, v.precio_total, p.precio_unitario, v.fecha_venta FROM productos p, ventas v, clientes c WHERE p.id_producto = v.id_producto and v.id_cliente = c.id_cliente ORDER BY fecha_venta desc;");
+    const getAllSales = await pool.query("SELECT DISTINCT v.id_venta, p.nombre_producto, c.id_cliente, c.nombre_cliente, v.cantidad_venta, v.tipo_venta, v.precio_total, p.precio_unitario, v.fecha_venta, p.imagen FROM productos p, ventas v, clientes c WHERE p.id_producto = v.id_producto and v.id_cliente = c.id_cliente ORDER BY fecha_venta desc;");
     console.log(getAllSales.rows);
     res.json(getAllSales.rows);
   } catch (err) {
