@@ -1,5 +1,5 @@
 import { Affix, Button, Table, message, Form, Popconfirm, Typography, Input, InputNumber, Layout } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined,WhatsAppOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import SupplierModal from './SupplierModal';
 import './SupplierList.css';
@@ -258,7 +258,7 @@ const SupplierList = ({ setRefresh, isRefresh }) => {
       editable: true,
     },
     {
-      title: 'Número de Teléfono/Celular',
+      title: 'Número de Celular',
       dataIndex: 'num_proveedor',
       width: '15%',
       editable: true,
@@ -271,6 +271,20 @@ const SupplierList = ({ setRefresh, isRefresh }) => {
     },
     {
       title: '',
+      dataIndex: 'num_proveedor',
+      width: '0.05%',
+      render: (_, record) => {
+        return (
+          <Button href={`https://api.whatsapp.com/send?phone=${record.num_proveedor}`} 
+          className='whatsapp' target='_blank' 
+          style={{backgroundColor:'#ecdde1'}}><WhatsAppOutlined 
+          style={{color:'#0df053', fontSize:'18px'}}/></Button>
+        );
+      },      
+    },
+    {
+      title: '',
+
       dataIndex: 'operation',
       width: '15%',
       render: (_, record) => {
