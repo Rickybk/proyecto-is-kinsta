@@ -88,6 +88,8 @@ const BuyList = ({ setRefresh, isRefresh }) => {
 
   const handleDateChange2 = (date, dateString) => {
     if (dateString !== null) {
+      dateString = moment(dateString).add(1, 'day')
+      dateString = dayjs(dateString).format('YYYY-MM-DD')
       setHasta(dateString);
       filterData(desde, dateString)
     }
