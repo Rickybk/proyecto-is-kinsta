@@ -169,6 +169,8 @@ const SaleList = ({ setRefresh, isRefresh }) => {
 
   const handleDateChange = (date, dateString) => {
     if (dateString !== null) {
+      dateString = moment(dateString).add(1, 'day')
+      dateString = dayjs(dateString).format('YYYY-MM-DD')
       setDesde(dateString);
       filterData(dateString, hasta)
     }
